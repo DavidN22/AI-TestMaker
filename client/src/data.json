@@ -1,0 +1,129 @@
+{
+    "questions": [
+      {
+        "question": "Which AWS service provides a global content delivery network (CDN) to cache and distribute content efficiently?",
+        "answers": {
+          "a": "Amazon S3",
+          "b": "AWS CloudFront",
+          "c": "AWS Lambda",
+          "d": "Amazon RDS"
+        },
+        "correct_answer": "b",
+        "hint": "This service caches content at edge locations to reduce latency.",
+        "explanation": "AWS CloudFront is a content delivery network (CDN) that caches copies of content at edge locations to improve access speed and reduce latency."
+      },
+      {
+        "question": "Which AWS services provide automated backup solutions? (Choose 2)",
+        "answers": {
+          "a": "AWS Backup",
+          "b": "Amazon S3",
+          "c": "Amazon RDS",
+          "d": "AWS CodePipeline",
+          "e": "AWS IAM"
+        },
+        "correct_answer": ["a", "c"],
+        "select_two": true,
+        "hint": "One is a centralized backup service, and the other provides automatic backups for databases.",
+        "explanation": "AWS Backup is a fully managed backup service, while Amazon RDS provides automated backups for relational databases."
+      },
+      {
+        "question": "Which AWS service helps you run code without provisioning or managing servers?",
+        "answers": {
+          "a": "Amazon EC2",
+          "b": "AWS Lambda",
+          "c": "Amazon RDS",
+          "d": "AWS CloudFormation"
+        },
+        "correct_answer": "b",
+        "hint": "It’s a serverless computing service.",
+        "explanation": "AWS Lambda allows you to run code without provisioning or managing servers, charging you only for the compute time you consume."
+      },
+      {
+        "question": "What AWS service enables you to create and manage users and permissions?",
+        "answers": {
+          "a": "AWS IAM",
+          "b": "Amazon S3",
+          "c": "AWS CloudTrail",
+          "d": "AWS Lambda"
+        },
+        "correct_answer": "a",
+        "hint": "This service is used to manage identity and access control.",
+        "explanation": "AWS Identity and Access Management (IAM) allows you to securely manage users, groups, and permissions in AWS."
+      },
+      {
+        "question": "Which AWS storage service is best suited for storing frequently accessed data with low latency?",
+        "answers": {
+          "a": "Amazon S3 Standard",
+          "b": "Amazon Glacier",
+          "c": "Amazon EBS",
+          "d": "AWS Snowball"
+        },
+        "correct_answer": "a",
+        "hint": "It’s the most commonly used object storage service with high availability.",
+        "explanation": "Amazon S3 Standard is designed for frequently accessed data with low latency and high durability."
+      },
+      {
+        "question": "Which AWS service allows you to set up monitoring and receive alerts for AWS resources?",
+        "answers": {
+          "a": "AWS CloudTrail",
+          "b": "AWS CloudWatch",
+          "c": "AWS IAM",
+          "d": "AWS Config"
+        },
+        "correct_answer": "b",
+        "hint": "This service provides metrics, logging, and alarms for AWS resources.",
+        "explanation": "AWS CloudWatch monitors AWS resources and applications, collects logs and metrics, and sends alerts based on configured thresholds."
+      },
+      {
+        "question": "Which AWS service enables you to automatically distribute incoming application traffic across multiple targets?",
+        "answers": {
+          "a": "Amazon Route 53",
+          "b": "AWS Load Balancer",
+          "c": "AWS Auto Scaling",
+          "d": "Amazon VPC"
+        },
+        "correct_answer": "b",
+        "hint": "It balances traffic across multiple EC2 instances or services.",
+        "explanation": "AWS Elastic Load Balancer (ELB) automatically distributes incoming application traffic across multiple targets to increase application availability and fault tolerance."
+      },
+      {
+        "question": "Which AWS database service provides a fully managed NoSQL database with low latency?",
+        "answers": {
+          "a": "Amazon RDS",
+          "b": "Amazon Aurora",
+          "c": "Amazon DynamoDB",
+          "d": "Amazon Redshift"
+        },
+        "correct_answer": "c",
+        "hint": "It’s a NoSQL database designed for single-digit millisecond latency.",
+        "explanation": "Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability."
+      },
+      {
+        "question": "Which AWS security feature allows you to log and track API calls in your AWS account?",
+        "answers": {
+          "a": "AWS IAM",
+          "b": "AWS CloudTrail",
+          "c": "AWS CloudWatch",
+          "d": "AWS WAF"
+        },
+        "correct_answer": "b",
+        "hint": "This service provides a record of all AWS API calls for compliance and security auditing.",
+        "explanation": "AWS CloudTrail records AWS API calls for an account, providing an audit log that helps with compliance and security monitoring."
+      },
+      {
+        "question": "Which AWS services can help improve application availability and fault tolerance? (Choose 2)",
+        "answers": {
+          "a": "AWS Auto Scaling",
+          "b": "Amazon S3 Glacier",
+          "c": "AWS Elastic Load Balancer",
+          "d": "AWS Snowball",
+          "e": "AWS Config"
+        },
+        "correct_answer": ["a", "c"],
+        "select_two": true,
+        "hint": "One dynamically adjusts the number of instances, and the other distributes traffic.",
+        "explanation": "AWS Auto Scaling automatically adjusts the number of instances based on demand, and AWS Elastic Load Balancer distributes traffic across multiple targets to enhance availability and fault tolerance."
+      }
+    ]
+  }
+  
