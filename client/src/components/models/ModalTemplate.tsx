@@ -11,11 +11,28 @@ interface ModalTemplateProps {
   setIsOpen: (isOpen: boolean) => void;
   title: string;
   children: React.ReactNode;
+  size?: "sm" | "md" | "lg" | "xl"; // Size options for width
+  fullScreen?: boolean; // New prop to control full height
 }
 
-export default function ModalTemplate({ isOpen, setIsOpen, title, children }: ModalTemplateProps) {
+export default function ModalTemplate({
+  isOpen,
+  setIsOpen,
+  title,
+  children,
+  size = "md",
+  fullScreen = false, // Default is normal height
+}: ModalTemplateProps) {
   const handleClose = () => {
     setTimeout(() => setIsOpen(false), 0);
+  };
+
+  // Define width classes based on the size prop
+  const sizeClasses = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-2xl",
+    xl: "max-w-5xl",
   };
 
   return (
@@ -26,7 +43,7 @@ export default function ModalTemplate({ isOpen, setIsOpen, title, children }: Mo
         className="fixed inset-0 bg-black/30 duration-200 ease-out data-[closed]:opacity-0"
       />
 
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center p-4">
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -34,7 +51,9 @@ export default function ModalTemplate({ isOpen, setIsOpen, title, children }: Mo
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md"
+              className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full ${
+                sizeClasses[size]
+              } ${fullScreen ? "h-[90vh] max-h-[90vh]" : "max-h-[80vh]"} overflow-y-auto`}
             >
               <DialogPanel>
                 <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -49,3 +68,5 @@ export default function ModalTemplate({ isOpen, setIsOpen, title, children }: Mo
     </Dialog>
   );
 }
+
+

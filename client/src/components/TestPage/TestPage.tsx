@@ -3,46 +3,61 @@ import TestQuestion from "./TestQuestions";
 import TestSidebar from "./TestSidebar";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Question } from "@/Types/Question";
+import gradeQuiz from "../../utils/gradeQuiz";
 
-interface Question {
-  question: string;
-  answers: Record<string, string | undefined>;
-  correct_answer: string | string[];
-  user_answer?: string | string[];
-  hint: string;
-  explanation: string;
-  select_two?: boolean;
-}
 
 export default function TestPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
   // Extract test state from navigation
-  const { testName, timer: initialTimer, questions: testQuestions } = location.state || {};
-
-  // Handle missing state (e.g., direct access without navigation)
-  useEffect(() => {
-    if (!testName || !testQuestions) {
-      navigate("/"); // Redirect to home if state is missing
-    }
-  }, [testName, testQuestions, navigate]);
-
+  const {
+    testName,
+    timer: initialTimer,
+    questions: testQuestions,
+  } = location.state || {};
   // Initialize state with navigation values
   const [questions, setQuestions] = useState<Question[]>(
-    testQuestions?.map((q: Question) => ({ ...q, user_answer: undefined })) || []
+    testQuestions?.map((q: Question) => ({ ...q, user_answer: undefined })) ||
+      []
   );
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
-  const [timer, setTimer] = useState(initialTimer || 3600); // Default to 1 hour if missing
+
+  // Prevent render if state is missing
+  useEffect(() => {
+    if (!testName || !testQuestions) {
+      navigate("/");
+    }
+  }, [testName, testQuestions, navigate]);
+
+  // Prevent accessing undefined values
+  if (!testName || !testQuestions) {
+    return null;
+  }
+
+    const onCancel = () => {
+      navigate("/", { replace: true, state: {} });
+    };
+  
+    const onSubmit = () => {
+      const results = gradeQuiz(questions);
+      const weakPoints = "Some weak points identified";
+      const resultsWithWeakPoints = { ...results, weakPoints };
+      console.log(resultsWithWeakPoints);
+    };
+
 
   const handleAnswerSelect = (answer: string) => {
     setQuestions((prev) =>
       prev.map((q, index) => {
         if (index === currentIndex) {
           if (q.select_two) {
-            const currentAnswers = Array.isArray(q.user_answer) ? q.user_answer : [];
+            const currentAnswers = Array.isArray(q.user_answer)
+              ? q.user_answer
+              : [];
             const newAnswers = currentAnswers.includes(answer)
               ? currentAnswers.filter((a) => a !== answer)
               : [...currentAnswers, answer];
@@ -64,10 +79,13 @@ export default function TestPage() {
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
       <TestSidebar
+        title={testName}
         questions={questions}
         currentIndex={currentIndex}
         setCurrentIndex={handleQuestionChange}
-        timer={timer}
+        timer={initialTimer}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
       />
 
       {/* Main Content */}
@@ -80,7 +98,9 @@ export default function TestPage() {
           transition={{ duration: 0.3 }}
           className="w-full max-w-2xl bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl"
         >
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{testName}</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            {testName}
+          </h2>
 
           {/* Question Component */}
           <TestQuestion

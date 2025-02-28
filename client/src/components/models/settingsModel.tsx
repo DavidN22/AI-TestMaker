@@ -10,7 +10,7 @@ interface SettingsModalProps {
 export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState("");
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const username = "JohnDoe"; // Placeholder for global state username
+  const username = "JohnDoe"; 
 
   return (
     <>
