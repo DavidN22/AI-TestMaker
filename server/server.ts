@@ -1,7 +1,15 @@
 import express, { Request, Response } from 'express';
-import "./db/db.js"
-import {testDbConnection} from "./db/db.js"
+import "./db/db.ts"
+import {testDbConnection} from "./db/db.ts"
 import cors from 'cors'; 
+import aiRoutes from './routes/aiRoutes.ts'; 
+import dbRoutes from './routes/dbRoutes.ts';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+//import authRoutes from './routes/authRoutes';
+//import dbRoutes from './routes/dbRoutes';
 
 
 const app = express();
@@ -12,8 +20,11 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.get('/api', (req: Request, res: Response) => {
+app.use('/api/ai', aiRoutes);
+//app.use('/api/auth', authRoutes);
+app.use('/api/db', dbRoutes);
 
+app.get('/api', (req: Request, res: Response) => {
     res.json({ server: 'Hello, this is your Express server!' });
 });
 

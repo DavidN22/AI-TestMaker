@@ -1,4 +1,5 @@
 {
+    "title": "AWS Cloud Practitioner",
     "score": "10.00%",
     "correctCount": 1,
     "wrongCount": 6,
@@ -12,10 +13,10 @@
                 "c": "AWS Lambda",
                 "d": "Amazon RDS"
             },
-            "correct_answer": "b",
+            "correct_answer": ["b"],
             "hint": "This service caches content at edge locations to reduce latency.",
             "explanation": "AWS CloudFront is a content delivery network (CDN) that caches copies of content at edge locations to improve access speed and reduce latency.",
-            "user_answer": "a",
+            "user_answer": ["b"],
             "is_correct": false
         },
         {
@@ -27,17 +28,11 @@
                 "d": "AWS CodePipeline",
                 "e": "AWS IAM"
             },
-            "correct_answer": [
-                "a",
-                "c"
-            ],
+            "correct_answer": ["a", "c"],
             "select_two": true,
             "hint": "One is a centralized backup service, and the other provides automatic backups for databases.",
             "explanation": "AWS Backup is a fully managed backup service, while Amazon RDS provides automated backups for relational databases.",
-            "user_answer": [
-                "b",
-                "a"
-            ],
+            "user_answer": ["b", "a"],
             "is_correct": false
         },
         {
@@ -48,10 +43,10 @@
                 "c": "Amazon RDS",
                 "d": "AWS CloudFormation"
             },
-            "correct_answer": "b",
+            "correct_answer": ["b"],
             "hint": "It’s a serverless computing service.",
             "explanation": "AWS Lambda allows you to run code without provisioning or managing servers, charging you only for the compute time you consume.",
-            "user_answer": "c",
+            "user_answer": ["c"],
             "is_correct": false
         },
         {
@@ -62,10 +57,10 @@
                 "c": "AWS CloudTrail",
                 "d": "AWS Lambda"
             },
-            "correct_answer": "a",
+            "correct_answer": ["a"],
             "hint": "This service is used to manage identity and access control.",
             "explanation": "AWS Identity and Access Management (IAM) allows you to securely manage users, groups, and permissions in AWS.",
-            "user_answer": "a",
+            "user_answer": ["a"],
             "is_correct": true
         },
         {
@@ -76,10 +71,10 @@
                 "c": "Amazon EBS",
                 "d": "AWS Snowball"
             },
-            "correct_answer": "a",
+            "correct_answer": ["a"],
             "hint": "It’s the most commonly used object storage service with high availability.",
             "explanation": "Amazon S3 Standard is designed for frequently accessed data with low latency and high durability.",
-            "user_answer": "b",
+            "user_answer": ["b"],
             "is_correct": false
         },
         {
@@ -90,10 +85,10 @@
                 "c": "AWS IAM",
                 "d": "AWS Config"
             },
-            "correct_answer": "b",
+            "correct_answer": ["b"],
             "hint": "This service provides metrics, logging, and alarms for AWS resources.",
             "explanation": "AWS CloudWatch monitors AWS resources and applications, collects logs and metrics, and sends alerts based on configured thresholds.",
-            "user_answer": "c",
+            "user_answer": ["c"],
             "is_correct": false
         },
         {
@@ -104,10 +99,10 @@
                 "c": "AWS Auto Scaling",
                 "d": "Amazon VPC"
             },
-            "correct_answer": "b",
+            "correct_answer": ["b"],
             "hint": "It balances traffic across multiple EC2 instances or services.",
             "explanation": "AWS Elastic Load Balancer (ELB) automatically distributes incoming application traffic across multiple targets to increase application availability and fault tolerance.",
-            "user_answer": "a",
+            "user_answer": ["a"],
             "is_correct": false
         },
         {
@@ -118,7 +113,7 @@
                 "c": "Amazon DynamoDB",
                 "d": "Amazon Redshift"
             },
-            "correct_answer": "c",
+            "correct_answer": ["c"],
             "hint": "It’s a NoSQL database designed for single-digit millisecond latency.",
             "explanation": "Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.",
             "is_correct": false
@@ -131,7 +126,7 @@
                 "c": "AWS CloudWatch",
                 "d": "AWS WAF"
             },
-            "correct_answer": "b",
+            "correct_answer": ["b"],
             "hint": "This service provides a record of all AWS API calls for compliance and security auditing.",
             "explanation": "AWS CloudTrail records AWS API calls for an account, providing an audit log that helps with compliance and security monitoring.",
             "is_correct": false
@@ -145,10 +140,7 @@
                 "d": "AWS Snowball",
                 "e": "AWS Config"
             },
-            "correct_answer": [
-                "a",
-                "c"
-            ],
+            "correct_answer": ["a", "c"],
             "select_two": true,
             "hint": "One dynamically adjusts the number of instances, and the other distributes traffic.",
             "explanation": "AWS Auto Scaling automatically adjusts the number of instances based on demand, and AWS Elastic Load Balancer distributes traffic across multiple targets to enhance availability and fault tolerance.",

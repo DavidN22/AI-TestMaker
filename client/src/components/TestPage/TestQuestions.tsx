@@ -6,6 +6,7 @@ interface TestQuestionProps {
   onAnswerSelect: (answer: string) => void;
   showHint: boolean;
 }
+
 export default function TestQuestion({
   questionData,
   selectedAnswer,
@@ -13,6 +14,7 @@ export default function TestQuestion({
   showHint,
 }: TestQuestionProps) {
   const { question, answers, select_two, hint } = questionData;
+
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
@@ -32,8 +34,7 @@ export default function TestQuestion({
               value={key}
               checked={
                 select_two
-                  ? Array.isArray(selectedAnswer) &&
-                    selectedAnswer.includes(key) // Multi-select
+                  ? Array.isArray(selectedAnswer) && selectedAnswer.includes(key) // Multi-select
                   : selectedAnswer === key // Single-select
               }
               onChange={() => onAnswerSelect(key)}

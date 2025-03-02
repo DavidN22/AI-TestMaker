@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Question } from "@/Types/Question";
 import gradeQuiz from "../../utils/gradeQuiz";
-
+import axios from "axios";
 
 export default function TestPage() {
   const location = useLocation();
@@ -18,11 +18,15 @@ export default function TestPage() {
     questions: testQuestions,
   } = location.state || {};
   // Initialize state with navigation values
-  const [questions, setQuestions] = useState<Question[]>(
-    testQuestions?.map((q: Question) => ({ ...q, user_answer: undefined })) ||
-      []
-  );
-
+const [questions, setQuestions] = useState<Question[]>(
+  testQuestions?.map((q: Question) => ({
+    ...q,
+    user_answer: undefined,
+    correct_answer: Array.isArray(q.correct_answer) ? q.correct_answer : [q.correct_answer], // Ensure array format
+  })) || []
+);
+console.log(gradeQuiz(questions))
+console.log(initialTimer)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
 
@@ -42,11 +46,24 @@ export default function TestPage() {
       navigate("/", { replace: true, state: {} });
     };
   
-    const onSubmit = () => {
+    const onSubmit = async () => {
       const results = gradeQuiz(questions);
-      const weakPoints = "Some weak points identified";
-      const resultsWithWeakPoints = { ...results, weakPoints };
-      console.log(resultsWithWeakPoints);
+      try {
+      const response = await axios.post("/api/ai/reviewTest", { results });
+      const data = response.data;
+      const resultsWithWeakPoints = { 
+        ...results, 
+        testName, 
+        weakPoints: data.message.weakpoints, 
+        summary: data.message.summary, 
+        date: new Date().toISOString().split('T')[0] 
+      };  
+       console.log(resultsWithWeakPoints)  
+     await axios.post("/api/db/tests", { resultsWithWeakPoints }); 
+
+      } catch (error) {
+      console.error("Error fetching weak points:", error);
+      }
     };
 
 

@@ -31,7 +31,7 @@ export default function ModalTemplate({
   const sizeClasses = {
     sm: "max-w-sm",
     md: "max-w-md",
-    lg: "max-w-2xl",
+    lg: "max-w-2xl h-[55vh]", // Increase height for lg
     xl: "max-w-5xl",
   };
 
@@ -53,7 +53,7 @@ export default function ModalTemplate({
               transition={{ duration: 0.2, ease: "easeOut" }}
               className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full ${
                 sizeClasses[size]
-              } ${fullScreen ? "h-[90vh] max-h-[90vh]" : "max-h-[80vh]"} overflow-y-auto`}
+              } ${fullScreen ? "h-[90vh] max-h-[90vh] overflow-y-auto" : "max-h-[80vh]"} overflow-visible`}
             >
               <DialogPanel>
                 <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">

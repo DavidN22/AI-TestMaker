@@ -6,9 +6,7 @@ dotenv.config();
 const { Pool } = pkg; // Fix import issue
 
 const pool = new Pool({
-    user: process.env.DB_USER || "postgres",
-    host: process.env.DB_HOST || "localhost",
-    database: process.env.DB_NAME || "starwars2",
+    connectionString: process.env.DB_URI,
 });
 
 // Test the connection immediately

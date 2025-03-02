@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec tsx server.ts",
     "start:ts-node": "ts-node --project tsconfig.node.json server.ts",
-    "build": "tsc --project tsconfig.node.json" ,
+    "build": "tsc --project tsconfig.node.json",
     "test": "tsc --project tsconfig.node.json --noEmit"
   },
   "keywords": [],
@@ -14,6 +14,7 @@
   "license": "ISC",
   "description": "Backend for application",
   "dependencies": {
+    "@google/generative-ai": "^0.22.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

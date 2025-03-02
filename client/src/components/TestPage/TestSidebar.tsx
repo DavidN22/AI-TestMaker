@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CancelTest from "../models/CancelTestModal";
 import SubmitTest from "../models/SubmitTestModal";
 import { Question } from "../../Types/Question";
-
 
 interface TestSidebarProps {
   questions: Question[];
@@ -12,22 +11,47 @@ interface TestSidebarProps {
   title: string;
   onCancel: () => void;
   onSubmit: () => void;
-
 }
 
 export default function TestSidebar({
   questions,
   currentIndex,
   setCurrentIndex,
-  timer,
+  timer: initialTimer,
   title,
   onCancel,
   onSubmit,
 }: TestSidebarProps) {
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(initialTimer);
 
+  // Timer effect
+  // useEffect(() => {
+  //   if (timeRemaining <= 0) {
+  //     onSubmit(); // Ensure auto-submit is triggered once
+  //     return;
+  //   }
+  
+  //   const timerInterval = window.setInterval(() => {
+  //     setTimeRemaining((prevTime) => {
+  //       if (prevTime <= 1) {
+  //         clearInterval(timerInterval);
+  //         onSubmit(); // Trigger submit once
+  //         return 0;
+  //       }
+  //       return prevTime - 1;
+  //     });
+  //   }, 1000);
+  
+  //   return () => clearInterval(timerInterval);
+  // }, [timeRemaining, onSubmit]);
+  
 
+  // Reset timer if initialTimer changes
+  useEffect(() => {
+    setTimeRemaining(initialTimer);
+  }, [initialTimer]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -80,9 +104,9 @@ export default function TestSidebar({
         </p>
 
         {/* Timer */}
-        {timer > 0 && (
-          <div className="flex items-center mt-4 text-gray-700 dark:text-gray-300">
-            ⏳ <span className="ml-2">{formatTime(timer)}</span>
+        {initialTimer > 0 && (
+          <div className={`flex items-center mt-4 ${timeRemaining < 60 ? "text-red-500 font-bold" : "text-gray-700 dark:text-gray-300"}`}>
+            ⏳ <span className="ml-2">{formatTime(timeRemaining)}</span>
           </div>
         )}
         {/* Progress */}

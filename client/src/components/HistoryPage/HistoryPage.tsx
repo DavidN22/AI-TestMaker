@@ -3,7 +3,6 @@ import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa"; // Sorting Ic
 import TestResultCard from "./HistoryCard";
 import historyData from "../../history.json"; 
 import { TestResults } from "@/Types/Results";
-import historyData2 from "../../history2.json"; 
 const generateMockHistory = () => {
   return [
     { ...historyData, title: "AWS Fundamentals", date: "2025-02-20" },
@@ -12,7 +11,7 @@ const generateMockHistory = () => {
     { ...historyData, title: "AWS Advanced Networking", date: "2025-02-10" },
     { ...historyData, title: "GCP Associate Cloud Engineer", date: "2025-02-05" },
     { ...historyData, title: "AWS Certified Solutions Architect", date: "2025-01-28" },
-    { ...historyData2, title: "Azure DevOps Engineer", date: "2025-01-20" }
+    { ...historyData, title: "Azure DevOps Engineer", date: "2025-01-20" }
   ];
 };
 

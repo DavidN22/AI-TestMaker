@@ -8,7 +8,6 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ state, onClose }: SettingsModalProps) {
-  const [apiKey, setApiKey] = useState("");
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const username = "JohnDoe"; 
 
@@ -27,23 +26,6 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
           <div className="w-full bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white p-3 rounded-lg border border-gray-300 dark:border-gray-600">
             {username}
           </div>
-        </div>
-
-        {/* API Key Input */}
-        <div className="mt-4">
-          <label className="block text-gray-700 dark:text-gray-300 mb-1">
-            API Key
-          </label>
-          <input
-            type="text"
-            className="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white p-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-            placeholder="Enter your API key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
-          <button className="cursor-pointer mt-2 w-full px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition">
-            Save API Key
-          </button>
         </div>
 
         {/* Delete Account Button - Opens Confirmation */}
