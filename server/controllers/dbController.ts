@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { pool } from "../db/db.ts"; // Ensure your database connection is configured
-import { json } from "stream/consumers";
+import { createClient } from "../utils/supabaseServerClient.ts";
 
 const dbController = {
   addQuizResult: async (req: Request, res: Response, next: NextFunction) => {
@@ -14,32 +14,67 @@ const dbController = {
         testName,
         weakPoints,
         summary,
-        date,
       } = req.body.resultsWithWeakPoints;
       // Insert into database, storing updatedQuizData as JSONB
+      let user = res.locals.user;
       const query = `
-        INSERT INTO devtests (score, correct_count, wrong_count, unanswered_count, title, weak_points, summary, quiz_data, date)
+        INSERT INTO devtests (score, "user", correct_count, wrong_count, unanswered_count, title, weak_points, summary, quiz_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING id;
       `;
 
       const values = [
         score,
+        user,
         correctCount,
         wrongCount,
         unansweredCount,
         testName,
         weakPoints,
         summary,
-        JSON.stringify(updatedQuizData), // Convert array to JSON string
-        date,
+        JSON.stringify(updatedQuizData),
       ];
       const result = await pool.query(query, values);
 
-      res.status(201).json({ message: "Quiz result saved successfully", quizId: result.rows[0].id });
+      res.status(201).json({
+        message: "Quiz result saved successfully",
+        quizId: result.rows[0].id,
+      });
     } catch (error) {
-      console.error("Error inserting quiz data:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      next(error);
+    }
+  },
+
+  getQuizResults: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let user = res.locals.user;
+      const query = `
+        SELECT * FROM devtests WHERE "user" = $1 ORDER BY date DESC;
+      `;
+      const result = await pool.query(query, [user]);
+      res.json(result.rows);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  deleteAccount: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const supabase = createClient({ req, res });
+
+      await supabase.auth.signOut();
+      let userid = res.locals.uid;
+      let user = res.locals.user;
+      console.log("Deleting user:", userid);
+      await supabase.auth.admin.deleteUser(userid);
+
+      const query = `
+        DELETE FROM "users" WHERE email = $1;
+      `;
+      await pool.query(query, [user]);
+      res.json({ message: "Account deleted successfully" });
+    } catch (error) {
+      next(error);
     }
   },
 };

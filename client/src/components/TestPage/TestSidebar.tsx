@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CancelTest from "../models/CancelTestModal";
 import SubmitTest from "../models/SubmitTestModal";
 import { Question } from "../../Types/Question";
@@ -11,6 +11,7 @@ interface TestSidebarProps {
   title: string;
   onCancel: () => void;
   onSubmit: () => void;
+  className?: string;
 }
 
 export default function TestSidebar({
@@ -21,44 +22,42 @@ export default function TestSidebar({
   title,
   onCancel,
   onSubmit,
+  className = "" ,
 }: TestSidebarProps) {
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(initialTimer);
-
-  // Timer effect
-  // useEffect(() => {
-  //   if (timeRemaining <= 0) {
-  //     onSubmit(); // Ensure auto-submit is triggered once
-  //     return;
-  //   }
   
-  //   const timerInterval = window.setInterval(() => {
-  //     setTimeRemaining((prevTime) => {
-  //       if (prevTime <= 1) {
-  //         clearInterval(timerInterval);
-  //         onSubmit(); // Trigger submit once
-  //         return 0;
-  //       }
-  //       return prevTime - 1;
-  //     });
-  //   }, 1000);
-  
-  //   return () => clearInterval(timerInterval);
-  // }, [timeRemaining, onSubmit]);
-  
-
-  // Reset timer if initialTimer changes
+  const onSubmitRef = useRef(onSubmit);
+  onSubmitRef.current = onSubmit;
   useEffect(() => {
-    setTimeRemaining(initialTimer);
-  }, [initialTimer]);
+    if (initialTimer > 0) {
+      const interval = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            console.log("Time's up!");
+            onSubmitRef.current(); 
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [initialTimer]); 
+  
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
+  const handleSubmit = async () => {
+    setIsSubmitOpen(false);
+    onSubmit();
+  };
+  
   // Helper function to check if a question has been answered
   const isQuestionAnswered = (
     user_answer?: string | string[],
@@ -93,8 +92,8 @@ export default function TestSidebar({
   };
 
   return (
-    <aside className="w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-lg border border-gray-300 dark:border-gray-700 transition-all flex flex-col justify-between">
-      {/* Header */}
+<aside className={`w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-lg border border-gray-300 dark:border-gray-700 transition-all flex flex-col justify-between ${className}`}>
+{/* Header */}
       <div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
           {title}
@@ -166,7 +165,7 @@ export default function TestSidebar({
       <SubmitTest
         isOpen={isSubmitOpen}
         setIsOpen={setIsSubmitOpen}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       />
     </aside>
   );

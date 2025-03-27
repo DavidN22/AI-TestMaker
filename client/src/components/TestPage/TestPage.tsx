@@ -1,70 +1,68 @@
 import { motion } from "framer-motion";
 import TestQuestion from "./TestQuestions";
 import TestSidebar from "./TestSidebar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Question } from "@/Types/Question";
 import gradeQuiz from "../../utils/gradeQuiz";
-import axios from "axios";
+import {reviewTest} from "../../utils/api";
+import LoadingSpinner from "../Loading/LoadingSpinner";
+import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
+import CancelTest from "../models/CancelTestModal";
+import SubmitTest from "../models/SubmitTestModal";
 
 export default function TestPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { refetch } = useGetTestResultsQuery();
+  const [isCancelOpen, setIsCancelOpen] = useState(false);
+  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
 
-  // Extract test state from navigation
   const {
     testName,
     timer: initialTimer,
     questions: testQuestions,
   } = location.state || {};
-  // Initialize state with navigation values
-const [questions, setQuestions] = useState<Question[]>(
-  testQuestions?.map((q: Question) => ({
-    ...q,
-    user_answer: undefined,
-    correct_answer: Array.isArray(q.correct_answer) ? q.correct_answer : [q.correct_answer], // Ensure array format
-  })) || []
-);
-console.log(gradeQuiz(questions))
-console.log(initialTimer)
+
+  const [questions, setQuestions] = useState<Question[]>(
+    testQuestions?.map((q: Question) => ({
+      ...q,
+      user_answer: undefined,
+      correct_answer: Array.isArray(q.correct_answer)
+        ? q.correct_answer
+        : [q.correct_answer],
+    })) || []
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
 
-  // Prevent render if state is missing
-  useEffect(() => {
-    if (!testName || !testQuestions) {
-      navigate("/");
-    }
-  }, [testName, testQuestions, navigate]);
-
-  // Prevent accessing undefined values
   if (!testName || !testQuestions) {
     return null;
   }
 
-    const onCancel = () => {
-      navigate("/", { replace: true, state: {} });
-    };
-  
-    const onSubmit = async () => {
-      const results = gradeQuiz(questions);
-      try {
-      const response = await axios.post("/api/ai/reviewTest", { results });
-      const data = response.data;
-      const resultsWithWeakPoints = { 
-        ...results, 
-        testName, 
-        weakPoints: data.message.weakpoints, 
-        summary: data.message.summary, 
-        date: new Date().toISOString().split('T')[0] 
-      };  
-       console.log(resultsWithWeakPoints)  
-     await axios.post("/api/db/tests", { resultsWithWeakPoints }); 
+  const onCancel = () => {
+    navigate("/", { replace: true, state: {} });
+  };
 
-      } catch (error) {
-      console.error("Error fetching weak points:", error);
-      }
-    };
+// In your onSubmit function
+const onSubmit = async () => {
+  setIsSubmitOpen(false);
+  setLoading(true);
+
+  const results = gradeQuiz(questions);
+  try {
+    await reviewTest({ results, testName });
+    refetch();
+    navigate("/history", { replace: true });
+  } catch (error) {
+    navigate("/history", { replace: true });
+    console.error("Error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   const handleAnswerSelect = (answer: string) => {
@@ -94,8 +92,9 @@ console.log(initialTimer)
 
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Sidebar */}
+      {/* Sidebar - hidden on mobile */}
       <TestSidebar
+        className="hidden lg:flex"
         title={testName}
         questions={questions}
         currentIndex={currentIndex}
@@ -105,15 +104,18 @@ console.log(initialTimer)
         onSubmit={onSubmit}
       />
 
+      {loading && <LoadingSpinner message="Getting your results" />}
+
       {/* Main Content */}
-      <div className="flex-grow flex flex-col items-center justify-center p-6">
+      <div className="flex flex-col flex-grow lg:items-center lg:justify-center">
+        {/* MOTION CARD */}
         <motion.div
           key={currentIndex}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.3 }}
-          className="w-full max-w-2xl bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl"
+          className="w-full h-[100dvh] lg:h-auto lg:max-w-2xl bg-white dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto"
         >
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             {testName}
@@ -127,7 +129,7 @@ console.log(initialTimer)
             showHint={showHint}
           />
 
-          {/* Navigation + Hint Button */}
+          {/* Navigation + Hint */}
           <div className="flex justify-between mt-8 space-x-4">
             <button
               onClick={() => handleQuestionChange(currentIndex - 1)}
@@ -160,7 +162,34 @@ console.log(initialTimer)
               Next
             </button>
           </div>
+
+          {/* Mobile Submit / Cancel */}
+          <div className="mt-6 flex justify-between lg:hidden">
+            <button
+              onClick={() => setIsCancelOpen(true)}
+              className="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
+            >
+              Cancel Test
+            </button>
+            <button
+              onClick={() => setIsSubmitOpen(true)}
+              className="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700"
+            >
+              Submit Test
+            </button>
+          </div>
         </motion.div>
+        <CancelTest
+          isOpen={isCancelOpen}
+          setIsOpen={setIsCancelOpen}
+          onCancel={onCancel}
+        />
+
+        <SubmitTest
+          isOpen={isSubmitOpen}
+          setIsOpen={setIsSubmitOpen}
+          onSubmit={onSubmit}
+        />
       </div>
     </div>
   );

@@ -2,6 +2,9 @@ import HomePage from "../components/HomePage/HomePage";
 import Header from "../components/Header/Header";
 import { motion } from "framer-motion";
 export default function HomeView() {
+
+
+
   return (
     <div className="flex flex-col h-screen">
       <Header />

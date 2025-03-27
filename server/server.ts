@@ -5,25 +5,24 @@ import cors from 'cors';
 import aiRoutes from './routes/aiRoutes.ts'; 
 import dbRoutes from './routes/dbRoutes.ts';
 import dotenv from 'dotenv';
-
+import authRoutes from './routes/authRoutes.ts';
 dotenv.config();
 
 //import authRoutes from './routes/authRoutes';
 //import dbRoutes from './routes/dbRoutes';
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 testDbConnection();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
 // Routes
 app.use('/api/ai', aiRoutes);
-//app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/db', dbRoutes);
-
+  
 app.get('/api', (req: Request, res: Response) => {
     res.json({ server: 'Hello, this is your Express server!' });
 });

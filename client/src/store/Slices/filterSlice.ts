@@ -21,7 +21,7 @@ const initialState: FilterState = {
     search: "",
     providers: [],
     difficulty: "",
-    filteredTests: tests as Test[], // Type assertion since tests might not be typed initially
+    filteredTests: tests as Test[],
 };
 
 const filterSlice = createSlice({

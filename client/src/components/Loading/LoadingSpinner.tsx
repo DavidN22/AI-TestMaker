@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export default function LoadingSpinner() {
+export default function LoadingSpinner({ message }: { message: string }) {
   return (
     <div
       className="fixed inset-0 flex flex-col items-center justify-center z-50"
@@ -22,7 +22,7 @@ export default function LoadingSpinner() {
         animate={{ opacity: [1, 0.5, 1] }}
         transition={{ duration: 1, repeat: Infinity }}
       >
-        Generating Your Quiz<span className="dots">...</span>
+         {message}<span className="dots">...</span>
       </motion.p>
     </div>
   );

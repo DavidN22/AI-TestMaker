@@ -2,15 +2,25 @@ import { Question } from "./Question";
 
 export interface TestResults {
   score: string;
-  correctCount: number;
-  wrongCount: number;
-  unansweredCount: number;
-  updatedQuizData: Question[];
-  weakPoints: string;
+  correct_count: number;
+  wrong_count: number;
+  unanswered_count: number;
+  quiz_data: Question[];
+  weak_points: string;
+  summary: string;
   date: string;
   title: string;
 }
 
 export interface TestResultCardProps {
   testData: TestResults;
+}
+
+
+export interface QuizResult {
+  score: string;
+  correctCount: number;
+  wrongCount: number;
+  unansweredCount: number;
+  updatedQuizData: Question[];
 }

@@ -1,9 +1,14 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import MobileFilterModal from "../models/MobileFilterModal";
-
-export default function MobileHeader({ onSettingsOpen, onLogout }: { onSettingsOpen: (val:boolean) => void; onLogout: () => void }) {
+import { useState } from "react";
+export default function MobileHeader({
+  onSettingsOpen,
+  onLogout,
+}: {
+  onSettingsOpen: (val: boolean) => void;
+  onLogout: () => void;
+}) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -47,7 +52,7 @@ export default function MobileHeader({ onSettingsOpen, onLogout }: { onSettingsO
         {/* Navigation Links */}
         <nav className="mt-24 space-y-6">
           {[
-            { to: "/", label: "🏠 Home" },
+            { to: "/home", label: "🏠 Home" },
             { to: "/history", label: "📜 History" },
             { to: "/statistics", label: "📊 Statistics" },
           ].map((item) => (

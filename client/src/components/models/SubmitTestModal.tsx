@@ -21,7 +21,7 @@ export default function SubmitTest({ isOpen, setIsOpen, onSubmit }: SubmitTestPr
           </button>
         <button
           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 "
-          onClick={onSubmit}
+          onClick={onSubmit} 
         >
           Yes, Submit
         </button>

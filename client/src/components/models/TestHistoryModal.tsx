@@ -12,6 +12,20 @@ export default function TestHistoryModal({
   setIsOpen,
   testData,
 }: TestHistoryModalProps) {
+
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    });
+  };
+
   return (
     <ModalTemplate
       isOpen={isOpen}
@@ -21,23 +35,38 @@ export default function TestHistoryModal({
       fullScreen={true}
     >
       <div className="flex flex-col h-full">
+        {/* Weak Points Section (Top) */}
+        {testData.weak_points && (
+          <div className="bg-red-100 dark:bg-red-800 p-4 rounded-lg shadow-sm mb-4 text-red-800 dark:text-red-200">
+            <p className="font-semibold">Weak Points:</p>
+            <p className="text-sm">{testData.weak_points}</p>
+          </div>
+        )}
+
         {/* Test Summary */}
         <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-t-lg shadow-sm">
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Date: {testData.date}
+            Date: {formatDate(testData.date)}
           </p>
           <p className="text-lg font-semibold text-gray-900 dark:text-white">
             Score: <span className="text-blue-500">{testData.score}</span>
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Correct: {testData.correctCount} | Wrong: {testData.wrongCount} |
-            Unanswered: {testData.unansweredCount}
+            Correct: {testData.correct_count} | Wrong: {testData.wrong_count} |
+            Unanswered: {testData.unanswered_count}
           </p>
+
+          {/* Summary Section */}
+          {testData.summary && (
+            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300 font-medium">
+              Summary: {testData.summary}
+            </p>
+          )}
         </div>
 
         {/* Scrollable Questions Section */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {testData.updatedQuizData.map((q, index) => {
+          {testData.quiz_data.map((q, index) => {
             const wasAnswered = q.user_answer !== undefined && q.user_answer !== null;
             
             return (
@@ -77,9 +106,9 @@ export default function TestHistoryModal({
 
                 {/* Unanswered Indication */}
                 {!wasAnswered && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 italic">
-                    (You did not answer this question)
-                  </p>
+                    <p className="text-sm text-red-500 dark:text-red-400 mt-2 italic">
+                    You did not answer this question
+                    </p>
                 )}
 
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 italic">

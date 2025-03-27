@@ -10,10 +10,20 @@ const getEmoji = (title: string) => {
   if (title.toLowerCase().includes("google")) return "🌍";
   return "📚";
 };
-
+const formatDate = (isoString: string) => {
+  const date = new Date(isoString);
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true, // Ensures AM/PM format
+  });
+};
 export default function TestResultCard({ testData }: TestResultCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <div
       className="relative bg-white dark:bg-[#1E1E1E] border border-gray-300 dark:border-gray-700 
@@ -30,7 +40,7 @@ export default function TestResultCard({ testData }: TestResultCardProps) {
       </div>
 
       {/* Date */}
-      <p className="text-xs text-gray-600 dark:text-gray-400">{testData.date}</p>
+      <p className="text-xs text-gray-600 dark:text-gray-400">{formatDate(testData.date)}</p>
 
       {/* Score & Accuracy */}
       <div className="text-sm text-gray-700 dark:text-gray-400">
@@ -38,7 +48,7 @@ export default function TestResultCard({ testData }: TestResultCardProps) {
           Score: <span className="text-blue-500">{testData.score}</span>
         </p>
         <p>
-          {testData.correctCount} / {testData.updatedQuizData.length} correct
+          {testData.correct_count} / {testData.quiz_data.length} correct
         </p>
       </div>
 

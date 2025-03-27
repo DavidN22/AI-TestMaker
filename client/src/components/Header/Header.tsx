@@ -2,15 +2,18 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SettingsModal from "../models/settingsModel";
 import MobileHeader from "./MobileHeader";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../../store/store";
+import { handleLogout } from "../../utils/api";
 export default function Header() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const location = useLocation();
 
-  const handleLogout = () => {
-    console.log("Logging out...");
+  const email = useSelector((state: RootState) => state.auth.email);
+  const handleGoogleSignIn = () => {
+    window.location.href = "http://localhost:3000/api/auth/login";
   };
-
   return (
     <>
       {/* Desktop Header */}
@@ -25,50 +28,62 @@ export default function Header() {
               MyApp
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="flex space-x-5 items-center">
-              <NavItem to="/" label="Home" active={location.pathname === "/"} />
-              <NavItem
-                to="/history"
-                label="History"
-                active={location.pathname === "/history"}
-              />
-              <NavItem
-                to="/statistics"
-                label="Statistics"
-                active={location.pathname === "/statistics"}
-              />
+            {email ? (
+              // 🔐 Authenticated view
+              <nav className="flex space-x-5 items-center">
+                <NavItem
+                  to="/home"
+                  label="Home"
+                  active={location.pathname === "/home"}
+                />
+                <NavItem
+                  to="/history"
+                  label="History"
+                  active={location.pathname === "/history"}
+                />
+                <NavItem
+                  to="/statistics"
+                  label="Statistics"
+                  active={location.pathname === "/statistics"}
+                />
 
-              {/* Settings Button */}
-              <button
-                onClick={() => setIsSettingsOpen(true)}
-                className="relative cursor-pointer text-gray-700 dark:text-gray-300 
-    hover:text-indigo-600 dark:hover:text-indigo-400 transition flex items-center gap-1
-    before:absolute before:left-0 before:-bottom-1 before:w-0 before:h-[2px] 
-    before:bg-indigo-600 dark:before:bg-indigo-400 before:transition-all before:duration-300 
-    hover:before:w-full"
-              >
-                ⚙ Settings
-              </button>
+                <button
+                  onClick={() => setIsSettingsOpen(true)}
+                  className="relative cursor-pointer text-gray-700 dark:text-gray-300 
+                  hover:text-indigo-600 dark:hover:text-indigo-400 transition flex items-center gap-1
+                  before:absolute before:left-0 before:-bottom-1 before:w-0 before:h-[2px] 
+                  before:bg-indigo-600 dark:before:bg-indigo-400 before:transition-all before:duration-300 
+                  hover:before:w-full"
+                >
+                  ⚙ Settings
+                </button>
 
-              {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="cursor-pointer px-3 py-1.5 border border-red-500 text-red-500 rounded-lg text-sm font-medium 
+                  transition-all duration-200 hover:bg-red-500 hover:text-white"
+                >
+                  Logout
+                </button>
+              </nav>
+            ) : (
+              // 🔓 Unauthenticated view
               <button
-                onClick={handleLogout}
-                className="cursor-pointer px-3 py-1.5 border border-red-500 text-red-500 rounded-lg text-sm font-medium 
-                transition-all duration-200 hover:bg-red-500 hover:text-white"
+                onClick={handleGoogleSignIn}
+                className="cursor-pointer px-4 py-1.5 border border-indigo-600 text-indigo-600 rounded-lg text-sm font-medium 
+                transition-all duration-200 hover:bg-indigo-600 hover:text-white"
               >
-                Logout
+                Login
               </button>
-            </nav>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Mobile Header */}
-      <MobileHeader
-        onSettingsOpen={setIsSettingsOpen}
-        onLogout={handleLogout}
-      />
+      {/* Mobile Header only if authenticated */}
+      {email && (
+        <MobileHeader onSettingsOpen={setIsSettingsOpen} onLogout={handleLogout} />
+      )}
 
       {/* Settings Modal */}
       <SettingsModal state={isSettingsOpen} onClose={setIsSettingsOpen} />
