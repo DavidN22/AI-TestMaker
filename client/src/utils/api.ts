@@ -2,6 +2,19 @@
 import axios from "axios";
 import { QuizResult } from "@/Types/Results";
 
+import { showError } from "../store/Slices/toastSlice";
+import store from "../store/store";
+
+const handleApiError = (error: unknown): void => {
+  const message =
+    axios.isAxiosError(error) && error.response?.data?.message
+      ? error.response.data.message
+      : error instanceof Error
+      ? error.message
+      : "An unexpected error occurred.";
+  store.dispatch(showError(message));
+};
+
 export const fetchTest = async ({
   testName,
   numQuestions,
@@ -11,17 +24,26 @@ export const fetchTest = async ({
   numQuestions: number;
   weakPointMode: boolean;
 }) => {
-  const response = await axios.post(
-    "/api/ai/getTest",
-    { testName, numQuestions, weakPointMode },
-    { withCredentials: true }
-  );
-  return response.data.message.questions;
+  try {
+    const response = await axios.post(
+      "/api/ai/getTest",
+      { testName, numQuestions, weakPointMode },
+      { withCredentials: true }
+    );
+    return response.data.message.questions;
+  } catch (error) {
+    handleApiError(error);
+    throw error; // optional: rethrow if you want caller to handle it too
+  }
 };
 
 export const deleteUserAccount = async () => {
-  await axios.delete("/api/db/delete", { withCredentials: true });
-  await axios.get("/api/auth/logout");
+  try {
+    await axios.delete("/api/db/delete", { withCredentials: true });
+    await axios.get("/api/auth/logout");
+  } catch (error) {
+    handleApiError(error);
+  }
 };
 
 export const reviewTest = async ({
@@ -31,32 +53,35 @@ export const reviewTest = async ({
   results: QuizResult;
   testName: string;
 }) => {
-  const reviewRes = await axios.post("/api/ai/reviewTest", { results });
-  const { weakpoints, summary } = reviewRes.data.message;
+  try {
+    const reviewRes = await axios.post("/api/ai/reviewTest", { results });
+    const { weakpoints, summary } = reviewRes.data.message;
 
-  const resultsWithWeakPoints = {
-    ...results,
-    testName,
-    weakPoints: weakpoints,
-    summary,
-  };
+    const resultsWithWeakPoints = {
+      ...results,
+      testName,
+      weakPoints: weakpoints,
+      summary,
+    };
 
-  await axios.post(
-    "/api/db/tests",
-    { resultsWithWeakPoints },
-    { withCredentials: true }
-  );
+    await axios.post(
+      "/api/db/tests",
+      { resultsWithWeakPoints },
+      { withCredentials: true }
+    );
 
-  return resultsWithWeakPoints;
+    return resultsWithWeakPoints;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
 };
 
 export const handleLogout = async () => {
-    try {
-      await axios.get('/api/auth/logout');
-       window.location.href = '/';
-      
-    
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  try {
+    await axios.get("/api/auth/logout");
+    window.location.href = "/";
+  } catch (error) {
+    handleApiError(error);
+  }
+};

@@ -5,14 +5,17 @@ import SkeletonLoader from "../Loading/SkeletonLoader"; // Import SkeletonLoader
 import { TestResults } from "@/Types/Results";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
 
-
 export default function HistoryPage() {
-  const {data: testHistory = [], error, isLoading:loading} = useGetTestResultsQuery();
+  const {
+    data: testHistory = [],
+    error,
+    isLoading: loading,
+  } = useGetTestResultsQuery();
   const [filteredHistory, setFilteredHistory] = useState<TestResults[]>([]);
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<"recent" | "oldest">("recent");
   const [dateFilter, setDateFilter] = useState("");
-  console.log(dateFilter)
+  console.log(dateFilter);
 
   // Filter & Sort logic
   useEffect(() => {
@@ -49,13 +52,13 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 bg-white dark:bg-[#1E1E1E] min-h-screen text-gray-900 dark:text-gray-100">
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
         Test History
       </h1>
       {error && (
         <p className="text-red-500">
-          Error: { 'status' in error ? error.status : error.message }
+          Error: {"status" in error ? error.status : error.message}
         </p>
       )}
       {/* Filter Section */}
@@ -64,7 +67,7 @@ export default function HistoryPage() {
         <input
           type="text"
           placeholder="Search by test name..."
-          className="p-2 border rounded-md w-full max-w-md"
+          className="p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-md w-full max-w-md"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -72,7 +75,7 @@ export default function HistoryPage() {
         {/* Sort Icon (Click to Toggle Sorting) */}
         <button
           onClick={toggleSortOrder}
-          className="p-2 border rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+          className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-200 dark:bg-[#1E1E1E] hover:bg-gray-300 dark:hover:bg-gray-700 transition-all"
         >
           {sortOrder === "recent" ? (
             <FaSortAmountDown
@@ -92,7 +95,7 @@ export default function HistoryPage() {
         {/* Date Filter (Calendar) */}
         <input
           type="date"
-          className="p-2 border rounded-md"
+          className="p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white rounded-md"
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
         />

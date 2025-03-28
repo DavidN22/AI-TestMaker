@@ -1,33 +1,20 @@
 import TestCard from "./TestCard";
 import { RootState } from "../../store/store";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import SidebarFilter from "./SidebarFilter";
-import { clearError } from "../../store/Slices/toastSlice";
-import { toast, ToastContainer } from "react-toastify";
-import { useEffect } from "react";
+
+
 export default function HomePage() {
   const filteredTests = useSelector(
     (state: RootState) => state.filter.filteredTests
   );
-  const dispatch = useDispatch();
-  const toastErrorMessage = useSelector((state: RootState) => state.toast.message);
-  useEffect(() => {
-    if (toastErrorMessage) {
-      toast.error(toastErrorMessage, { position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored", });
-      dispatch(clearError());
-    }
-  }, [toastErrorMessage, dispatch]);
+  
+
+
   console.log("rendered");
   return (
-    <div className="flex flex-1 overflow-hidden">
-      <ToastContainer/>
+    <div className="flex flex-1 overflow-hidden bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
+
       {/* Sidebar */}
       <SidebarFilter />
 

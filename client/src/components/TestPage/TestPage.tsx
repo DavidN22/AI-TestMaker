@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import TestQuestion from "./TestQuestions";
 import TestSidebar from "./TestSidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Question } from "@/Types/Question";
 import gradeQuiz from "../../utils/gradeQuiz";
-import {reviewTest} from "../../utils/api";
+import { reviewTest } from "../../utils/api";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
 import CancelTest from "../models/CancelTestModal";
@@ -18,6 +18,17 @@ export default function TestPage() {
   const { refetch } = useGetTestResultsQuery();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
+
+
+  useEffect(() => {
+    if (
+      !location.state ||
+      !location.state.testName ||
+      !location.state.questions
+    ) {
+      navigate("/home", { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   const {
     testName,
@@ -46,24 +57,27 @@ export default function TestPage() {
     navigate("/", { replace: true, state: {} });
   };
 
-// In your onSubmit function
-const onSubmit = async () => {
-  setIsSubmitOpen(false);
-  setLoading(true);
+  // In your onSubmit function
+  const onSubmit = async () => {
+    setIsSubmitOpen(false);
+    setLoading(true);
 
-  const results = gradeQuiz(questions);
-  try {
-    await reviewTest({ results, testName });
-    refetch();
-    navigate("/history", { replace: true });
-  } catch (error) {
-    navigate("/history", { replace: true });
-    console.error("Error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+    const results = gradeQuiz(questions);
+    try {
+      await reviewTest({ results, testName });
+      refetch();
+      navigate("/history", { replace: true });
+    } catch (error) {
 
+      navigate("/home", { replace: true });
+      setLoading(false);
+    
+      
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAnswerSelect = (answer: string) => {
     setQuestions((prev) =>
@@ -91,7 +105,8 @@ const onSubmit = async () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-white dark:bg-[#1E1E1E] text-black dark:text-white">
+
       {/* Sidebar - hidden on mobile */}
       <TestSidebar
         className="hidden lg:flex"
@@ -115,9 +130,9 @@ const onSubmit = async () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.3 }}
-          className="w-full h-[100dvh] lg:h-auto lg:max-w-2xl bg-white dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto"
-        >
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+          className="w-full h-[100dvh] lg:h-auto lg:max-w-2xl bg-white dark:bg-[#2A2A2A] p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto border-t lg:border border-gray-200 dark:border-gray-700"
+          >
+          <h2 className="text-lg font-bold text-black dark:text-white mb-4">
             {testName}
           </h2>
 
@@ -134,10 +149,10 @@ const onSubmit = async () => {
             <button
               onClick={() => handleQuestionChange(currentIndex - 1)}
               disabled={currentIndex === 0}
-              className={`flex-1 px-6 py-3 rounded-lg font-semibold text-sm transition-all ${
+              className={`flex-1 px-6 py-3 rounded-md font-medium text-sm transition-all ${
                 currentIndex === 0
-                  ? "bg-gray-300 dark:bg-gray-600 cursor-not-allowed text-gray-500 dark:text-gray-400"
-                  : "bg-gray-900 dark:bg-gray-700 text-white hover:bg-gray-800 dark:hover:bg-gray-600"
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
+                  : "bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100"
               }`}
             >
               Previous
@@ -145,7 +160,7 @@ const onSubmit = async () => {
 
             <button
               onClick={() => setShowHint(!showHint)}
-              className="px-6 py-3 bg-yellow-500 text-white rounded-lg font-semibold text-sm hover:bg-yellow-600 transition-all"
+              className="px-6 py-3 bg-yellow-500 text-black dark:text-black rounded-md font-medium text-sm hover:bg-yellow-400 transition-all"
             >
               {showHint ? "Hide Hint" : "Show Hint"}
             </button>
@@ -153,10 +168,10 @@ const onSubmit = async () => {
             <button
               onClick={() => handleQuestionChange(currentIndex + 1)}
               disabled={currentIndex === questions.length - 1}
-              className={`flex-1 px-6 py-3 rounded-lg font-semibold text-sm transition-all ${
+              className={`flex-1 px-6 py-3 rounded-md font-medium text-sm transition-all ${
                 currentIndex === questions.length - 1
-                  ? "bg-gray-300 dark:bg-gray-600 cursor-not-allowed text-gray-500 dark:text-gray-400"
-                  : "bg-gray-900 dark:bg-gray-700 text-white hover:bg-gray-800 dark:hover:bg-gray-600"
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
+                  : "bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100"
               }`}
             >
               Next
@@ -167,13 +182,13 @@ const onSubmit = async () => {
           <div className="mt-6 flex justify-between lg:hidden">
             <button
               onClick={() => setIsCancelOpen(true)}
-              className="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
+              className="px-4 py-2 border border-red-600 text-red-600 bg-white dark:bg-black rounded-md text-sm hover:bg-red-50 dark:hover:bg-red-900 transition"
             >
               Cancel Test
             </button>
             <button
               onClick={() => setIsSubmitOpen(true)}
-              className="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700"
+              className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-md text-sm hover:bg-neutral-900 dark:hover:bg-neutral-100 transition"
             >
               Submit Test
             </button>

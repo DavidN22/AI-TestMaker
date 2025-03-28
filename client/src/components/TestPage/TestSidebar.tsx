@@ -3,6 +3,7 @@ import CancelTest from "../models/CancelTestModal";
 import SubmitTest from "../models/SubmitTestModal";
 import { Question } from "../../Types/Question";
 
+
 interface TestSidebarProps {
   questions: Question[];
   currentIndex: number;
@@ -12,7 +13,7 @@ interface TestSidebarProps {
   onCancel: () => void;
   onSubmit: () => void;
   className?: string;
-}
+} 
 
 export default function TestSidebar({
   questions,
@@ -77,96 +78,108 @@ export default function TestSidebar({
     question: { user_answer?: string | string[]; select_two?: boolean }
   ) => {
     if (index === currentIndex) {
-      return "bg-gray-700 text-white";
+      return "bg-black text-white dark:bg-white dark:text-black";
     } else if (
       question.select_two &&
       Array.isArray(question.user_answer) &&
       question.user_answer.length === 1
     ) {
-      return "bg-yellow-500 text-white hover:bg-yellow-400";
+      return "bg-yellow-500 text-black hover:bg-yellow-400";
     } else if (isQuestionAnswered(question.user_answer, question.select_two)) {
       return "bg-green-500 text-white hover:bg-green-400";
     } else {
-      return "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600";
+      return "bg-gray-100 text-black hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700";
     }
   };
+  
+  
 
   return (
-<aside className={`w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-lg border border-gray-300 dark:border-gray-700 transition-all flex flex-col justify-between ${className}`}>
-{/* Header */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {title}
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
-          Basic AWS knowledge assessment
-        </p>
+<aside
+  className={`w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-md border border-gray-200 dark:border-gray-700 transition-all flex flex-col justify-between ${className}`}
+>
+  {/* Header */}
+  <div>
+    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+      {title}
+    </h2>
+    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+      Basic AWS knowledge assessment
+    </p>
 
-        {/* Timer */}
-        {initialTimer > 0 && (
-          <div className={`flex items-center mt-4 ${timeRemaining < 60 ? "text-red-500 font-bold" : "text-gray-700 dark:text-gray-300"}`}>
-            ⏳ <span className="ml-2">{formatTime(timeRemaining)}</span>
-          </div>
-        )}
-        {/* Progress */}
-        <div className="mt-4">
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            Question {currentIndex + 1} of {questions.length}
-          </span>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 h-1 rounded-full mt-1">
-            <div
-              className="bg-blue-500 h-1 rounded-full"
-              style={{
-                width: `${((currentIndex + 1) / questions.length) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Question List */}
-        <div className="grid grid-cols-5 gap-1 mt-6">
-          {questions.map((q, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`p-3 text-sm font-medium rounded-md transition ${getButtonClass(
-                index,
-                q
-              )}`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+    {/* Timer */}
+    {initialTimer > 0 && (
+      <div
+        className={`flex items-center mt-4 text-lg ${
+          timeRemaining < 60
+            ? "text-red-500 font-bold"
+            : "text-gray-700 dark:text-gray-300"
+        }`}
+      >
+        ⏳ <span className="ml-2">{formatTime(timeRemaining)}</span>
       </div>
+    )}
 
-      {/* Bottom Buttons */}
-      <div className="mt-8">
-        <button
-          className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500"
-          onClick={() => setIsCancelOpen(true)}
-        >
-          Cancel Test
-        </button>
-        <button
-          className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-500 mt-3"
-          onClick={() => setIsSubmitOpen(true)}
-        >
-          Submit Test
-        </button>
+    {/* Progress */}
+    <div className="mt-5">
+      <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+        Question {currentIndex + 1} of {questions.length}
       </div>
+      <div className="w-full bg-gray-200 dark:bg-gray-800 h-2 rounded-full">
+        <div
+          className="bg-black dark:bg-white h-2 rounded-full transition-all"
+          style={{
+            width: `${((currentIndex + 1) / questions.length) * 100}%`,
+          }}
+        />
+      </div>
+    </div>
 
-      {/* Modals */}
-      <CancelTest
-        isOpen={isCancelOpen}
-        setIsOpen={setIsCancelOpen}
-        onCancel={onCancel}
-      />
-      <SubmitTest
-        isOpen={isSubmitOpen}
-        setIsOpen={setIsSubmitOpen}
-        onSubmit={handleSubmit}
-      />
-    </aside>
+    {/* Question List */}
+    <div className="grid grid-cols-5 gap-2 mt-6">
+      {questions.map((q, index) => (
+        <button
+          key={index}
+          onClick={() => setCurrentIndex(index)}
+          className={`text-sm font-semibold py-2 rounded-md transition-all ${
+            getButtonClass(index, q)
+          }`}
+        >
+          {index + 1}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {/* Bottom Buttons */}
+  <div className="mt-8 space-y-3">
+    <button
+      className="w-full bg-white dark:bg-[#1E1E1E] border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900 transition-all"
+      onClick={() => setIsCancelOpen(true)}
+    >
+      Cancel Test
+    </button>
+    <button
+      className="w-full bg-black dark:bg-white text-white dark:text-black py-2 rounded-md hover:bg-gray-900 dark:hover:bg-gray-200 transition-all"
+      onClick={() => setIsSubmitOpen(true)}
+    >
+      Submit Test
+    </button>
+  </div>
+
+  {/* Modals */}
+  <CancelTest
+    isOpen={isCancelOpen}
+    setIsOpen={setIsCancelOpen}
+    onCancel={onCancel}
+  />
+  <SubmitTest
+    isOpen={isSubmitOpen}
+    setIsOpen={setIsSubmitOpen}
+    onSubmit={handleSubmit}
+  />
+</aside>
+
+
   );
 }

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function HistoryView() {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen dark:bg-[#1E1E1E]">
       <Header />
       <motion.div
       className="flex flex-col h-screen"

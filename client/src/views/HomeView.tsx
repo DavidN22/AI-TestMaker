@@ -6,7 +6,7 @@ export default function HomeView() {
 
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen dark:bg-[#1E1E1E]">
       <Header />
       <motion.div
       className="flex flex-1 overflow-hidden"

@@ -36,8 +36,9 @@ export default function TestCard({ title, description }: TestCardProps) {
       </p>
 
       {/* Start Button */}
-      <button className="cursor-pointer mt-auto bg-gray-900 dark:bg-gray-700 text-white text-sm font-medium 
-      px-4 py-2 rounded-md transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-600">
+     <button className="cursor-pointer mt-auto bg-gray-900 dark:bg-white text-white dark:text-black text-sm font-medium 
+px-4 py-2 rounded-md transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-200">
+
         Start Test →
       </button>
       <TestConfigModal testName={title} state={isModalOpen} setIsOpen={setIsModalOpen} />

@@ -5,9 +5,6 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ModalTemplate from "./ModalTemplate";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { Info } from "lucide-react";
-import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import { showError } from "../../store/Slices/toastSlice";
 import { fetchTest } from "../../utils/api.ts";
 import axios from "axios";
 
@@ -29,8 +26,7 @@ export default function TestConfigModal({
   const [loading, setLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
+
   
 
   const handleStart = async () => {
@@ -48,10 +44,9 @@ export default function TestConfigModal({
       setIsOpen(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-        dispatch(showError(error.response.data.message));
-      } else {
-        dispatch(showError("An unexpected error occurred."));
-      }
+        console.log("hit")
+        setIsOpen(false);
+      } 
       setLoading(false);
       console.error("Error fetching test questions:", error);
     }

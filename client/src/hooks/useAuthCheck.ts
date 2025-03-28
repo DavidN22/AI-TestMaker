@@ -6,7 +6,7 @@ import axios from "axios";
 
 const useAuthCheck = () => {
   const dispatch = useDispatch();
-
+console.log("hit")
   useEffect(() => {
     const checkUser = async () => {
       try {

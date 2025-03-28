@@ -43,7 +43,7 @@ export default function ModalTemplate({
         className="fixed inset-0 bg-black/30 duration-200 ease-out data-[closed]:opacity-0"
       />
 
-      <div className="fixed inset-0 flex items-center justify-center p-4">
+      <div className="fixed inset-0 flex items-center justify-center  p-4">
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -51,7 +51,7 @@ export default function ModalTemplate({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full ${
+              className={`bg-white dark:bg-[#1E1E1E] rounded-lg shadow-lg p-6 w-full ${
                 sizeClasses[size]
               } ${fullScreen ? "h-[90vh] max-h-[90vh] overflow-y-auto" : "max-h-[80vh]"} overflow-visible`}
             >

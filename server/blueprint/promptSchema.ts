@@ -15,6 +15,16 @@ export const promptSchema = `{
     {
       "question": "QUESTION_TEXT",
       "answers": {
+        "a": "True",
+        "b": "False",
+      },
+      "correct_answer": ["CORRECT_ANSWER"],
+      "hint": "HINT_TEXT",
+      "explanation": "EXPLANATION_TEXT"
+    },
+    {
+      "question": "QUESTION_TEXT",
+      "answers": {
         "a": "OPTION_A",
         "b": "OPTION_B",
         "c": "OPTION_C",

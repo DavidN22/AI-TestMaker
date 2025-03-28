@@ -24,7 +24,7 @@ export default function SidebarFilter() {
           value={search}
           onChange={handleSearchChange}
           placeholder="Search..."
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-lg"
         />
       </div>
 
@@ -32,7 +32,10 @@ export default function SidebarFilter() {
       <div className="mt-6">
         <h3 className="text-md font-medium text-gray-800 dark:text-gray-300 mb-2">Cloud Provider</h3>
         {["AWS", "Azure", "Google Cloud"].map((provider) => (
-          <label key={provider} className="flex items-center justify-between py-2 px-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg">
+        <label
+  key={provider}
+  className="flex items-center justify-between py-2 px-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg"
+>
             <span>{provider}</span>
             <input
               type="checkbox"
@@ -48,7 +51,10 @@ export default function SidebarFilter() {
       <div className="mt-6">
         <h3 className="text-md font-medium text-gray-800 dark:text-gray-300 mb-2">Difficulty</h3>
         {["Beginner", "Intermediate", "Advanced"].map((level) => (
-          <label key={level} className="flex items-center justify-between py-2 px-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg">
+         <label
+         key={level}
+         className="flex items-center justify-between py-2 px-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg"
+       >
             <span>{level}</span>
             <input
               type="radio"
@@ -64,9 +70,12 @@ export default function SidebarFilter() {
       </div>
 
       {/* Reset Button */}
-      <button onClick={resetFilters} className="cursour-pointer mt-8 w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600">
-        Reset Filters
-      </button>
+      <button
+  onClick={resetFilters}
+  className="cursor-pointer mt-8 w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors"
+>
+  Reset Filters
+</button>
     </aside>
   );
 }

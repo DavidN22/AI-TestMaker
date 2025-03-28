@@ -4,19 +4,51 @@ import HomeView from "./views/HomeView";
 import TestView from "./views/TestView";
 import HistoryView from "./views/HistoryView";
 import LoadingPlaceholder from "./components/Loading/Placeholder";
-import Landing from "./views/Landing";
+import Landing from "./views/LandingView";
 import ProtectedRoute from "./hooks/ProtectedRoute";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./store/store";
+import { toast } from "react-toastify";
+import { clearError } from "./store/Slices/toastSlice";
 import useAuthCheck from "./hooks/useAuthCheck";
+import { ToastContainer } from "react-toastify";
 export default function App() {
  
-
-
+const dispatch = useDispatch();
+const toastErrorMessage = useSelector(
+  (state: RootState) => state.toast.message
+);
 useAuthCheck();
 
-
+useEffect(() => {
+  if (toastErrorMessage) {
+    toast.error(toastErrorMessage, { position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored", });
+    dispatch(clearError());
+  }
+}, [toastErrorMessage, dispatch]);
 
   return (
     <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route
