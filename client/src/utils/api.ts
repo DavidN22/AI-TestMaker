@@ -1,19 +1,7 @@
 // src/utils/api.ts
 import axios from "axios";
 import { QuizResult } from "@/Types/Results";
-
-import { showError } from "../store/Slices/toastSlice";
-import store from "../store/store";
-
-const handleApiError = (error: unknown): void => {
-  const message =
-    axios.isAxiosError(error) && error.response?.data?.message
-      ? error.response.data.message
-      : error instanceof Error
-      ? error.message
-      : "An unexpected error occurred.";
-  store.dispatch(showError(message));
-};
+import { handleApiError } from "./handleApiErrors";
 
 export const fetchTest = async ({
   testName,
