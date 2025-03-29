@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import CancelTest from "../models/CancelTestModal";
 import SubmitTest from "../models/SubmitTestModal";
 import { Question } from "../../Types/Question";
+import { CheckCircle, Circle, AlertTriangle } from "lucide-react";
 
 
 interface TestSidebarProps {
@@ -73,24 +74,22 @@ export default function TestSidebar({
     }
   };
 
-  const getButtonClass = (
-    index: number,
+  const getQuestionIcon = (
     question: { user_answer?: string | string[]; select_two?: boolean }
   ) => {
-    if (index === currentIndex) {
-      return "bg-black text-white dark:bg-white dark:text-black";
-    } else if (
+    if (
       question.select_two &&
       Array.isArray(question.user_answer) &&
       question.user_answer.length === 1
     ) {
-      return "bg-yellow-500 text-black hover:bg-yellow-400";
+      return <AlertTriangle className="text-yellow-500 w-4 h-4" />;
     } else if (isQuestionAnswered(question.user_answer, question.select_two)) {
-      return "bg-green-500 text-white hover:bg-green-400";
+      return <CheckCircle className="text-green-500 w-4 h-4" />;
     } else {
-      return "bg-gray-100 text-black hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700";
+      return <Circle className="text-gray-400 w-4 h-4" />;
     }
   };
+  
   
   
 
@@ -137,18 +136,22 @@ export default function TestSidebar({
 
     {/* Question List */}
     <div className="grid grid-cols-5 gap-2 mt-6">
-      {questions.map((q, index) => (
-        <button
-          key={index}
-          onClick={() => setCurrentIndex(index)}
-          className={`text-sm font-semibold py-2 rounded-md transition-all ${
-            getButtonClass(index, q)
-          }`}
-        >
-          {index + 1}
-        </button>
-      ))}
-    </div>
+  {questions.map((q, index) => (
+    <button
+      key={index}
+      onClick={() => setCurrentIndex(index)}
+      className={`flex flex-col items-center justify-center text-xs font-semibold py-2 rounded-md transition-all border ${
+        index === currentIndex
+          ? "border-black dark:border-white"
+          : "border-gray-300 dark:border-gray-600"
+      }`}
+    >
+      <span>{index + 1}</span>
+      {getQuestionIcon(q)}
+    </button>
+  ))}
+</div>
+
   </div>
 
   {/* Bottom Buttons */}

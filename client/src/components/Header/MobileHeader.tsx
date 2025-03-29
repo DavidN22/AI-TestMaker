@@ -1,7 +1,12 @@
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import MobileFilterModal from "../models/MobileFilterModal";
 import { useState } from "react";
+import DarkModeToggle from "./DarkModeToggle";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { Menu, X, Home, History, Settings, BarChart, LogOut } from "lucide-react";
+
 export default function MobileHeader({
   onSettingsOpen,
   onLogout,
@@ -10,93 +15,109 @@ export default function MobileHeader({
   onLogout: () => void;
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const email = useSelector((state: RootState) => state.auth.email);
+
+  const showFilterModal = location.pathname === "/home";
 
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden bg-white dark:bg-[#1A1A1A] shadow-md border-b border-gray-200 dark:border-gray-700 sticky top-0 left-0 right-0 w-full z-50">
-        <div className="max-w-6xl mx-auto px-5">
-          <MobileFilterModal />
+      <header className="md:hidden bg-white dark:bg-[#121212] shadow-sm sticky top-0 w-full z-50">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-wide">
-              MyApp
-            </h1>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="text-gray-800 dark:text-gray-300 hover:text-gray-600 dark:hover:text-gray-400 transition-all"
-              onClick={() => setIsMobileMenuOpen(true)}
+            {/* Logo */}
+            <Link
+              to="/"
+              className="text-xl font-bold text-gray-900 dark:text-gray-100"
             >
-              ☰
-            </button>
+              MyApp
+            </Link>
+
+            {/* Icons container */}
+            <div className="flex items-center gap-4">
+              <DarkModeToggle />
+              {showFilterModal && <MobileFilterModal />}
+              <button
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
+                onClick={() => setIsMobileMenuOpen(true)}
+              >
+                <Menu size={24} />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Fullscreen Mobile Menu */}
-      <motion.div
-        initial={{ x: "-100%" }}
-        animate={{ x: isMobileMenuOpen ? 0 : "-100%" }}
-        exit={{ x: "-100%" }}
-        transition={{ type: "spring", stiffness: 250, damping: 40 }}
-        className="fixed top-0 left-0 w-full h-full bg-gradient-to-b from-white/90 to-gray-100 dark:from-[#1A1A1A]/90 dark:to-[#121212]/90 backdrop-blur-lg z-50 flex flex-col px-8 py-10"
-      >
-        {/* Close Button */}
-        <button
-          className="absolute top-6 right-6 text-gray-700 dark:text-gray-300 text-3xl hover:text-gray-900 dark:hover:text-gray-100 transition-all"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          ✕
-        </button>
-
-        {/* Navigation Links */}
-        <nav className="mt-24 space-y-6">
-          {[
-            { to: "/home", label: "🏠 Home" },
-            { to: "/history", label: "📜 History" },
-            { to: "/statistics", label: "📊 Statistics" },
-          ].map((item) => (
-            <Link
-              key={item.to}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed inset-0 bg-white dark:bg-[#121212] z-50 flex flex-col px-6 py-8"
+          >
+            <button
+              className="self-end text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
               onClick={() => setIsMobileMenuOpen(false)}
-              to={item.to}
-              className="block text-lg font-semibold text-gray-900 dark:text-white py-4 px-6 
-              border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800
-              hover:border-gray-500 dark:hover:border-gray-500 transition-all shadow-md"
             >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+              <X size={24} />
+            </button>
 
-        {/* Divider Line */}
-        <div className="mt-10 border-t border-gray-300 dark:border-gray-700 w-4/5 mx-auto opacity-70"></div>
+            <div className="mt-10 mb-6 text-center">
+              <p className="text-sm text-gray-500 dark:text-gray-400">Signed in as</p>
+              <p className="text-md font-semibold text-gray-900 dark:text-gray-100 truncate px-2">
+                {email}
+              </p>
+            </div>
 
-        {/* Action Buttons */}
-        <div className="mt-10 space-y-4">
-          {/* Settings Button */}
-          <button
-            onClick={() => onSettingsOpen(true)}
-            className="w-full text-lg font-semibold text-gray-900 dark:text-white py-4 px-6 
-            border border-gray-400 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800
-            hover:border-gray-500 dark:hover:border-gray-500 transition-all shadow-md"
-          >
-            ⚙ Settings
-          </button>
+            <nav className="flex-1 space-y-3">
+              {[{ to: "/home", label: "Home", Icon: Home },
+                { to: "/history", label: "History", Icon: History },
+                { to: "/statistics", label: "Statistics", Icon: BarChart },
+              ].map(({ to, label, Icon }) => (
+                <Link
+                  key={to}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  to={to}
+                  className="flex items-center gap-3 py-3 px-4 rounded-lg bg-gray-50 dark:bg-[#1A1A1A] hover:bg-gray-100 dark:hover:bg-[#232323] transition"
+                >
+                  <Icon size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-gray-800 dark:text-gray-200 font-medium">
+                    {label}
+                  </span>
+                </Link>
+              ))}
+            </nav>
 
-          {/* Logout Button */}
-          <button
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              onLogout();
-            }}
-            className="w-full bg-red-600 text-white text-lg font-semibold py-4 px-6 rounded-lg 
-            border border-red-700 hover:border-gray-500 dark:hover:border-gray-500 transition-all shadow-lg"
-          >
-            🚪 Logout
-          </button>
-        </div>
-      </motion.div>
+            <div className="border-t border-gray-200 dark:border-gray-700 w-full my-6"></div>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => onSettingsOpen(true)}
+                className="flex items-center gap-3 py-3 px-4 rounded-lg bg-gray-50 dark:bg-[#1A1A1A] hover:bg-gray-100 dark:hover:bg-[#232323] transition w-full"
+              >
+                <Settings size={20} className="text-gray-700 dark:text-gray-300" />
+                <span className="text-gray-800 dark:text-gray-200 font-medium">
+                  Settings
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onLogout();
+                }}
+                className="flex items-center gap-3 py-3 px-4 rounded-lg bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 transition w-full"
+              >
+                <LogOut size={20} className="text-white" />
+                <span className="text-white font-medium">Logout</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

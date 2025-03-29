@@ -1,21 +1,37 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import ModalTemplate from "./ModalTemplate";
 import { RootState } from "../../store/store";
-import { deleteUserAccount } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
+import { useApi } from "../../utils/api";
+import { showSuccess } from "../../store/Slices/toastSlice";
+import CustomCombobox from "./CustomCombobox";
+
 interface SettingsModalProps {
   onClose: (isSettingOpen: boolean) => void;
   state: boolean;
 }
 
-
-
 export default function SettingsModal({ state, onClose }: SettingsModalProps) {
+  const { deleteUserAccount } = useApi();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
 
+  const modelOptions = ["gemini", "gpt-4o", "deepseek", "claude"];
+  const [selectedModel, setSelectedModel] = useState("gemini");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("languageModel") || "gemini";
+    setSelectedModel(stored);
+  }, []);
+
+  const handleModelChange = (model: string) => {
+    setSelectedModel(model);
+    localStorage.setItem("languageModel", model);
+    dispatch(showSuccess(`Language model set to ${model}`));
+  };
 
   const deleteAccount = async () => {
     try {
@@ -40,7 +56,17 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
           </div>
         </div>
 
-        {/* Delete Account Button - Opens Confirmation */}
+        {/* Language Model Selector */}
+        <CustomCombobox
+          label="Current Language Model"
+          options={modelOptions}
+          selected={selectedModel}
+          onChange={handleModelChange}
+          disabledOptions={modelOptions.filter((m) => m !== "gemini")}
+          displayValue={(model) => model.charAt(0).toUpperCase() + model.slice(1)}
+        />
+
+        {/* Delete Account Button */}
         <div className="mt-12">
           <button
             onClick={() => setIsConfirmOpen(true)}
@@ -61,7 +87,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
         </div>
       </ModalTemplate>
 
-      {/* Reusable Confirmation Modal */}
+      {/* Confirm Delete Modal */}
       <ModalTemplate
         isOpen={isConfirmOpen}
         setIsOpen={setIsConfirmOpen}
@@ -81,7 +107,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
           <button
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
             onClick={() => {
-              deleteAccount() // Replace with actual delete logic
+              deleteAccount();
               setIsConfirmOpen(false);
             }}
           >

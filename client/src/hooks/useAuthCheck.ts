@@ -6,7 +6,7 @@ import axios from "axios";
 
 const useAuthCheck = () => {
   const dispatch = useDispatch();
-console.log("hit")
+
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -22,7 +22,6 @@ console.log("hit")
       } catch {
         dispatch(setAuthLoading(false));
         dispatch(logout());
-        console.log("User not logged in");
       }
     };
     checkUser();

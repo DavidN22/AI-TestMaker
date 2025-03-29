@@ -7,28 +7,28 @@ const faqs = [
   {
     question: "How do I create an account?",
     answer:
-      "Simply click the sign-up button and follow the instructions. You'll be set up in no time.",
+      "Simply log in with your Google account. No additional sign-up is required.",
   },
   {
     question: "Are the tests customizable?",
     answer:
-      "Absolutely! You can choose difficulty levels, topics, question types, and durations.",
+      "Absolutely! You can choose topics, duration and different modes like weakpoint!",
   },
   {
     question: "Can I track my progress?",
     answer:
-      "Yes, Testify AI provides detailed analytics on your performance to highlight strengths and areas for improvement.",
+      "Yes, Testify AI provides detailed analytics on your performance and a history to view past exams and areas for improvement.",
   },
   {
-    question: "Is my data secure?",
+    question: "Will more features be added?",
     answer:
-      "We take security seriously. All data is securely stored, encrypted, and never shared.",
+      " Yes! More features will be added including a more detailed analytics dashboard, and a way to create your own tests!",
   },
   {
-    question: "Do you provide certifications?",
-    answer:
-      "While we don't issue official certifications, our exams thoroughly prepare you for official AWS, Azure, and GCP certification tests.",
-  },
+    question: "Is this free to use?",
+    answer: "Yes, it's currently free to use while in testing phase, but it may become a paid service in the future.",
+  }
+  
 ];
 
 const FAQSection = () => {

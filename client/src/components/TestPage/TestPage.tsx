@@ -5,13 +5,14 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Question } from "@/Types/Question";
 import gradeQuiz from "../../utils/gradeQuiz";
-import { reviewTest } from "../../utils/api";
+import { useApi } from "../../utils/api";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
 import CancelTest from "../models/CancelTestModal";
 import SubmitTest from "../models/SubmitTestModal";
 
 export default function TestPage() {
+  const { reviewTest } = useApi();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -101,8 +102,10 @@ export default function TestPage() {
   };
 
   const handleQuestionChange = (index: number) => {
+    setShowHint(false);
     setCurrentIndex(index);
   };
+  
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-[#1E1E1E] text-black dark:text-white">
@@ -130,7 +133,7 @@ export default function TestPage() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.3 }}
-          className="w-full h-[100dvh] lg:h-auto lg:max-w-2xl bg-white dark:bg-[#2A2A2A] p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto border-t lg:border border-gray-200 dark:border-gray-700"
+          className="w-full h-[100dvh] lg:h-auto lg:max-w-4xl bg-white dark:bg-[#2A2A2A] p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto border-t lg:border border-gray-200 dark:border-gray-700"
           >
           <h2 className="text-lg font-bold text-black dark:text-white mb-4">
             {testName}

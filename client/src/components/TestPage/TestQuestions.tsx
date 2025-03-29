@@ -76,11 +76,16 @@ export default function TestQuestion({
       </div>
 
       {/* Hint Section */}
-      {showHint && (
-        <div className="mt-6 p-4 bg-yellow-100 dark:bg-yellow-600 text-gray-900 dark:text-white rounded-md text-sm sm:text-base">
-          <span className="font-semibold">Hint: </span> {hint}
-        </div>
-      )}
+ <div
+  className="mt-6 min-h-[3.5rem] p-4 rounded-md text-sm sm:text-base transition-all duration-300 bg-yellow-100 dark:bg-yellow-600 text-gray-900 dark:text-white"
+  style={{
+    visibility: showHint ? "visible" : "hidden",
+    opacity: showHint ? 1 : 0,
+  }}
+>
+  <span className="font-semibold">Hint: </span> {hint}
+</div>
+
     </div>
   );
 }

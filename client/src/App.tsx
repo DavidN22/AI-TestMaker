@@ -16,29 +16,31 @@ import { ToastContainer } from "react-toastify";
 export default function App() {
  
 const dispatch = useDispatch();
-const toastErrorMessage = useSelector(
-  (state: RootState) => state.toast.message
-);
+const { message, type } = useSelector((state: RootState) => state.toast);
 useAuthCheck();
 
 useEffect(() => {
-  if (toastErrorMessage) {
-    toast.error(toastErrorMessage, { position: "top-right",
+  if (message && type) {
+    const toastFn = type === "success" ? toast.success : toast.error;
+    toastFn(message, {
+      position: "top-center",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "colored", });
+      theme: "colored",
+    });
     dispatch(clearError());
   }
-}, [toastErrorMessage, dispatch]);
+}, [message, type, dispatch]);
+
 
   return (
     <Router>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}

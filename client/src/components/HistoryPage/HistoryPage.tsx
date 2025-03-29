@@ -15,7 +15,7 @@ export default function HistoryPage() {
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<"recent" | "oldest">("recent");
   const [dateFilter, setDateFilter] = useState("");
-  console.log(dateFilter);
+
 
   // Filter & Sort logic
   useEffect(() => {
@@ -52,7 +52,8 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-white dark:bg-[#1E1E1E] min-h-screen text-gray-900 dark:text-gray-100">
+    <div className="container mx-auto p-6 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
+
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
         Test History
       </h1>

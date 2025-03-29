@@ -1,7 +1,21 @@
 import { motion } from "framer-motion";
 import { CornerFrame } from "./CornerFrame";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 const CTASection = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.auth.email);
+
+  const handleCTA = () => {
+    if (user) {
+      navigate("/home");
+    } else {
+      window.location.href = "http://localhost:3000/api/auth/login";
+    }
+  };
+
   return (
     <section className="relative bg-white dark:bg-[#1E1E1E] text-black dark:text-white px-6 py-28 overflow-hidden">
       <div className="max-w-4xl mx-auto relative z-10 text-center border border-yellow-400/20 dark:border-yellow-300/30 rounded-2xl px-8 py-20 shadow-[0_0_40px_rgba(234,179,8,0.05)] dark:shadow-[0_0_50px_rgba(234,179,8,0.15)] bg-gray-50 dark:bg-[#141414] backdrop-blur-sm">
@@ -26,17 +40,17 @@ const CTASection = () => {
         </motion.p>
 
         {/* CTA Button */}
-        <motion.a
-          href="/home"
+        <motion.button
+          onClick={handleCTA}
           className="inline-block bg-[#0f172a] dark:bg-white text-white dark:text-black font-semibold px-10 py-4 rounded-full shadow-md hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] dark:hover:shadow-[0_0_30px_rgba(234,179,8,0.4)] border-2 border-yellow-400 dark:border-yellow-300 transition duration-300"
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.95 }}
         >
-          Get Early Access
-        </motion.a>
+          {user ? "Go to Dashboard" : "Start free now!"}
+        </motion.button>
       </div>
 
-      {/* Reusable glowing tech lines */}
+      {/* Glowing lines */}
       <CornerFrame />
     </section>
   );

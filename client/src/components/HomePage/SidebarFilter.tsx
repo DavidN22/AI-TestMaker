@@ -12,7 +12,7 @@ export default function SidebarFilter() {
   } = useFilters();
 
   return (
-    <aside className="md:sticky w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-lg md:block hidden overflow-auto border border-gray-300 dark:border-gray-700 transition-all">
+    <aside className="md:sticky top-0 w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-lg md:block hidden overflow-auto border border-gray-300 dark:border-gray-700 transition-all">
       <div className="mb-6 text-left">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Filters</h2>
       </div>

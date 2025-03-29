@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TestConfigModal from "../models/configModel";
+import TestConfigModal from "../models/configModal";
 interface TestCardProps {
   title: string;
   description: string;
