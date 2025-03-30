@@ -7,7 +7,7 @@ export const getWeakPointsMiddleware = async (
     next: NextFunction
 ) => {
     const { testName, weakPointMode } = req.body;
-    console.log("testName", weakPointMode);
+   
     if (!weakPointMode) return next();
 
     if (!testName || typeof testName !== "string") {
@@ -30,7 +30,7 @@ export const getWeakPointsMiddleware = async (
         `;
         
         const { rows } = await pool.query(query, [testName, user]);
-        console.log("rows", rows);
+       
         if (rows.length === 0) {
             return next(new Error("No weak points found for the specified test"));
         }

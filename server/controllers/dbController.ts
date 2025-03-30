@@ -20,7 +20,7 @@ const dbController = {
       const query = `
         INSERT INTO devtests (score, "user", correct_count, wrong_count, unanswered_count, title, weak_points, summary, quiz_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-        RETURNING id;
+        RETURNING test_id;
       `;
 
       const values = [
@@ -38,7 +38,7 @@ const dbController = {
 
       res.status(201).json({
         message: "Quiz result saved successfully",
-        quizId: result.rows[0].id,
+        quizId: result.rows[0],
       });
     } catch (error) {
       next(error);
@@ -52,6 +52,7 @@ const dbController = {
         SELECT * FROM devtests WHERE "user" = $1 ORDER BY date DESC;
       `;
       const result = await pool.query(query, [user]);
+  
       res.json(result.rows);
     } catch (error) {
       next(error);
@@ -67,11 +68,9 @@ const dbController = {
       let user = res.locals.user;
       console.log("Deleting user:", userid);
       await supabase.auth.admin.deleteUser(userid);
+      const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`;
+      await pool.query(deleteQuery, [user]);
 
-      const query = `
-        DELETE FROM "users" WHERE email = $1;
-      `;
-      await pool.query(query, [user]);
       res.json({ message: "Account deleted successfully" });
     } catch (error) {
       next(error);

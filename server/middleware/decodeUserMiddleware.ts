@@ -16,7 +16,6 @@ export const decodeUserMiddleware = async (req: Request, res: Response, next: Ne
 
     res.locals.user = user.email;
     res.locals.uid = user.id;
-    console.log("User decoded from token", user.email);
     next();
   } catch (error) {
     next(error);

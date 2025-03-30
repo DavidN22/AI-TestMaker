@@ -8,6 +8,8 @@ import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api.ts";
 import DarkModeToggle from "./DarkModeToggle";
 import UserDropdown from "./UserDropdown";
+import TokenDisplay from "./TokenDisplay";
+
 
 export default function Header() {
 
@@ -44,6 +46,7 @@ export default function Header() {
 
                   {/* Right Group: Theme Toggle + User Dropdown */}
                   <div className="flex items-center space-x-5 ml-10 pr-4">
+                  <TokenDisplay />
                     <DarkModeToggle />
                     <UserDropdown
                       onSettingsOpen={() => setIsSettingsOpen(true)}

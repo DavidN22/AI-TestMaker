@@ -4,6 +4,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { promptSchema } from "../blueprint/promptSchema.ts";
 import { summary } from "../blueprint/weakPointBlueprint.ts";
 
+import { pool } from "../db/db.ts"; 
+
 const apiKey: string = process.env.API_KEY || "";
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
@@ -18,27 +20,42 @@ const aiController = {
     const { testName, numQuestions } = req.body;
 
     try {
-      let prompt = `Generate exactly ${numQuestions} questions for a ${testName} quiz.
-      Mix of: 
+      // Deduct 1 token from the user's account
+      const user = res.locals.user;
+      await pool.query(
+        "UPDATE users SET tokens = tokens - 1 WHERE email = $1",
+        [user]
+      );
+
+      let prompt = `You are an API generating test questions in JSON.
+
+      Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz.
+      
+      Types:
       - Multiple choice (4 options, 1 correct),
       - Select two (5 options, 2 correct),
       - True/False (2 options, 1 correct).
       
-      Respond ONLY in this JSON format:
-      
+      Return only a valid JSON with the following format:
       ${promptSchema}
       
-      If select_two is true, include 5 options and exactly 2 correct answers.
-      Do not include extra fields.
-      Only return the JSON.
+      Rules:
+      - "questions" array MUST contain **exactly ${numQuestions} items**
+      - Do NOT include any explanation or commentary.
+      - Do NOT include more or fewer than ${numQuestions} questions.
+      - Follow the JSON structure strictly. No text before or after.
+      ${res.locals.weakPoints?.length ? `Focus especially on: ${res.locals.weakPoints.join(", ")}` : ""}`.trim();
       
-      ${res.locals.weakPoints?.length ? `Focus especially on: ${res.locals.weakPoints.join(", ")}` : ""}
-      `;
-      
+
       const result = await model.generateContent(prompt);
       const message = JSON.parse(result.response.text());
-      console.log("Length of result:", message.questions.length, numQuestions); // Add this line
+
+      message.questions = message.questions.map(({ question_number, ...rest }: any) => ({
+        ...rest
+      }));
+      
       res.json({ message });
+      
     } catch (error) {
       next(error);
     }

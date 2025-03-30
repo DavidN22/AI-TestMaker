@@ -11,12 +11,13 @@ import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
 import CancelTest from "../models/CancelTestModal";
 import SubmitTest from "../models/SubmitTestModal";
 
+
 export default function TestPage() {
   const { reviewTest } = useApi();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { refetch } = useGetTestResultsQuery();
+  const { refetch:refetchTestData } = useGetTestResultsQuery();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
 
@@ -55,7 +56,7 @@ export default function TestPage() {
   }
 
   const onCancel = () => {
-    navigate("/", { replace: true, state: {} });
+    navigate("/home", { replace: true, state: {} });
   };
 
   // In your onSubmit function
@@ -65,15 +66,21 @@ export default function TestPage() {
 
     const results = gradeQuiz(questions);
     try {
-      await reviewTest({ results, testName });
-      refetch();
-      navigate("/history", { replace: true });
-    } catch (error) {
+      const getId = await reviewTest({ results, testName });
+      refetchTestData();
 
+      setTimeout(() => {
+         // adjust based on your actual return
+
+        navigate("/history", {
+          replace: true,
+          state: { justSubmitted: true, testId: getId?.test_id },
+        });
+      }, 100);
+    } catch (error) {
       navigate("/home", { replace: true });
       setLoading(false);
-    
-      
+
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -105,11 +112,9 @@ export default function TestPage() {
     setShowHint(false);
     setCurrentIndex(index);
   };
-  
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-[#1E1E1E] text-black dark:text-white">
-
       {/* Sidebar - hidden on mobile */}
       <TestSidebar
         className="hidden lg:flex"
@@ -134,7 +139,7 @@ export default function TestPage() {
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.3 }}
           className="w-full h-[100dvh] lg:h-auto lg:max-w-4xl bg-white dark:bg-[#2A2A2A] p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto border-t lg:border border-gray-200 dark:border-gray-700"
-          >
+        >
           <h2 className="text-lg font-bold text-black dark:text-white mb-4">
             {testName}
           </h2>

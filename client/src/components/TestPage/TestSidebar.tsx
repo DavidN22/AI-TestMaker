@@ -38,7 +38,7 @@ export default function TestSidebar({
         setTimeRemaining((prev) => {
           if (prev <= 1) {
             clearInterval(interval);
-            console.log("Time's up!");
+   
             onSubmitRef.current(); 
             return 0;
           }

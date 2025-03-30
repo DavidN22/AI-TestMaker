@@ -6,6 +6,7 @@ import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api";
 import { showSuccess } from "../../store/Slices/toastSlice";
 import CustomCombobox from "./CustomCombobox";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 
 interface SettingsModalProps {
   onClose: (isSettingOpen: boolean) => void;
@@ -13,7 +14,7 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ state, onClose }: SettingsModalProps) {
-  const { deleteUserAccount } = useApi();
+  const { deleteUserAccount, loading} = useApi();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -47,6 +48,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
     <>
       <ModalTemplate isOpen={state} setIsOpen={onClose} title="Settings">
         {/* Username Display */}
+        {loading && <LoadingSpinner message  = "" />}
         <div className="mt-4">
           <label className="block text-gray-700 dark:text-gray-300 mb-1">
             Username
@@ -72,7 +74,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
             onClick={() => setIsConfirmOpen(true)}
             className="cursor-pointer w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
-            Delete Account
+            Delete all Data
           </button>
         </div>
 
@@ -94,7 +96,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
         title="Confirm Deletion"
       >
         <p className="text-gray-700 dark:text-gray-300">
-          Are you sure you want to permanently delete your account? This action
+          Are you sure you want to permanently delete your data? This action
           cannot be undone.
         </p>
         <div className="mt-6 flex justify-between">

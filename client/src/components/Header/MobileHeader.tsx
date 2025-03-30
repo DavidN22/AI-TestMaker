@@ -5,7 +5,16 @@ import { useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { Menu, X, Home, History, Settings, BarChart, LogOut } from "lucide-react";
+import {
+  Menu,
+  X,
+  Home,
+  History,
+  Settings,
+  BarChart,
+  LogOut,
+} from "lucide-react";
+import TokenDisplayMobile from "./TokenDisplayMobile";
 
 export default function MobileHeader({
   onSettingsOpen,
@@ -37,6 +46,7 @@ export default function MobileHeader({
             {/* Icons container */}
             <div className="flex items-center gap-4">
               <DarkModeToggle />
+
               {showFilterModal && <MobileFilterModal />}
               <button
                 className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
@@ -66,14 +76,19 @@ export default function MobileHeader({
             </button>
 
             <div className="mt-10 mb-6 text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Signed in as</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Signed in as
+              </p>
               <p className="text-md font-semibold text-gray-900 dark:text-gray-100 truncate px-2">
                 {email}
               </p>
+              <div className="mt-4">
+                <TokenDisplayMobile />
+              </div>
             </div>
-
             <nav className="flex-1 space-y-3">
-              {[{ to: "/home", label: "Home", Icon: Home },
+              {[
+                { to: "/home", label: "Home", Icon: Home },
                 { to: "/history", label: "History", Icon: History },
                 { to: "/statistics", label: "Statistics", Icon: BarChart },
               ].map(({ to, label, Icon }) => (
@@ -83,7 +98,10 @@ export default function MobileHeader({
                   to={to}
                   className="flex items-center gap-3 py-3 px-4 rounded-lg bg-gray-50 dark:bg-[#1A1A1A] hover:bg-gray-100 dark:hover:bg-[#232323] transition"
                 >
-                  <Icon size={20} className="text-gray-700 dark:text-gray-300" />
+                  <Icon
+                    size={20}
+                    className="text-gray-700 dark:text-gray-300"
+                  />
                   <span className="text-gray-800 dark:text-gray-200 font-medium">
                     {label}
                   </span>
@@ -98,7 +116,10 @@ export default function MobileHeader({
                 onClick={() => onSettingsOpen(true)}
                 className="flex items-center gap-3 py-3 px-4 rounded-lg bg-gray-50 dark:bg-[#1A1A1A] hover:bg-gray-100 dark:hover:bg-[#232323] transition w-full"
               >
-                <Settings size={20} className="text-gray-700 dark:text-gray-300" />
+                <Settings
+                  size={20}
+                  className="text-gray-700 dark:text-gray-300"
+                />
                 <span className="text-gray-800 dark:text-gray-200 font-medium">
                   Settings
                 </span>

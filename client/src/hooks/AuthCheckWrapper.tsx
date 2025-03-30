@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserEmail, setAuthLoading } from "../store/Slices/authSlice";
+import { setUserData, setAuthLoading } from "../store/Slices/authSlice";
 import { RootState } from "../store/store";
 import axios from "axios";
 
@@ -18,7 +18,7 @@ const AuthCheckWrapper = ({ children }: Props) => {
         
         const { data } = await axios.get("/api/auth/me");
      
-        dispatch(setUserEmail(data.user.email));
+        dispatch(setUserData(data.user.email));
         
         console.log("User: ", data.user.email);
       } catch {

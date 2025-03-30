@@ -2,6 +2,7 @@ import { Question } from "./Question";
 
 export interface TestResults {
   score: string;
+  test_id: string;
   correct_count: number;
   wrong_count: number;
   unanswered_count: number;

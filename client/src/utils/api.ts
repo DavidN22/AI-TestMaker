@@ -25,12 +25,20 @@ export function useApi() {
       return response.data.message.questions;
     } catch (error) {
       handleApiError(error);
-      throw error;
+      throw error
     } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Reviews the test results by sending them to the server for analysis.
+   * The server returns weak points and a summary, which are then saved to the database.
+   * @param {Object} params - The parameters for the reviewTest function.
+   * @param {QuizResult} params.results - The results of the quiz to be reviewed.
+   * @param {string} params.testName - The name of the test.
+   * @returns {Promise<Object>} - The processed results with weak points, summary, and test ID.
+   */
   const reviewTest = async ({
     results,
     testName,
@@ -40,9 +48,11 @@ export function useApi() {
   }) => {
     setLoading(true);
     try {
+      // Send the quiz results to the AI review endpoint for analysis
       const reviewRes = await axios.post("/api/ai/reviewTest", { results });
       const { weakpoints, summary } = reviewRes.data.message;
 
+      // Combine the original results with the weak points and summary
       const resultsWithWeakPoints = {
         ...results,
         testName,
@@ -50,17 +60,22 @@ export function useApi() {
         summary,
       };
 
-      await axios.post(
+      // Save the processed results to the database
+      const dbRes = await axios.post(
         "/api/db/tests",
         { resultsWithWeakPoints },
         { withCredentials: true }
       );
 
-      return resultsWithWeakPoints;
+      // Extract the quiz ID from the database response
+      const quizId = dbRes.data.quizId.test_id;
+      // Return the processed results along with the test ID (from the backend response)
+      return { ...resultsWithWeakPoints, test_id: quizId };
     } catch (error) {
+      // Handle any errors that occur during the process
       handleApiError(error);
-      throw error;
     } finally {
+      // Ensure the loading state is reset
       setLoading(false);
     }
   };

@@ -6,6 +6,7 @@ import { useApi } from "../../utils/api.ts";
 import axios from "axios";
 import CustomCombobox from "./CustomCombobox.tsx";
 import LoadingWithTrivia from "../Loading/LoadingSpinnerHints.tsx";
+import { useGetTokensQuery } from "../../store/Slices/tokenSlice";
 
 interface TestConfigModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -25,7 +26,7 @@ export default function TestConfigModal({
   const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
   const { fetchTest, loading } = useApi();
-
+  const { refetch } = useGetTokensQuery();
   const handleStart = async () => {
     try {
       const questions = await fetchTest({
@@ -33,6 +34,7 @@ export default function TestConfigModal({
         numQuestions,
         weakPointMode,
       });
+      refetch();
       setTimeout(() => {
         navigate(`/test/${testName}`, {
           state: {
@@ -45,7 +47,6 @@ export default function TestConfigModal({
       setIsOpen(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-        console.log("hit");
         setIsOpen(false);
       }
       console.error("Error fetching test questions:", error);

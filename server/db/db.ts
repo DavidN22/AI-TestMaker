@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { Pool } = pkg; // Fix import issue
+const { Pool } = pkg;
 
 const pool = new Pool({
     connectionString: process.env.DB_URI,
@@ -16,7 +16,7 @@ const testDbConnection = async () => {
         console.log(`✅ PostgreSQL connected successfully at: ${result.rows[0].now}`);
     } catch (err) {
         console.error("❌ Error connecting to PostgreSQL:");
-        process.exit(1); // Optional: Exit only if needed
+        process.exit(1); 
     }
 };
 

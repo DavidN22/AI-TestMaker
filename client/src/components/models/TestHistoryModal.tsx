@@ -4,7 +4,7 @@ import { TestResults } from "@/Types/Results";
 interface TestHistoryModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  testData: TestResults;
+  testData: TestResults | null;
 }
 
 export default function TestHistoryModal({
@@ -24,7 +24,7 @@ export default function TestHistoryModal({
       hour12: true,
     });
   };
-
+  if (!testData) return null;
   return (
     <ModalTemplate
       isOpen={isOpen}

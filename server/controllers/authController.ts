@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { createClient } from "../utils/supabaseServerClient.ts";
-import { pool } from "../db/db.ts"; 
+import { pool } from "../db/db.ts";
 
-export const handleLogin = async (req: Request, res: Response, next: NextFunction) => {
+export const handleLogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const supabase = createClient({ req, res });
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -24,37 +28,74 @@ export const handleLogin = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const handleOAuthCallback = async (req: Request, res: Response, next: NextFunction) => {
+export const handleOAuthCallback = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const code = req.query.code as string;
 
   try {
-    if (code) {
-      const supabase = createClient({ req, res });
-      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-      if (exchangeError) throw exchangeError;
+    if (!code) throw new Error("Authorization code missing");
 
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-      if (userError || !user) throw userError || new Error("User not found");
+    const supabase = createClient({ req, res });
+    const { error: exchangeError } =
+      await supabase.auth.exchangeCodeForSession(code);
+    if (exchangeError) throw exchangeError;
 
-      const checkQuery = "SELECT * FROM users WHERE uid = $1";
-      const checkResult = await pool.query(checkQuery, [user.id]);
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) throw userError || new Error("User not found");
 
-      if (checkResult.rows.length === 0) {
-        const insertQuery = `
-          INSERT INTO users (uid, email, name)
-          VALUES ($1, $2, $3)
+    const { id: uid, email, user_metadata } = user;
+
+    const existingEmailQuery = "SELECT * FROM users WHERE email = $1";
+    const { rows } = await pool.query(existingEmailQuery, [email]);
+
+    if (rows.length > 0) {
+      const existingUser = rows[0];
+
+      if (existingUser.uid !== uid) {
+        // Update UID if it's different
+        const updateQuery = `
+          UPDATE users
+          SET uid = $1, name = $2
+          WHERE email = $3
         `;
-        await pool.query(insertQuery, [
-          user.id,
-          user.email,
-          user.user_metadata?.name || "",
+        await pool.query(updateQuery, [
+          uid,
+          user_metadata?.name || "",
+          email,
         ]);
-        console.log("User inserted into local DB");
       } else {
-        console.log("User already exists in local DB");
+        console.log("User already exists with matching UID in local DB");
+      }
+    } else {
+      // Try inserting new user
+      const insertQuery = `
+        INSERT INTO users (uid, email, name)
+        VALUES ($1, $2, $3)
+      `;
+
+      try {
+        await pool.query(insertQuery, [uid, email, user_metadata?.name || ""]);
+      } catch (err: any) {
+        if (
+          err.code === "23505" && // Unique violation
+          err.constraint === "users_uid_key"
+        ) {
+          console.warn("Supabase UID collision detected. Deleting user from Supabase.");
+
+          // Delete user from Supabase pool
+          await supabase.auth.admin.deleteUser(uid);
+
+          // Redirect to login to retry flow
+          return res.redirect("http://localhost:8000/home"); // or wherever your login starts
+        } else {
+          throw err;
+        }
       }
     }
 
@@ -63,7 +104,13 @@ export const handleOAuthCallback = async (req: Request, res: Response, next: Nex
     next(error);
   }
 };
-export const handleLogout = async (req: Request, res: Response, next: NextFunction) => {
+
+
+export const handleLogout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const supabase = createClient({ req, res });
     await supabase.auth.signOut();
@@ -73,22 +120,51 @@ export const handleLogout = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-
-export const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
+export const getCurrentUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    console.log("hit")
     const supabase = createClient({ req, res });
     const {
       data: { user },
       error,
     } = await supabase.auth.getUser();
 
-    if (!user || error) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
+    if (!user) {
+      res.json({ user: null });
+      return
+    }
+   
+    res.json({ user });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getUserToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const email = res.locals.user;
+    if (!email) {
+      return next(new Error("Unauthorized: User email missing"));
     }
 
-    res.json({ user });
+    const result = await pool.query(
+      "SELECT tokens FROM users WHERE email = $1",
+      [email]
+    );
+
+    if (result.rows.length === 0) {
+      return next(new Error("User not found"));
+    }
+
+    const token = result.rows[0].tokens;
+
+    res.status(200).json({ token });
   } catch (error) {
     next(error);
   }
