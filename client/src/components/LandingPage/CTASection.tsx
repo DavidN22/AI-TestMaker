@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CornerFrame } from "./CornerFrame";
+import { CornerFrame } from "./Designs/CornerFrame";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const CTASection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          Be Among the First to Try Testify AI
+          Be Among the First to Try Teskro
         </motion.h2>
 
         {/* Description */}

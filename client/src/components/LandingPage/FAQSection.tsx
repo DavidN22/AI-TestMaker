@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "Can I track my progress?",
     answer:
-      "Yes, Testify AI provides detailed analytics on your performance and a history to view past exams and areas for improvement.",
+      "Yes, Teskro provides detailed analytics on your performance and a history to view past exams and areas for improvement.",
   },
   {
     question: "Will more features be added?",

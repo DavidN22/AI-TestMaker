@@ -8,8 +8,8 @@ import gradeQuiz from "../../utils/gradeQuiz";
 import { useApi } from "../../utils/api";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
-import CancelTest from "../models/CancelTestModal";
-import SubmitTest from "../models/SubmitTestModal";
+import CancelTest from "../Modals/CancelTestModal";
+import SubmitTest from "../Modals/SubmitTestModal";
 
 
 export default function TestPage() {

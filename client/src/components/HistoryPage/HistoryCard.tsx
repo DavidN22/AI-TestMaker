@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TestHistoryModal from "../models/TestHistoryModal";
+import TestHistoryModal from "../Modals/TestHistoryModal";
 import { TestResultCardProps } from "@/Types/Results";
 
 const getEmoji = (title: string) => {

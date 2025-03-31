@@ -1,17 +1,17 @@
 // App.tsx
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomeView from "./views/HomeView";
-import TestView from "./views/TestView";
-import HistoryView from "./views/HistoryView";
+import HomeView from "./components/views/HomeView";
+import TestView from "./components/views/TestView";
+import HistoryView from "./components/views/HistoryView";
 import LoadingPlaceholder from "./components/Loading/Placeholder";
-import Landing from "./views/LandingView";
-import ProtectedRoute from "./hooks/ProtectedRoute";
+import Landing from "./components/views/LandingView";
+import ProtectedRoute from "./Auth-helpers/ProtectedRoute";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import { toast } from "react-toastify";
 import { clearError } from "./store/Slices/toastSlice";
-import useAuthCheck from "./hooks/useAuthCheck";
+import useAuthCheck from "./Auth-helpers/useAuthCheck";
 import { ToastContainer } from "react-toastify";
 export default function App() {
  
@@ -90,52 +90,3 @@ useEffect(() => {
     </Router>
   );
 }
-/*
-// App.tsx
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import HomeView from "./views/HomeView";
-import TestView from "./views/TestView";
-import HistoryView from "./views/HistoryView";
-import LoadingPlaceholder from "./components/Loading/Placeholder";
-import Landing from "./views/Landing";
-import useAuthCheck from "./hooks/useAuthCheck";
-import { useSelector } from "react-redux";
-import { RootState } from "./store/store"; // adjust if needed
-
-export default function App() {
-  useAuthCheck();
-
-  const email = useSelector((state: RootState) => state.auth.email);
-  const isAuthLoading = useSelector((state: RootState) => state.auth.isAuthLoading);
-
-  if (isAuthLoading) return <div></div>;
-
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-
-        <Route
-          path="/home"
-          element={email ? <HomeView /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/test/:id"
-          element={email ? <TestView /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/history"
-          element={email ? <HistoryView /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/statistics"
-          element={email ? <LoadingPlaceholder /> : <Navigate to="/" replace />}
-        />
-
-        <Route path="*" element={<Landing />} />
-      </Routes>
-    </Router>
-  );
-}
-
-*/

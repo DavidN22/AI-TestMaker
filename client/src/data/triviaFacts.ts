@@ -29,8 +29,6 @@ export const triviaFacts: string[] = [
   "🧠 AI Insight: The idea of AI dates back to ancient myths of mechanical servants.",
   "🤖 Fun Fact: AI can write poetry that resembles Shakespeare’s style.",
   "💡 Did you know? AI models are trained using massive datasets and powerful GPUs.",
-
-  // 30 New Facts Below
   "🔍 Interesting: GPT-3 contains 175 billion parameters, making it one of the largest models ever built.",
   "🤖 Fun Fact: Sophia became the first robot to receive citizenship (Saudi Arabia, 2017).",
   "💡 Did you know? AI can generate realistic faces of people who don't actually exist.",

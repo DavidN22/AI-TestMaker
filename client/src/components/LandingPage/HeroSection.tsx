@@ -40,7 +40,7 @@ const HeroSection = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-md">
-            Testify AI helps you generate, practice, and improve with curated cloud exam questions powered by AI.
+          Teskro helps you generate, practice, and improve with curated cloud exam questions powered by AI.
           </p>
 
           {user ? (

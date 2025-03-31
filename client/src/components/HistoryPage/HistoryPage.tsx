@@ -5,7 +5,7 @@ import TestResultCard from "./HistoryCard";
 import SkeletonLoader from "../Loading/SkeletonLoader";
 import { TestResults } from "@/Types/Results";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
-import TestHistoryModal from "../models/TestHistoryModal";
+import TestHistoryModal from "../Modals/TestHistoryModal";
 
 export default function HistoryPage() {
   const {
@@ -70,6 +70,8 @@ export default function HistoryPage() {
   }, [justSubmitted, testId, filteredHistory, loading, navigate, location.pathname]);
 
   return (
+    <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100 overflow-auto">
+
     <div className="container mx-auto p-6 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
         Test History
@@ -122,7 +124,7 @@ export default function HistoryPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {loading ? (
           [...Array(8)].map((_, index) => <SkeletonLoader key={index} />)
-        ) : filteredHistory.length === 0 ? (
+        ) : testHistory.length === 0 ? (
           <div className="col-span-full text-center mt-10">
             <p className="text-lg text-gray-500 dark:text-gray-400">
               No tests taken yet. Once you take a test, your results will appear here.
@@ -156,6 +158,7 @@ export default function HistoryPage() {
         setIsOpen={setIsModalOpen}
         testData={selectedTest}
       />
+    </div>
     </div>
   );
 }

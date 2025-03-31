@@ -51,7 +51,7 @@ const HowItWorksSection = () => {
         </motion.h2>
 
         <p className="text-md text-gray-600 dark:text-gray-400 mb-16 max-w-3xl mx-auto">
-          From sign-in to detailed analytics — here’s how Testify AI streamlines your journey.
+          From sign-in to detailed analytics — here’s how Teskro streamlines your journey.
         </p>
 
         <div className="grid md:grid-cols-5 gap-6">

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import ModalTemplate from "./ModalTemplate";
 import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api";
@@ -16,7 +15,6 @@ interface SettingsModalProps {
 export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const { deleteUserAccount, loading} = useApi();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
 
@@ -37,8 +35,10 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const deleteAccount = async () => {
     try {
       await deleteUserAccount();
-      navigate("/", { replace: true });
       window.location.reload();
+
+     
+    
     } catch (error) {
       console.error("Error deleting account:", error);
     }

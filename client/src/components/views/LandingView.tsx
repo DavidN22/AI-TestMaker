@@ -1,12 +1,12 @@
-import Header from "../components/Header/Header";
-import HeroSection from "../components/LandingPage/HeroSection";
-import FeaturesSection from "../components/LandingPage/FeaturesSection";
-import CTASection from "../components/LandingPage/CTASection";
-import Footer from "../components/LandingPage/Footer";
-import HowItWorksSection from "../components/LandingPage/HowItWorksSection";
-import FAQSection from "../components/LandingPage/FAQSection";
+import Header from "../Header/Header";
+import HeroSection from "../LandingPage/HeroSection";
+import FeaturesSection from "../LandingPage/FeaturesSection";
+import CTASection from "../LandingPage/CTASection";
+import Footer from "../LandingPage/Footer";
+import HowItWorksSection from "../LandingPage/HowItWorksSection";
+import FAQSection from "../LandingPage/FAQSection";
 import { motion } from "framer-motion";
-import FeaturesPreviewSection from "../components/LandingPage/FeaturesPreviewSection";
+import FeaturesPreviewSection from "../LandingPage/FeaturesPreviewSection";
 
 export default function LandingView() {
   return (

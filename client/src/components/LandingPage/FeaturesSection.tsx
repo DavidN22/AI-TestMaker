@@ -63,7 +63,7 @@ const FeaturesSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          What Makes Testify AI Different?
+          What Makes Teskro Different?
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-12">

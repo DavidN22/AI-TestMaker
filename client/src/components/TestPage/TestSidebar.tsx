@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import CancelTest from "../models/CancelTestModal";
-import SubmitTest from "../models/SubmitTestModal";
+import CancelTest from "../Modals/CancelTestModal";
+import SubmitTest from "../Modals/SubmitTestModal";
 import { Question } from "../../Types/Question";
 import { CheckCircle, Circle, AlertTriangle } from "lucide-react";
 

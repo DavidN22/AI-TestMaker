@@ -6,7 +6,7 @@ import { useApi } from "../../utils/api.ts";
 import axios from "axios";
 import CustomCombobox from "./CustomCombobox.tsx";
 import LoadingWithTrivia from "../Loading/LoadingSpinnerHints.tsx";
-import { useGetTokensQuery } from "../../store/Slices/tokenSlice";
+import { useGetTokensQuery } from "../../store/Slices/tokenSlice.ts";
 
 interface TestConfigModalProps {
   setIsOpen: (isOpen: boolean) => void;

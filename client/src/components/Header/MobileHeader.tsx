@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import MobileFilterModal from "../models/MobileFilterModal";
+import MobileFilterModal from "../Modals/MobileFilterModal";
 import { useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
 import { useSelector } from "react-redux";
@@ -32,7 +32,7 @@ export default function MobileHeader({
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden bg-white dark:bg-[#121212] shadow-sm sticky top-0 w-full z-50">
+      <header className="md:hidden bg-white dark:bg-[#121212] shadow-sm sticky top-0 left-0 right-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -40,7 +40,7 @@ export default function MobileHeader({
               to="/"
               className="text-xl font-bold text-gray-900 dark:text-gray-100"
             >
-              MyApp
+              Teskro
             </Link>
 
             {/* Icons container */}

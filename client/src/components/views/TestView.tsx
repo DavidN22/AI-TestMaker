@@ -1,4 +1,4 @@
-import TestPage from "../components/TestPage/TestPage";
+import TestPage from "../TestPage/TestPage";
 import { motion } from "framer-motion";
 export default function TestView() {
   return (

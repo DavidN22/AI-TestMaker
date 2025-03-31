@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import SettingsModal from "../models/settingsModal";
+import SettingsModal from "../Modals/settingsModal.tsx";
 import MobileHeader from "./MobileHeader";
 import { useSelector } from "react-redux";
-import { Home, History, BarChart } from "lucide-react";
+import { Home, History, BarChart, Cpu } from "lucide-react";
 import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api.ts";
 import DarkModeToggle from "./DarkModeToggle";
 import UserDropdown from "./UserDropdown";
 import TokenDisplay from "./TokenDisplay";
 
-
 export default function Header() {
-
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
   const { handleLogout } = useApi();
@@ -29,10 +27,16 @@ export default function Header() {
             {/* Branding */}
             <Link
               to="/"
-              className="text-lg font-semibold text-gray-900 dark:text-white tracking-wide hover:opacity-80 transition"
+              className="group flex items-center gap-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white hover:opacity-80 transition"
             >
-              MyApp
+              <Cpu
+                size={20}
+                className="text-black dark:text-white transition-transform duration-300 group-hover:rotate-12"
+              />
+              <span className="tracking-wider">Teskro</span>
             </Link>
+
+            {/* Desktop Navigation */}
 
             <nav className="flex items-center justify-end w-full space-x-5">
               {email ? (
@@ -41,12 +45,16 @@ export default function Header() {
                   <div className="flex space-x-5">
                     <NavItem to="/home" label="Home" icon={Home} />
                     <NavItem to="/history" label="History" icon={History} />
-                    <NavItem to="/statistics" label="Statistics" icon={BarChart} />
+                    <NavItem
+                      to="/statistics"
+                      label="Statistics"
+                      icon={BarChart}
+                    />
                   </div>
 
                   {/* Right Group: Theme Toggle + User Dropdown */}
                   <div className="flex items-center space-x-5 ml-10 pr-4">
-                  <TokenDisplay />
+                    <TokenDisplay />
                     <DarkModeToggle />
                     <UserDropdown
                       onSettingsOpen={() => setIsSettingsOpen(true)}
