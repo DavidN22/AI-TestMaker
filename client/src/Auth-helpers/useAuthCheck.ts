@@ -13,6 +13,7 @@ const useAuthCheck = () => {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
           },
+          withCredentials: true, 
         });
     
         const user = data.user;
