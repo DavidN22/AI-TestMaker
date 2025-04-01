@@ -12,7 +12,7 @@ const testDbConnection = async () => {
         console.log(`✅ PostgreSQL connected successfully at: ${result.rows[0].now}`);
     }
     catch (err) {
-        console.error("❌ Error connecting to PostgreSQL:");
+        console.error("❌ Error connecting to PostgreSQL:" + err.message);
         process.exit(1);
     }
 };
