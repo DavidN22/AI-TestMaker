@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/callback", handleOAuthCallback);
 router.get("/logout", handleLogout);
-router.get("/login", handleLogin);
+router.post("/login", handleLogin);
 router.get("/tokens", decodeUserMiddleware, getUserToken)
 router.get("/me", getCurrentUser);
 
