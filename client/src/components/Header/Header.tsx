@@ -15,7 +15,7 @@ export default function Header() {
   const email = useSelector((state: RootState) => state.auth.email);
   const { handleLogout } = useApi();
   const handleGoogleSignIn = () => {
-    window.location.href = "http://localhost:3000/api/auth/login";
+    window.location.href = "https://ai-test-maker-server.vercel.app/api/auth/login";
   };
 
   return (
