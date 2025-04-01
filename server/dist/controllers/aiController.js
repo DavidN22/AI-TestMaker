@@ -1,0 +1,58 @@
+//import schema from "../blueprint/questionSchema.ts";
+import { promptSchema } from "../blueprint/promptSchema.js";
+import { summary } from "../blueprint/weakPointBlueprint.js";
+import { pool } from "../db/db.js";
+import { getModel } from "../utils/getModel.js";
+const aiController = {
+    getAiTest: async (req, res, next) => {
+        const { testName, numQuestions, languageModel } = req.body;
+        try {
+            const user = res.locals.user;
+            await pool.query("UPDATE users SET tokens = tokens - 1 WHERE email = $1", [user]);
+            const model = getModel(languageModel);
+            let prompt = `You are an API generating test questions in JSON.
+
+Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz.
+
+Types:
+- Multiple choice (4 options, 1 correct),
+- Select two (5 options, 2 correct),
+- True/False (2 options, 1 correct).
+
+Return only a valid JSON with the following format:
+${promptSchema}
+
+Rules:
+- "questions" array MUST contain **exactly ${numQuestions} items**
+- Do NOT include any explanation or commentary.
+- Do NOT include more or fewer than ${numQuestions} questions.
+- Follow the JSON structure strictly. No text before or after.
+${res.locals.weakPoints?.length
+                ? `Focus especially on: ${res.locals.weakPoints.join(", ")}`
+                : ""}`.trim();
+            const rawResponse = await model.generate(prompt);
+            const message = JSON.parse(rawResponse);
+            message.questions = message.questions.map(({ question_number, ...rest }) => ({ ...rest }));
+            res.json({ message });
+        }
+        catch (error) {
+            next(error);
+        }
+    },
+    getWeakPoints: async (req, res, next) => {
+        const { results, languageModel } = req.body;
+        try {
+            const model = getModel(languageModel);
+            const prompt = `Generate weakpoints and a summary of the ${JSON.stringify(results)} quiz. 
+Follow this format: ${summary}. Keep it very brief and concise (1 to 2 sentences). 
+You are directly talking to the user. ONLY RESPOND IN JSON FORMAT!`;
+            const rawResponse = await model.generate(prompt);
+            const message = JSON.parse(rawResponse);
+            res.json({ message });
+        }
+        catch (error) {
+            next(error);
+        }
+    },
+};
+export default aiController;

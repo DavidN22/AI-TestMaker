@@ -7,7 +7,6 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
 });
 
-// 👇 Wrap the baseQuery to catch and handle errors globally
 const baseQueryWithErrorHandling: typeof baseQuery = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
 
@@ -21,11 +20,33 @@ const baseQueryWithErrorHandling: typeof baseQuery = async (args, api, extraOpti
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithErrorHandling,
+  tagTypes: ["TestResults"],
   endpoints: (builder) => ({
     getTestResults: builder.query<TestResults[], void>({
       query: () => "/tests",
+      providesTags: ["TestResults"],
+    }),
+
+    deleteTestResult: builder.mutation<void, string>({
+      query: (testId) => ({
+        url: `/tests/${testId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["TestResults"],
+    }),
+
+    clearAllTestResults: builder.mutation<void, void>({
+      query: () => ({
+        url: `/tests`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["TestResults"],
     }),
   }),
 });
 
-export const { useGetTestResultsQuery } = apiSlice;
+export const {
+  useGetTestResultsQuery,
+  useDeleteTestResultMutation,
+  useClearAllTestResultsMutation,
+} = apiSlice;

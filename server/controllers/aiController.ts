@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 //import schema from "../blueprint/questionSchema.ts";
-import { promptSchema } from "../blueprint/promptSchema.ts";
-import { summary } from "../blueprint/weakPointBlueprint.ts";
+import { promptSchema } from "../blueprint/promptSchema.js";
+import { summary } from "../blueprint/weakPointBlueprint.js";
 
-import { pool } from "../db/db.ts";
-import { getModel } from "../utils/getModel.ts";
+import { pool } from "../db/db.js";
+import { getModel } from "../utils/getModel.js";
 
 const aiController = {
   getAiTest: async (req: Request, res: Response, next: NextFunction) => {
@@ -43,7 +43,6 @@ ${
 }`.trim();
 
       const rawResponse = await model.generate(prompt);
-      console.log("AI response:", rawResponse);
       const message = JSON.parse(rawResponse);
 
       

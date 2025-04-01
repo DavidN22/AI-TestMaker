@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createClient } from "../utils/supabaseServerClient.ts";
-import { pool } from "../db/db.ts";
+import { createClient } from "../utils/supabaseServerClient.js";
+import { pool } from "../db/db.js";
 
 export const handleLogin = async (
   req: Request,
@@ -129,7 +129,6 @@ export const getCurrentUser = async (
     const supabase = createClient({ req, res });
     const {
       data: { user },
-      error,
     } = await supabase.auth.getUser();
 
     if (!user) {

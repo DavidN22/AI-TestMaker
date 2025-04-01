@@ -4,8 +4,11 @@ import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import TestResultCard from "./HistoryCard";
 import SkeletonLoader from "../Loading/SkeletonLoader";
 import { TestResults } from "@/Types/Results";
-import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
+import {
+  useGetTestResultsQuery,
+} from "../../store/Slices/apiSlice";
 import TestHistoryModal from "../Modals/TestHistoryModal";
+
 
 export default function HistoryPage() {
   const {
@@ -18,9 +21,9 @@ export default function HistoryPage() {
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<"recent" | "oldest">("recent");
   const [dateFilter, setDateFilter] = useState("");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTest, setSelectedTest] = useState<TestResults | null>(null);
+
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -60,105 +63,159 @@ export default function HistoryPage() {
 
   useEffect(() => {
     if (justSubmitted && testId && filteredHistory.length > 0 && !loading) {
-      const submittedTest = filteredHistory.find((test) => test.test_id === testId);
+      const submittedTest = filteredHistory.find(
+        (test) => test.test_id === testId
+      );
       if (submittedTest) {
         setSelectedTest(submittedTest);
         setIsModalOpen(true);
         navigate(location.pathname, { replace: true }); // Clear state
       }
     }
-  }, [justSubmitted, testId, filteredHistory, loading, navigate, location.pathname]);
+  }, [
+    justSubmitted,
+    testId,
+    filteredHistory,
+    loading,
+    navigate,
+    location.pathname,
+  ]);
 
   return (
     <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100 overflow-auto">
+      <div className="container mx-auto p-6 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+          Test History
+        </h1>
 
-    <div className="container mx-auto p-6 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
-      <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-        Test History
-      </h1>
-
-      {error && (
-        <p className="text-red-500">
-          Error: {"status" in error ? error.status : error.message}
-        </p>
-      )}
-
-      {/* Filter Section */}
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <input
-          type="text"
-          placeholder="Search by test name..."
-          className="p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-md w-full max-w-md"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <button
-          onClick={toggleSortOrder}
-          className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-200 dark:bg-[#1E1E1E] hover:bg-gray-300 dark:hover:bg-gray-700 transition-all"
-        >
-          {sortOrder === "recent" ? (
-            <FaSortAmountDown
-              className="text-gray-700 dark:text-white"
-              size={20}
-              title="Sort: Recent → Oldest"
-            />
-          ) : (
-            <FaSortAmountUp
-              className="text-gray-700 dark:text-white"
-              size={20}
-              title="Sort: Oldest → Recent"
-            />
-          )}
-        </button>
-
-        <input
-          type="date"
-          className="p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white rounded-md"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-        />
-      </div>
-
-      {/* Test Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {loading ? (
-          [...Array(8)].map((_, index) => <SkeletonLoader key={index} />)
-        ) : testHistory.length === 0 ? (
-          <div className="col-span-full text-center mt-10">
-            <p className="text-lg text-gray-500 dark:text-gray-400">
-              No tests taken yet. Once you take a test, your results will appear here.
-            </p>
-            <div className="mt-6">
-              <svg
-                className="mx-auto h-20 w-20 text-gray-300 dark:text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-          </div>
-        ) : (
-          filteredHistory.map((test, index) => (
-            <TestResultCard key={index} testData={test} />
-          ))
+        {error && (
+          <p className="text-red-500">
+            Error: {"status" in error ? error.status : error.message}
+          </p>
         )}
-      </div>
 
-      {/* Always-mounted modal */}
-      <TestHistoryModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        testData={selectedTest}
-      />
-    </div>
+        {/* {filteredHistory.length > 0 && (
+          <button
+            onClick={() => setIsConfirmOpen(true)}
+            className="mb-4 text-sm px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
+          >
+            Clear All Test History
+          </button>
+        )} */}
+
+        {/* Filter Section */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <input
+            type="text"
+            placeholder="Search by test name..."
+            className="p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-md w-full max-w-md"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <button
+            onClick={toggleSortOrder}
+            className="p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-200 dark:bg-[#1E1E1E] hover:bg-gray-300 dark:hover:bg-gray-700 transition-all"
+          >
+            {sortOrder === "recent" ? (
+              <FaSortAmountDown
+                className="text-gray-700 dark:text-white"
+                size={20}
+                title="Sort: Recent → Oldest"
+              />
+            ) : (
+              <FaSortAmountUp
+                className="text-gray-700 dark:text-white"
+                size={20}
+                title="Sort: Oldest → Recent"
+              />
+            )}
+          </button>
+
+          <input
+            type="date"
+            className="p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-white rounded-md"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+          />
+        </div>
+
+        {/* Test Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {loading ? (
+            [...Array(8)].map((_, index) => <SkeletonLoader key={index} />)
+          ) : testHistory.length === 0 ? (
+            <div className="col-span-full text-center mt-10">
+              <p className="text-lg text-gray-500 dark:text-gray-400">
+                No tests taken yet. Once you take a test, your results will
+                appear here.
+              </p>
+              <div className="mt-6">
+                <svg
+                  className="mx-auto h-20 w-20 text-gray-300 dark:text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            filteredHistory.map((test) => (
+              <TestResultCard
+                key={test.test_id}
+                testData={test}
+                setFilteredHistory={setFilteredHistory}
+              />
+            ))
+          )}
+        </div>
+
+        {/* Always-mounted modal */}
+        <TestHistoryModal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          testData={selectedTest}
+        />
+
+        {/* Clear All Confirmation Modal */}
+        {/* <ModalTemplate
+          isOpen={isConfirmOpen}
+          setIsOpen={setIsConfirmOpen}
+          title="Confirm Deletion"
+        >
+          <p className="text-gray-700 dark:text-gray-300">
+            Are you sure you want to permanently delete all your test results?
+            This action cannot be undone.
+          </p>
+          <div className="mt-6 flex justify-between">
+            <button
+              onClick={() => setIsConfirmOpen(false)}
+              className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition flex items-center justify-center min-w-[120px]"
+              disabled={isDeleting}
+              onClick={async () => {
+                setIsDeleting(true);
+                await clearAllTestResults();
+                setIsDeleting(false);
+                setIsConfirmOpen(false);
+              }}
+            >
+              {isDeleting ? <LoadingSpinner message="" /> : "Delete All"}
+            </button>
+          </div>
+        </ModalTemplate> */}
+      </div>
     </div>
   );
 }

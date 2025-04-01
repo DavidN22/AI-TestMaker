@@ -1,6 +1,11 @@
 import { useState } from "react";
 import TestHistoryModal from "../Modals/TestHistoryModal";
+import ModalTemplate from "../Modals/ModalTemplate";
 import { TestResultCardProps } from "@/Types/Results";
+import { useDeleteTestResultMutation } from "../../store/Slices/apiSlice";
+import { TestResults } from "@/Types/Results";
+import { Menu } from "@headlessui/react";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 const getEmoji = (title: string) => {
   if (title.toLowerCase().includes("aws")) return "☁️";
@@ -8,6 +13,7 @@ const getEmoji = (title: string) => {
   if (title.toLowerCase().includes("google")) return "🌍";
   return "📚";
 };
+
 const formatDate = (isoString: string) => {
   const date = new Date(isoString);
   return date.toLocaleString("en-US", {
@@ -17,18 +23,70 @@ const formatDate = (isoString: string) => {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: true, // Ensures AM/PM format
+    hour12: true,
   });
 };
-export default function TestResultCard({ testData }: TestResultCardProps) {
+
+export default function TestResultCard({
+  testData,
+  setFilteredHistory,
+}: TestResultCardProps & {
+  setFilteredHistory: React.Dispatch<React.SetStateAction<TestResults[]>>;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDropdownOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+
+  const [deleteTest] = useDeleteTestResultMutation();
+
+  const handleCardClick = () => {
+    if (!isDropdownOpen) {
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <div
-      className="group relative bg-white dark:bg-[#1E1E1E] border border-gray-300 dark:border-gray-700 
-    rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-500 
-    dark:hover:border-blue-400 cursor-pointer flex flex-col min-h-[200px] space-y-3"
-      onClick={() => setIsModalOpen(true)}
+      className="relative group bg-white dark:bg-[#1E1E1E] border border-gray-300 dark:border-gray-700 
+      rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-500 
+      dark:hover:border-blue-400 cursor-pointer flex flex-col min-h-[200px] space-y-3"
+      onClick={handleCardClick}
     >
+      {/* 3-dot menu */}
+      <Menu as="div" className="absolute top-3 right-3 z-10 text-left">
+  <Menu.Button
+    onClick={(e) => e.stopPropagation()}
+    className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+  >
+    <EllipsisVerticalIcon className="h-6 w-6" aria-hidden="true" />
+  </Menu.Button>
+
+  <Menu.Items
+    onClick={(e) => e.stopPropagation()}
+    className="absolute right-0 mt-2 w-32 origin-top-right bg-white dark:bg-[#2C2C2C] 
+               border border-gray-200 dark:border-gray-600 divide-y divide-gray-100 dark:divide-gray-700 
+               rounded-md shadow-lg focus:outline-none z-50"
+  >
+    <div className="px-1 py-1">
+      <Menu.Item>
+        {({ active }) => (
+          <button
+            onClick={() => setIsConfirmDeleteOpen(true)}
+            className={`${
+              active
+                ? "bg-gray-100 dark:bg-gray-700 text-red-700"
+                : "text-red-600"
+            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+          >
+            Delete
+          </button>
+        )}
+      </Menu.Item>
+    </div>
+  </Menu.Items>
+</Menu>
+
+
       {/* Title & Icon */}
       <div className="flex items-center gap-3 min-w-0">
         <span className="text-2xl">{getEmoji(testData.title)}</span>
@@ -55,17 +113,49 @@ export default function TestResultCard({ testData }: TestResultCardProps) {
       {/* View Details Button */}
       <button
         className="cursor-pointer mt-auto bg-gray-900 dark:bg-gray-700 text-white text-sm font-medium 
-      px-4 py-2 rounded-md transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-600"
+        px-4 py-2 rounded-md transition-all duration-200 hover:bg-gray-800 dark:hover:bg-gray-600"
       >
         View Results →
       </button>
 
-      {/* Modal for Full Test History */}
+      {/* Modal for result details */}
       <TestHistoryModal
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
         testData={testData}
       />
+
+      {/* Confirmation Modal for delete */}
+      <ModalTemplate
+        isOpen={isConfirmDeleteOpen}
+        setIsOpen={setIsConfirmDeleteOpen}
+        title="Confirm Deletion"
+      >
+        <p className="text-gray-700 dark:text-gray-300">
+          Are you sure you want to delete this test result? This action cannot
+          be undone.
+        </p>
+        <div className="mt-6 flex justify-between">
+          <button
+            onClick={() => setIsConfirmDeleteOpen(false)}
+            className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+            onClick={() => {
+              setFilteredHistory((prev) =>
+                prev.filter((test) => test.test_id !== testData.test_id)
+              );
+              setIsConfirmDeleteOpen(false);
+              deleteTest(testData.test_id);
+            }}
+          >
+            Yes, Delete
+          </button>
+        </div>
+      </ModalTemplate>
     </div>
   );
 }

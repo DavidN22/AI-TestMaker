@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../db/db.ts"; // adjust path as needed
+import { pool } from "../db/db.js"; // adjust path as needed
 
 export const getTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,7 +18,6 @@ export const getTokenMiddleware = async (req: Request, res: Response, next: Next
 
     const tokens = result.rows[0].tokens;
 
-    console.log("Tokens available:", tokens);
 
     if (tokens === 0) {
       return next(new Error("No tokens available"));

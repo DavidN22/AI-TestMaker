@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createClient } from "../utils/supabaseServerClient.ts";
+import { createClient } from "../utils/supabaseServerClient.js";
 
 export const decodeUserMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {

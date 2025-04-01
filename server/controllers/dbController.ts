@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../db/db.ts"; // Ensure your database connection is configured
-import { createClient } from "../utils/supabaseServerClient.ts";
+import { pool } from "../db/db.js"; // Ensure your database connection is configured
+import { createClient } from "../utils/supabaseServerClient.js";
 
 const dbController = {
   addQuizResult: async (req: Request, res: Response, next: NextFunction) => {
@@ -10,12 +10,11 @@ const dbController = {
         correctCount,
         wrongCount,
         unansweredCount,
-        updatedQuizData, // This remains an array but stored as JSON
+        updatedQuizData,
         testName,
         weakPoints,
         summary,
       } = req.body.resultsWithWeakPoints;
-      // Insert into database, storing updatedQuizData as JSONB
       let user = res.locals.user;
       const query = `
         INSERT INTO devtests (score, "user", correct_count, wrong_count, unanswered_count, title, weak_points, summary, quiz_data)
@@ -66,7 +65,7 @@ const dbController = {
       await supabase.auth.signOut();
       let userid = res.locals.uid;
       let user = res.locals.user;
-      console.log("Deleting user:", userid);
+
       await supabase.auth.admin.deleteUser(userid);
       const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`;
       await pool.query(deleteQuery, [user]);
@@ -76,6 +75,31 @@ const dbController = {
       next(error);
     }
   },
+  clearAllTestResults: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let user = res.locals.user;
+      const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`;
+      await pool.query(deleteQuery, [user]);
+  
+      res.status(200).json({ message: "All test results cleared successfully." });
+    } catch (error) {
+      next(error);
+    }
+  },
+  
+  deleteSingleTestResult: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { testId } = req.params;
+      const user = res.locals.user;
+      const deleteQuery = `DELETE FROM devtests WHERE test_id = $1 AND "user" = $2`;
+      await pool.query(deleteQuery, [testId, user]);
+  
+      res.status(200).json({ message: `Test result ${testId} deleted successfully.` });
+    } catch (error) {
+      next(error);
+    }
+  },
+  
 };
 
 export default dbController;
