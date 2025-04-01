@@ -13,7 +13,12 @@ export const createClient = (context) => {
             },
             setAll(cookiesToSet) {
                 cookiesToSet.forEach(({ name, value, options }) => {
-                    context.res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, options));
+                    context.res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, {
+                        ...options,
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'none',
+                    }));
                 });
             },
         },
