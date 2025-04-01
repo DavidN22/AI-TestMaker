@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     port: 8000,
     proxy: {
-      '/api': 'https://ai-test-maker-server.vercel.app',
+      '/api': 'https://api.teskro.com',
     },
   },
   resolve: {

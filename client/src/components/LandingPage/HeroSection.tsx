@@ -10,7 +10,7 @@ const HeroSection = () => {
   const user = useSelector((state: RootState) => state.auth.email);
 
   const handleGoogleSignIn = () => {
-    window.location.href = "http://ai-test-maker-server.vercel.app/api/auth/login";
+    window.location.href = "http://api.teskro.com/api/auth/login";
   };
 
   const handleNavToHome = () => {

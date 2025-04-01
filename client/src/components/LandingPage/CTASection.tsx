@@ -12,7 +12,7 @@ const CTASection = () => {
     if (user) {
       navigate("/home");
     } else {
-      window.location.href = "https://ai-test-maker-server.vercel.app/api/auth/login";
+      window.location.href = "https://api.teskro.com/api/auth/login";
     }
   };
 

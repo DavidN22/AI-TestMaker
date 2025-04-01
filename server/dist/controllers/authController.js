@@ -6,7 +6,7 @@ export const handleLogin = async (req, res, next) => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: "https://ai-test-maker-server.vercel.app/api/auth/callback",
+                redirectTo: "https://api.teskro.com/api/auth/callback",
             },
         });
         if (error)
