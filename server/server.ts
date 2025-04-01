@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import "./db/db.js"
-import {testDbConnection} from "./db/db.js"
 import cors from 'cors'; 
 import aiRoutes from './routes/aiRoutes.js'; 
 import dbRoutes from './routes/dbRoutes.js';
@@ -14,9 +13,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-testDbConnection();
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://teskro.com',
+  credentials: true
+}));
+
 app.use(express.json());
 // Routes
 app.use('/api/ai', aiRoutes);
