@@ -15,9 +15,10 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: 'https://teskro.com',
-  credentials: true
-}));
+    origin: ['https://teskro.com', 'https://www.teskro.com'],
+    credentials: true
+  }));
+  
 
 app.use(express.json());
 // Routes
