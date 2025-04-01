@@ -14,16 +14,9 @@ export default function Header() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
   const { handleLogout } = useApi();
-  const handleGoogleSignIn = async () => {
-    const res = await fetch("https://ai-test-maker-server.vercel.app/api/auth/login", {
-      method: "POST",
-      credentials: "include", // crucial!
-    });
-  
-    const { url } = await res.json();
-    window.location.href = url; // manual redirect after cookies have been handled
+  const handleGoogleSignIn = () => {
+    window.location.href = "https://ai-test-maker-server.vercel.app/api/auth/login";
   };
-  
 
   return (
     <>
