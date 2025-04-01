@@ -6,7 +6,7 @@ export const handleLogin = async (req, res, next) => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: "http://localhost:3000/api/auth/callback",
+                redirectTo: "http://ai-test-maker-server.vercel.app/api/auth/callback",
             },
         });
         if (error)
@@ -72,14 +72,14 @@ export const handleOAuthCallback = async (req, res, next) => {
                     // Delete user from Supabase pool
                     await supabase.auth.admin.deleteUser(uid);
                     // Redirect to login to retry flow
-                    return res.redirect("http://localhost:8000/home"); // or wherever your login starts
+                    return res.redirect("https://teskro.com/home"); // or wherever your login starts
                 }
                 else {
                     throw err;
                 }
             }
         }
-        res.redirect("http://localhost:8000/home");
+        res.redirect("https://teskro.com/home");
     }
     catch (error) {
         next(error);
@@ -89,7 +89,7 @@ export const handleLogout = async (req, res, next) => {
     try {
         const supabase = createClient({ req, res });
         await supabase.auth.signOut();
-        res.redirect("http://localhost:8000/home");
+        res.redirect("https://teskro.com/home");
     }
     catch (error) {
         next(error);
