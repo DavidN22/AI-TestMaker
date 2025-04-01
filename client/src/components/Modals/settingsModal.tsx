@@ -18,7 +18,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
 
-  const modelOptions = ["gemini", "gpt-4o", "deepseek", "claude"];
+  const modelOptions = ["gemini", "deepseek", "gpt-4o", "claude"];
   const [selectedModel, setSelectedModel] = useState("gemini");
 
   useEffect(() => {
@@ -29,7 +29,8 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const handleModelChange = (model: string) => {
     setSelectedModel(model);
     localStorage.setItem("languageModel", model);
-    dispatch(showSuccess(`Language model set to ${model}`));
+    dispatch(showSuccess(`Language model set to ${model.charAt(0).toUpperCase() + model.slice(1)}`));
+
   };
 
   const deleteAccount = async () => {
@@ -58,15 +59,15 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
           </div>
         </div>
 
-        {/* Language Model Selector */}
         <CustomCombobox
-          label="Current Language Model"
-          options={modelOptions}
-          selected={selectedModel}
-          onChange={handleModelChange}
-          disabledOptions={modelOptions.filter((m) => m !== "gemini")}
-          displayValue={(model) => model.charAt(0).toUpperCase() + model.slice(1)}
-        />
+  label="Current Language Model"
+  options={modelOptions}
+  selected={selectedModel}
+  onChange={handleModelChange}
+  disabledOptions={[selectedModel, ...modelOptions.filter((m) => m !== "gemini" && m !== "deepseek" && m !== "gpt-4o")]}
+  displayValue={(model) => model.charAt(0).toUpperCase() + model.slice(1)}
+/>
+
 
         {/* Delete Account Button */}
         <div className="mt-12">

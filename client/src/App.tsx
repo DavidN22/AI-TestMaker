@@ -23,7 +23,7 @@ useEffect(() => {
   if (message && type) {
     const toastFn = type === "success" ? toast.success : toast.error;
     toastFn(message, {
-      position: "top-center",
+      position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,

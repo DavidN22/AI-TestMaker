@@ -17,19 +17,22 @@ export function useApi() {
   }) => {
     setLoading(true);
     try {
+      const languageModel = localStorage.getItem("languageModel") || "gemini";
       const response = await axios.post(
         "/api/ai/getTest",
-        { testName, numQuestions, weakPointMode },
+        { testName, numQuestions, weakPointMode, languageModel },
         { withCredentials: true }
       );
       return response.data.message.questions;
     } catch (error) {
       handleApiError(error);
-      throw error
+      throw error;
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   /**
    * Reviews the test results by sending them to the server for analysis.
@@ -48,37 +51,36 @@ export function useApi() {
   }) => {
     setLoading(true);
     try {
-      // Send the quiz results to the AI review endpoint for analysis
-      const reviewRes = await axios.post("/api/ai/reviewTest", { results });
+      const languageModel = localStorage.getItem("languageModel") || "gemini";
+  
+      const reviewRes = await axios.post("/api/ai/reviewTest", {
+        results,
+        languageModel,
+      });
       const { weakpoints, summary } = reviewRes.data.message;
-
-      // Combine the original results with the weak points and summary
+  
       const resultsWithWeakPoints = {
         ...results,
         testName,
         weakPoints: weakpoints,
         summary,
       };
-
-      // Save the processed results to the database
+  
       const dbRes = await axios.post(
         "/api/db/tests",
         { resultsWithWeakPoints },
         { withCredentials: true }
       );
-
-      // Extract the quiz ID from the database response
+  
       const quizId = dbRes.data.quizId.test_id;
-      // Return the processed results along with the test ID (from the backend response)
       return { ...resultsWithWeakPoints, test_id: quizId };
     } catch (error) {
-      // Handle any errors that occur during the process
       handleApiError(error);
     } finally {
-      // Ensure the loading state is reset
       setLoading(false);
     }
   };
+  
 
   const deleteUserAccount = async () => {
     setLoading(true);

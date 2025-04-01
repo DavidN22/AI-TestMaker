@@ -8,7 +8,7 @@ interface CustomComboboxProps<T> {
   selected: T;
   onChange: (value: T) => void;
   displayValue?: (value: T) => string;
-  disabledOptions?: T[]; // Optional: for disabling specific options
+  disabledOptions?: T[];
 }
 
 export default function CustomCombobox<T extends string | number>({
@@ -46,20 +46,30 @@ export default function CustomCombobox<T extends string | number>({
             >
               <Combobox.Options className="absolute w-full mt-1 bg-white dark:bg-gray-700 shadow-md rounded-md border border-gray-300 dark:border-gray-600 p-2 space-y-1 z-50 max-h-60 overflow-y-auto scrollbar">
                 {options.map((option) => {
-                  const isDisabled = disabledOptions.includes(option);
+                  const isSelected = option === selected;
+                  const isDisabled = isSelected || disabledOptions.includes(option);
+
                   return (
                     <Combobox.Option
                       key={String(option)}
                       value={option}
                       disabled={isDisabled}
-                      className={`cursor-pointer px-4 py-2 rounded-md flex justify-between items-center ${
-                        isDisabled
-                          ? "text-gray-400 bg-transparent"
-                          : "hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
-                      }`}
+                      className={`px-4 py-2 rounded-md flex justify-between items-center
+                        ${
+                          isSelected
+                            ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-not-allowed"
+                            : isDisabled
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white cursor-pointer"
+                        }`}
                     >
                       <span>{displayValue(option)}</span>
-                      {isDisabled && (
+                      {isSelected && (
+                        <span className="text-xs text-gray-400 ml-2">
+                          (selected)
+                        </span>
+                      )}
+                      {!isSelected && disabledOptions.includes(option) && (
                         <span className="text-xs text-gray-400 ml-2">
                           (coming soon)
                         </span>
