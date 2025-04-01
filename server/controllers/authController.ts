@@ -12,7 +12,7 @@ export const handleLogin = async (
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://ai-test-maker-server.vercel.app/api/auth/callback",
+        redirectTo: "https://ai-test-maker-server.vercel.app/api/auth/callback",
       },
     });
 
