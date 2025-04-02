@@ -21,7 +21,7 @@ export default function Header() {
     const loginUrl =
       window.location.hostname === "localhost"
         ? "http://localhost:3000/api/auth/login"
-        : "https://teskro.com/api/auth/login";
+        : "https://api.teskro.com/api/auth/login";
     window.location.href = loginUrl;
   };
 
