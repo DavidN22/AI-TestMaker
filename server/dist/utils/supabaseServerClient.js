@@ -17,7 +17,7 @@ export const createClient = (context) => {
                         ...options,
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
-                        sameSite: 'none',
+                        sameSite: 'lax',
                         domain: process.env.NODE_ENV === 'production' ? '.teskro.com' : undefined, // no domain for localhost
                     }));
                 });
