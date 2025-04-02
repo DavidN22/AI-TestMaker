@@ -9,7 +9,7 @@ export function useApi() {
   const [loading, setLoading] = useState(false);
   const apiBase = useSelector((state: RootState) => state.config.apiBase);
   const frontendBase = useSelector((state: RootState) => state.config.frontendBase);
-  console.log("API Base URL:", apiBase);
+
 
   const fetchTest = async ({
     testName,
