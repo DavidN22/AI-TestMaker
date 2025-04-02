@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { createClient } from "../utils/supabaseServerClient.js";
 import { pool } from "../db/db.js";
-import { CLIENT_URL, API_URL } from "../utils/config.js"; // ✅ Import URLs
 
 export const handleLogin = async (
   req: Request,
@@ -9,13 +8,11 @@ export const handleLogin = async (
   next: NextFunction
 ) => {
   try {
-    console.log("Handling login request");
     const supabase = createClient({ req, res });
-
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${API_URL}/api/auth/callback`, // ✅ Dynamic base URL
+        redirectTo: "https://api.teskro.com/api/auth/callback",
       },
     });
 
@@ -61,6 +58,7 @@ export const handleOAuthCallback = async (
       const existingUser = rows[0];
 
       if (existingUser.uid !== uid) {
+        // Update UID if it's different
         const updateQuery = `
           UPDATE users
           SET uid = $1, name = $2
@@ -75,6 +73,7 @@ export const handleOAuthCallback = async (
         console.log("User already exists with matching UID in local DB");
       }
     } else {
+      // Try inserting new user
       const insertQuery = `
         INSERT INTO users (uid, email, name)
         VALUES ($1, $2, $3)
@@ -84,23 +83,28 @@ export const handleOAuthCallback = async (
         await pool.query(insertQuery, [uid, email, user_metadata?.name || ""]);
       } catch (err: any) {
         if (
-          err.code === "23505" &&
+          err.code === "23505" && // Unique violation
           err.constraint === "users_uid_key"
         ) {
           console.warn("Supabase UID collision detected. Deleting user from Supabase.");
+
+          // Delete user from Supabase pool
           await supabase.auth.admin.deleteUser(uid);
-          return res.redirect(`${CLIENT_URL}/home`); 
+
+          // Redirect to login to retry flow
+          return res.redirect("https://teskro.com/home"); // or wherever your login starts
         } else {
           throw err;
         }
       }
     }
 
-    res.redirect(`${CLIENT_URL}/home`);
+    res.redirect("https://teskro.com/home");
   } catch (error) {
     next(error);
   }
 };
+
 
 export const handleLogout = async (
   req: Request,
@@ -110,17 +114,19 @@ export const handleLogout = async (
   try {
     const supabase = createClient({ req, res });
     await supabase.auth.signOut();
-    res.redirect(`${CLIENT_URL}/home`); 
+    res.status(200).json({ message: "Logged out" }); // No redirect
   } catch (error) {
     next(error);
   }
 };
+
 
 export const getCurrentUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+
   try {
     const supabase = createClient({ req, res });
     const {
@@ -130,15 +136,14 @@ export const getCurrentUser = async (
     console.log("User from Supabase:", user);
     if (!user) {
       res.json({ user: null });
-      return;
+      return
     }
-
+   
     res.json({ user });
   } catch (error) {
     next(error);
   }
 };
-
 export const getUserToken = async (
   req: Request,
   res: Response,
