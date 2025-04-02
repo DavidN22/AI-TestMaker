@@ -89,7 +89,7 @@ export const handleLogout = async (req, res, next) => {
     try {
         const supabase = createClient({ req, res });
         await supabase.auth.signOut();
-        res.redirect("https://teskro.com/home");
+        res.status(200).json({ message: "Logged out" }); // No redirect
     }
     catch (error) {
         next(error);

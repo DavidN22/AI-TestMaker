@@ -94,18 +94,18 @@ export function useApi() {
       setLoading(false);
     }
   };
-
   const handleLogout = async () => {
     setLoading(true);
     try {
       await axios.get("https://api.teskro.com/api/auth/logout", { withCredentials: true });
-       window.location.reload();
+      window.location.href = "https://teskro.com";
     } catch (error) {
       handleApiError(error);
     } finally {
       setLoading(false);
     }
-  }; 
+  };
+   
 
   return {
     loading,
