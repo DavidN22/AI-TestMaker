@@ -23,13 +23,13 @@ export const apiSlice = createApi({
   tagTypes: ["TestResults"],
   endpoints: (builder) => ({
     getTestResults: builder.query<TestResults[], void>({
-      query: () => "https://api.teskro.com/tests",
+      query: () => "/tests",
       providesTags: ["TestResults"],
     }),
 
     deleteTestResult: builder.mutation<void, string>({
       query: (testId) => ({
-        url: `https://api.teskro.com/tests/${testId}`,
+        url: `/tests/${testId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["TestResults"],
@@ -37,7 +37,7 @@ export const apiSlice = createApi({
 
     clearAllTestResults: builder.mutation<void, void>({
       query: () => ({
-        url: `https://api.teskro.com/tests`,
+        url: `/tests`,
         method: "DELETE",
       }),
       invalidatesTags: ["TestResults"],
