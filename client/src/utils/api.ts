@@ -87,6 +87,7 @@ export function useApi() {
     try {
       await axios.delete("https://api.teskro.com/api/db/delete", { withCredentials: true });
       await axios.get("https://api.teskro.com/api/auth/logout", { withCredentials: true });
+      window.location.reload();
     } catch (error) {
       handleApiError(error);
     } finally {
@@ -98,8 +99,7 @@ export function useApi() {
     setLoading(true);
     try {
       await axios.get("https://api.teskro.com/api/auth/logout", { withCredentials: true });
-
-      window.location.href = "https://teskro.com/";
+       window.location.reload();
     } catch (error) {
       handleApiError(error);
     } finally {
