@@ -3,7 +3,7 @@ import { TestResults } from "@/Types/Results";
 import { handleApiError } from "../../utils/handleApiErrors";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "/api/db",
+  baseUrl: "https://api.teskro.com/api/db",
   credentials: "include",
 });
 
@@ -23,13 +23,13 @@ export const apiSlice = createApi({
   tagTypes: ["TestResults"],
   endpoints: (builder) => ({
     getTestResults: builder.query<TestResults[], void>({
-      query: () => "/tests",
+      query: () => "https://api.teskro.com/tests",
       providesTags: ["TestResults"],
     }),
 
     deleteTestResult: builder.mutation<void, string>({
       query: (testId) => ({
-        url: `/tests/${testId}`,
+        url: `https://api.teskro.com/tests/${testId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["TestResults"],
@@ -37,7 +37,7 @@ export const apiSlice = createApi({
 
     clearAllTestResults: builder.mutation<void, void>({
       query: () => ({
-        url: `/tests`,
+        url: `https://api.teskro.com/tests`,
         method: "DELETE",
       }),
       invalidatesTags: ["TestResults"],

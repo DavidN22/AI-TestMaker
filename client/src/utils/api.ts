@@ -19,7 +19,7 @@ export function useApi() {
     try {
       const languageModel = localStorage.getItem("languageModel") || "gemini";
       const response = await axios.post(
-        "/api/ai/getTest",
+        "https://api.teskro.com/api/ai/getTest",
         { testName, numQuestions, weakPointMode, languageModel },
         { withCredentials: true }
       );
@@ -53,7 +53,7 @@ export function useApi() {
     try {
       const languageModel = localStorage.getItem("languageModel") || "gemini";
   
-      const reviewRes = await axios.post("/api/ai/reviewTest", {
+      const reviewRes = await axios.post("https://api.teskro.com/api/ai/reviewTest", {
         results,
         languageModel,
       });
@@ -67,7 +67,7 @@ export function useApi() {
       };
   
       const dbRes = await axios.post(
-        "/api/db/tests",
+        "https://api.teskro.com/api/db/tests",
         { resultsWithWeakPoints },
         { withCredentials: true }
       );
@@ -85,8 +85,8 @@ export function useApi() {
   const deleteUserAccount = async () => {
     setLoading(true);
     try {
-      await axios.delete("/api/db/delete", { withCredentials: true });
-      await axios.get("/api/auth/logout");
+      await axios.delete("https://api.teskro.com/api/db/delete", { withCredentials: true });
+      await axios.get("https://api.teskro.com/api/auth/logout");
     } catch (error) {
       handleApiError(error);
     } finally {
@@ -97,8 +97,8 @@ export function useApi() {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      await axios.get("/api/auth/logout");
-      window.location.href = "/";
+      await axios.get("https://api.teskro.com/api/auth/logout");
+      window.location.href = "https://teskro.com/";
     } catch (error) {
       handleApiError(error);
     } finally {

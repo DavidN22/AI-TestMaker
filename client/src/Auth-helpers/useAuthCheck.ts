@@ -8,7 +8,7 @@ const useAuthCheck = () => {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const { data } = await axios.get("/api/auth/me", {
+        const { data } = await axios.get("https://api.teskro.com/api/auth/me", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
