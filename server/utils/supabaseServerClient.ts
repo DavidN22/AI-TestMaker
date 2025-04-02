@@ -31,12 +31,12 @@ export const createClient = (context: SupabaseContext) => {
               ...options,
               httpOnly: true,
               secure: true,
-              sameSite: 'none', 
-           
+              sameSite: 'none',
+              domain: '.teskro.com', // ensures the cookie is shared across subdomains
             })
           );
         });
-      },
+      }      
     },
   });
 };

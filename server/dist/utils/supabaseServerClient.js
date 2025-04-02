@@ -18,9 +18,10 @@ export const createClient = (context) => {
                         httpOnly: true,
                         secure: true,
                         sameSite: 'none',
+                        domain: '.teskro.com', // ensures the cookie is shared across subdomains
                     }));
                 });
-            },
+            }
         },
     });
 };
