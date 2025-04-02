@@ -2,7 +2,10 @@ import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 import { handleApiError } from '../../utils/handleApiErrors';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://api.teskro.com/api/auth',
+  baseUrl:
+  window.location.hostname === 'localhost'
+    ? '/api/auth'
+    : 'https://api.teskro.com/api/auth',
   credentials: 'include',
 });
 

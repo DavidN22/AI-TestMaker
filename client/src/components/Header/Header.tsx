@@ -10,12 +10,19 @@ import DarkModeToggle from "./DarkModeToggle";
 import UserDropdown from "./UserDropdown";
 import TokenDisplay from "./TokenDisplay";
 
+
 export default function Header() {
+ 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
+
   const { handleLogout } = useApi();
   const handleGoogleSignIn = () => {
-    window.location.href = "https://api.teskro.com/api/auth/login";
+    const loginUrl =
+      window.location.hostname === "localhost"
+        ? "http://localhost:3000/api/auth/login"
+        : "https://teskro.com/api/auth/login";
+    window.location.href = loginUrl;
   };
 
   return (

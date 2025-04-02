@@ -4,12 +4,14 @@ import { apiSlice } from "./Slices/apiSlice";
 import toastReducer from "./Slices/toastSlice";
 import authReducer from "./Slices/authSlice";
 import { tokenApiSlice } from "./Slices/tokenSlice";
+import configReducer from "./Slices/configSlice";
 
 const store = configureStore({
   reducer: {
     filter: filterReducer,
     toast: toastReducer,
     auth: authReducer,
+    config: configReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     [tokenApiSlice.reducerPath]: tokenApiSlice.reducer,
   },

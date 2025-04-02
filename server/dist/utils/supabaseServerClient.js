@@ -16,9 +16,9 @@ export const createClient = (context) => {
                     context.res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, {
                         ...options,
                         httpOnly: true,
-                        secure: true,
-                        sameSite: 'none',
-                        domain: '.teskro.com', // ensures the cookie is shared across subdomains
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: 'lax',
+                        domain: process.env.NODE_ENV === 'production' ? '.teskro.com' : undefined, // no domain for localhost
                     }));
                 });
             }
