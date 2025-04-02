@@ -18,6 +18,7 @@ const useAuthCheck = () => {
     
         const user = data.user;
 
+        console.log("User data:", user);
     
         dispatch(setUserData({
           email: user.email,
