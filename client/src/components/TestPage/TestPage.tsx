@@ -11,16 +11,14 @@ import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
 import CancelTest from "../Modals/CancelTestModal";
 import SubmitTest from "../Modals/SubmitTestModal";
 
-
 export default function TestPage() {
   const { reviewTest } = useApi();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { refetch:refetchTestData } = useGetTestResultsQuery();
+  const { refetch: refetchTestData } = useGetTestResultsQuery();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-
 
   useEffect(() => {
     if (
@@ -70,7 +68,7 @@ export default function TestPage() {
       refetchTestData();
 
       setTimeout(() => {
-         // adjust based on your actual return
+        // adjust based on your actual return
 
         navigate("/history", {
           replace: true,
@@ -173,17 +171,21 @@ export default function TestPage() {
               {showHint ? "Hide Hint" : "Show Hint"}
             </button>
 
-            <button
-              onClick={() => handleQuestionChange(currentIndex + 1)}
-              disabled={currentIndex === questions.length - 1}
-              className={`flex-1 px-6 py-3 rounded-md font-medium text-sm transition-all ${
-                currentIndex === questions.length - 1
-                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100"
-              }`}
-            >
-              Next
-            </button>
+            {currentIndex === questions.length - 1 ? (
+              <button
+                onClick={() => setIsSubmitOpen(true)}
+                className="flex-1 px-6 py-3 bg-black text-white dark:bg-white dark:text-black rounded-md font-medium text-sm hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all"
+              >
+                Submit Test
+              </button>
+            ) : (
+              <button
+                onClick={() => handleQuestionChange(currentIndex + 1)}
+                className="flex-1 px-6 py-3 bg-black text-white dark:bg-white dark:text-black rounded-md font-medium text-sm hover:bg-neutral-900 dark:hover:bg-neutral-100 transition-all"
+              >
+                Next
+              </button>
+            )}
           </div>
 
           {/* Mobile Submit / Cancel */}

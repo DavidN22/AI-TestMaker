@@ -17,11 +17,12 @@ const CTASection = () => {
   };
 
   return (
-    <section className="relative bg-white dark:bg-[#1E1E1E] text-black dark:text-white px-6 py-28 overflow-hidden">
-      <div className="max-w-4xl mx-auto relative z-10 text-center border border-yellow-400/20 dark:border-yellow-300/30 rounded-2xl px-8 py-20 shadow-[0_0_40px_rgba(234,179,8,0.05)] dark:shadow-[0_0_50px_rgba(234,179,8,0.15)] bg-gray-50 dark:bg-[#141414] backdrop-blur-sm">
+    <section className="relative bg-white dark:bg-[#1E1E1E] text-black dark:text-white px-6 py-32">
+      <div className="max-w-4xl mx-auto relative z-10 text-center border border-yellow-400/20 dark:border-yellow-300/30 rounded-2xl px-8 py-24 shadow-[0_0_40px_rgba(234,179,8,0.05)] dark:shadow-[0_0_50px_rgba(234,179,8,0.15)] bg-gray-50 dark:bg-[#141414] backdrop-blur-sm">
+        
         {/* Title */}
         <motion.h2
-          className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-yellow-400 to-orange-500 dark:from-yellow-300 dark:to-yellow-500 text-transparent bg-clip-text mb-6"
+          className="text-4xl md:text-5xl font-extrabold leading-tight bg-gradient-to-r from-yellow-400 to-orange-500 dark:from-yellow-300 dark:to-yellow-500 text-transparent bg-clip-text mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -31,7 +32,7 @@ const CTASection = () => {
 
         {/* Description */}
         <motion.p
-          className="text-md md:text-lg text-gray-700 dark:text-gray-400 max-w-2xl mx-auto mb-10"
+          className="text-md md:text-lg leading-relaxed text-gray-700 dark:text-gray-400 max-w-2xl mx-auto mb-10"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}

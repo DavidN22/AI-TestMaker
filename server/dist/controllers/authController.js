@@ -3,7 +3,6 @@ import { pool } from "../db/db.js";
 import { CLIENT_URL, API_URL } from "../utils/config.js"; // ✅ Import URLs
 export const handleLogin = async (req, res, next) => {
     try {
-        console.log("Handling login request");
         const supabase = createClient({ req, res });
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
@@ -97,7 +96,6 @@ export const getCurrentUser = async (req, res, next) => {
     try {
         const supabase = createClient({ req, res });
         const { data: { user }, } = await supabase.auth.getUser();
-        console.log("User from Supabase:", user);
         if (!user) {
             res.json({ user: null });
             return;

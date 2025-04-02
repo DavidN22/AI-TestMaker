@@ -23,7 +23,6 @@ export function getModel(languageModel: string) {
           ],
           model: "deepseek-chat",
           response_format: { type: "json_object" },
-          max_tokens: 2048,
         });
 
         return completion.choices[0].message.content || "";

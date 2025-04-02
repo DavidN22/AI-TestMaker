@@ -20,7 +20,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const [isHistoryConfirmOpen, setIsHistoryConfirmOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
   const [clearAllTestResults] = useClearAllTestResultsMutation();
-  const modelOptions = ["gemini", "deepseek", "gpt-4o", "claude"];
+  const modelOptions = ["gemini","gpt-4o", "deepseek",  "claude"];
   const [selectedModel, setSelectedModel] = useState("gemini");
 
   useEffect(() => {
@@ -33,7 +33,9 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
     localStorage.setItem("languageModel", model);
     dispatch(
       showSuccess(
-        `Language model set to ${model.charAt(0).toUpperCase() + model.slice(1)}`
+        `Language model set to ${
+          model.charAt(0).toUpperCase() + model.slice(1)
+        }`
       )
     );
   };
@@ -55,7 +57,13 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
       console.error("Error deleting history data:", error);
     }
   };
-
+  const modelLabelMap: Record<string, string> = {
+    gemini: "Gemini (Fastest Model)",
+    "gpt-4o": "Gpt-4o",
+    deepseek: "Deepseek (Slowest Model)",
+    claude: "Claude",
+  };
+  
   return (
     <>
       <ModalTemplate isOpen={state} setIsOpen={onClose} title="Settings">
@@ -81,34 +89,44 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
               (m) => m !== "gemini" && m !== "deepseek" && m !== "gpt-4o"
             ),
           ]}
-          displayValue={(model) => model.charAt(0).toUpperCase() + model.slice(1)}
+          displayValue={(model) => modelLabelMap[model] || model}
+
         />
+        {/* Bug Report Section */}
+        <div className="mt-8 text-sm text-gray-600 dark:text-gray-400 text-center">
+          Found a bug or have feedback?{" "}
+          <a
+            href="mailto:naymondavid@gmail.com"
+            className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+          >
+            Send me an email
+          </a>
+          .
+        </div>
 
-{/* Danger Zone */}
-<div className="mt-10 bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-300 dark:border-red-700">
-  <h3 className="text-base font-semibold text-red-700 dark:text-red-300 mb-2">
-    Danger Zone
-  </h3>
-  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-    Be careful — these actions are irreversible.
-  </p>
-  <div className="flex flex-wrap gap-3">
-    <button
-      onClick={() => setIsHistoryConfirmOpen(true)}
-      className="px-4 py-2 text-yellow-800 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-700 dark:text-yellow-100 dark:hover:bg-yellow-600 rounded-md text-sm font-medium transition"
-    >
-      Delete History
-    </button>
-    <button
-      onClick={() => setIsConfirmOpen(true)}
-      className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition"
-    >
-      Delete All Data
-    </button>
-  </div>
-</div>
-
-
+        {/* Danger Zone */}
+        <div className="mt-10 bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-300 dark:border-red-700">
+          <h3 className="text-base font-semibold text-red-700 dark:text-red-300 mb-2">
+            Danger Zone
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Be careful — these actions are irreversible.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setIsHistoryConfirmOpen(true)}
+              className="px-4 py-2 text-yellow-800 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-700 dark:text-yellow-100 dark:hover:bg-yellow-600 rounded-md text-sm font-medium transition"
+            >
+              Delete History
+            </button>
+            <button
+              onClick={() => setIsConfirmOpen(true)}
+              className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition"
+            >
+              Delete All Data
+            </button>
+          </div>
+        </div>
 
         {/* Close Button */}
         <div className="mt-4 flex justify-end">
@@ -157,8 +175,8 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
         title="Confirm History Deletion"
       >
         <p className="text-gray-700 dark:text-gray-300">
-          Are you sure you want to delete your test history? This action
-          cannot be undone.
+          Are you sure you want to delete your test history? This action cannot
+          be undone.
         </p>
         <div className="mt-6 flex justify-between">
           <button

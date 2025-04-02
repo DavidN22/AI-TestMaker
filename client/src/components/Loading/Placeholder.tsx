@@ -7,7 +7,7 @@ export default function LoadingPlaceholder() {
     <>
       <Header />
       <motion.div
-        className="fixed inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-[#0e0e0e]/90 backdrop-blur-md"
+        className="fixed inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-[#1E1E1E]/90"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

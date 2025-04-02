@@ -9,7 +9,7 @@ export const handleLogin = async (
   next: NextFunction
 ) => {
   try {
-    console.log("Handling login request");
+
     const supabase = createClient({ req, res });
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -127,7 +127,6 @@ export const getCurrentUser = async (
       data: { user },
     } = await supabase.auth.getUser();
 
-    console.log("User from Supabase:", user);
     if (!user) {
       res.json({ user: null });
       return;

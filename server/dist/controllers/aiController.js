@@ -9,26 +9,42 @@ const aiController = {
         try {
             const user = res.locals.user;
             await pool.query("UPDATE users SET tokens = tokens - 1 WHERE email = $1", [user]);
+            const result = await pool.query(`
+    SELECT quiz_data
+    FROM devtests
+    WHERE "user" = $1
+    ORDER BY date DESC
+    LIMIT 1
+  `, [user]);
+            // Step 2: Extract previous questions if any
+            let previousQuestions = [];
+            if (result.rows.length > 0) {
+                const quizData = result.rows[0].quiz_data;
+                previousQuestions = quizData.map((q) => q.question);
+            }
             const model = getModel(languageModel);
             let prompt = `You are an API generating test questions in JSON.
 
-Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz.
-
-Types:
-- Multiple choice (4 options, 1 correct),
-- Select two (5 options, 2 correct),
-- True/False (2 options, 1 correct).
-
-Return only a valid JSON with the following format:
-${promptSchema}
-
-Rules:
-- "questions" array MUST contain **exactly ${numQuestions} items**
-- Do NOT include any explanation or commentary.
-- Do NOT include more or fewer than ${numQuestions} questions.
-- Follow the JSON structure strictly. No text before or after.
-${res.locals.weakPoints?.length
+      Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz.
+      
+      Types:
+      - Multiple choice (4 options, 1 correct),
+      - Select two (5 options, 2 correct),
+      - True/False (2 options, 1 correct).
+      
+      Return only a valid JSON with the following format:
+      ${promptSchema}
+      
+      Rules:
+      - "questions" array MUST contain **exactly ${numQuestions} items**
+      - Do NOT include any explanation or commentary.
+      - Do NOT include more or fewer than ${numQuestions} questions.
+      - Follow the JSON structure strictly. No text before or after.
+      ${res.locals.weakPoints?.length
                 ? `Focus especially on: ${res.locals.weakPoints.join(", ")}`
+                : ""}
+      ${previousQuestions.length
+                ? `Avoid generating questions similar to the following:\n- ${previousQuestions.join("\n- ")}`
                 : ""}`.trim();
             const rawResponse = await model.generate(prompt);
             const message = JSON.parse(rawResponse);

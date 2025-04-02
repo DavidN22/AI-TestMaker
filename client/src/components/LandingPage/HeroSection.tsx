@@ -3,14 +3,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
-import cpuAnimation from "../../assets/cpuAnimation.gif";
+import heroAnimation from "../../assets/heroAnimation.gif";
 
 const HeroSection = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.email);
 
   const handleGoogleSignIn = () => {
-    window.location.href = "http://api.teskro.com/api/auth/login";
+    const loginUrl =
+      window.location.hostname === "localhost"
+        ? "http://localhost:3000/api/auth/login"
+        : "https://api.teskro.com/api/auth/login";
+    window.location.href = loginUrl;
   };
 
   const handleNavToHome = () => {
@@ -41,7 +45,8 @@ const HeroSection = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-md">
-          Teskro helps you generate, practice, and improve with curated cloud exam questions powered by AI.
+            Teskro helps you generate, practice, and improve with curated cloud
+            exam questions powered by AI.
           </p>
 
           {user ? (
@@ -78,25 +83,21 @@ const HeroSection = () => {
         >
           <div className="relative w-[90%] max-w-md aspect-square bg-gradient-to-br from-gray-100 to-white dark:from-[#2a2a2a] dark:to-[#1E1E1E] border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl p-8 flex items-center justify-center overflow-hidden">
             {/* Glowing pulse behind icon */}
-            <div className="absolute w-32 h-32 bg-yellow-300/20 dark:bg-yellow-400/10 rounded-full blur-2xl animate-ping z-0" />
+            <div className="absolute w-32 h-32 " />
             <motion.img
-  src={cpuAnimation}
-  alt="CPU Animation"
-  className="w-48 h-48 z-10" // increased from w-32 h-32 to w-48 h-48
-  initial={{ scale: 0.9 }}
-  animate={{ scale: 1 }}
-  transition={{ yoyo: Infinity, duration: 3, ease: "easeInOut" }}
-/>
+              src={heroAnimation}
+              alt="CPU Animation"
+              className="w-68 h-68 z-10" // increased from w-32 h-32 to w-48 h-48
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+            />
 
             <div className="absolute bottom-4 text-sm text-gray-400 dark:text-gray-500 text-center w-full z-10">
               Your AI-powered cloud study partner
             </div>
-            
           </div>
         </motion.div>
-        
       </div>
-      
     </section>
   );
 };
