@@ -99,6 +99,7 @@ export const getCurrentUser = async (req, res, next) => {
     try {
         const supabase = createClient({ req, res });
         const { data: { user }, } = await supabase.auth.getUser();
+        console.log("User from Supabase:", user);
         if (!user) {
             res.json({ user: null });
             return;
