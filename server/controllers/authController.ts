@@ -110,7 +110,7 @@ export const handleLogout = async (
   try {
     const supabase = createClient({ req, res });
     await supabase.auth.signOut();
-    res.redirect(`${CLIENT_URL}/home`); 
+    res.json({ message: "Logged out successfully" });
   } catch (error) {
     next(error);
   }
