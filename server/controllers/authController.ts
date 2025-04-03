@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createClient } from "../utils/supabaseServerClient.js";
 import { pool } from "../db/db.js";
-import { CLIENT_URL, API_URL } from "../utils/config.js"; // ✅ Import URLs
+import { CLIENT_URL, API_URL } from "../utils/config.js";
 
 export const handleLogin = async (
   req: Request,
@@ -9,13 +8,12 @@ export const handleLogin = async (
   next: NextFunction
 ) => {
   try {
-
-    const supabase = createClient({ req, res });
+    const supabase = res.locals.supabase;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${API_URL}/api/auth/callback`, // ✅ Dynamic base URL
+        redirectTo: `${API_URL}/api/auth/callback`,
       },
     });
 
@@ -41,15 +39,16 @@ export const handleOAuthCallback = async (
   try {
     if (!code) throw new Error("Authorization code missing");
 
-    const supabase = createClient({ req, res });
-    const { error: exchangeError } =
-      await supabase.auth.exchangeCodeForSession(code);
+    const supabase = res.locals.supabase;
+
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
     if (exchangeError) throw exchangeError;
 
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
+
     if (userError || !user) throw userError || new Error("User not found");
 
     const { id: uid, email, user_metadata } = user;
@@ -83,13 +82,10 @@ export const handleOAuthCallback = async (
       try {
         await pool.query(insertQuery, [uid, email, user_metadata?.name || ""]);
       } catch (err: any) {
-        if (
-          err.code === "23505" &&
-          err.constraint === "users_uid_key"
-        ) {
+        if (err.code === "23505" && err.constraint === "users_uid_key") {
           console.warn("Supabase UID collision detected. Deleting user from Supabase.");
           await supabase.auth.admin.deleteUser(uid);
-          return res.redirect(`${CLIENT_URL}/home`); 
+          return res.redirect(`${CLIENT_URL}/home`);
         } else {
           throw err;
         }
@@ -108,7 +104,8 @@ export const handleLogout = async (
   next: NextFunction
 ) => {
   try {
-    const supabase = createClient({ req, res });
+    const supabase = res.locals.supabase;
+
     await supabase.auth.signOut();
     res.json({ message: "Logged out successfully" });
   } catch (error) {
@@ -122,7 +119,8 @@ export const getCurrentUser = async (
   next: NextFunction
 ) => {
   try {
-    const supabase = createClient({ req, res });
+    const supabase = res.locals.supabase;
+
     const {
       data: { user },
     } = await supabase.auth.getUser();

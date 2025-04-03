@@ -27,7 +27,7 @@ export default function LoadingPlaceholder() {
           </h2>
 
           <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">
-            We’re putting the finishing touches on this section. Check back soon!
+            Check back soon!
           </p>
         </div>
       </motion.div>

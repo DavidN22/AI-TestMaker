@@ -3,7 +3,12 @@ import { Loader2, AlertCircle, CheckCircle, Info, XCircle  } from "lucide-react"
 import Tooltip from "./Tooltip";
 
 export default function TokenBadge() {
-  const { data, isLoading, isError } = useGetTokensQuery();
+  const { data, isLoading, isError } = useGetTokensQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnReconnect: false,
+    refetchOnFocus: false,
+  });
+  
 
   const baseStyle =
     "flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-xl shadow-sm border transition-all duration-300 min-w-[140px] h-[36px] backdrop-blur-sm";

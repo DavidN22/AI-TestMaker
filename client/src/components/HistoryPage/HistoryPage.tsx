@@ -11,11 +11,16 @@ import TestHistoryModal from "../Modals/TestHistoryModal";
 
 
 export default function HistoryPage() {
-  const {
-    data: testHistory = [],
-    error,
-    isLoading: loading,
-  } = useGetTestResultsQuery();
+const {
+  data: testHistory = [],
+  error,
+  isLoading: loading,
+} = useGetTestResultsQuery(undefined, {
+  refetchOnMountOrArgChange: false,
+  refetchOnReconnect: false,
+  refetchOnFocus: false,
+});
+
 
   const [filteredHistory, setFilteredHistory] = useState<TestResults[]>([]);
   const [search, setSearch] = useState("");
@@ -23,7 +28,6 @@ export default function HistoryPage() {
   const [dateFilter, setDateFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTest, setSelectedTest] = useState<TestResults | null>(null);
-
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,15 +97,6 @@ export default function HistoryPage() {
             Error: {"status" in error ? error.status : error.message}
           </p>
         )}
-
-        {/* {filteredHistory.length > 0 && (
-          <button
-            onClick={() => setIsConfirmOpen(true)}
-            className="mb-4 text-sm px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
-          >
-            Clear All Test History
-          </button>
-        )} */}
 
         {/* Filter Section */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -183,38 +178,6 @@ export default function HistoryPage() {
           setIsOpen={setIsModalOpen}
           testData={selectedTest}
         />
-
-        {/* Clear All Confirmation Modal */}
-        {/* <ModalTemplate
-          isOpen={isConfirmOpen}
-          setIsOpen={setIsConfirmOpen}
-          title="Confirm Deletion"
-        >
-          <p className="text-gray-700 dark:text-gray-300">
-            Are you sure you want to permanently delete all your test results?
-            This action cannot be undone.
-          </p>
-          <div className="mt-6 flex justify-between">
-            <button
-              onClick={() => setIsConfirmOpen(false)}
-              className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
-            >
-              Cancel
-            </button>
-            <button
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition flex items-center justify-center min-w-[120px]"
-              disabled={isDeleting}
-              onClick={async () => {
-                setIsDeleting(true);
-                await clearAllTestResults();
-                setIsDeleting(false);
-                setIsConfirmOpen(false);
-              }}
-            >
-              {isDeleting ? <LoadingSpinner message="" /> : "Delete All"}
-            </button>
-          </div>
-        </ModalTemplate> */}
       </div>
     </div>
   );

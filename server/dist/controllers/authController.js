@@ -1,13 +1,12 @@
-import { createClient } from "../utils/supabaseServerClient.js";
 import { pool } from "../db/db.js";
-import { CLIENT_URL, API_URL } from "../utils/config.js"; // ✅ Import URLs
+import { CLIENT_URL, API_URL } from "../utils/config.js";
 export const handleLogin = async (req, res, next) => {
     try {
-        const supabase = createClient({ req, res });
+        const supabase = res.locals.supabase;
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: `${API_URL}/api/auth/callback`, // ✅ Dynamic base URL
+                redirectTo: `${API_URL}/api/auth/callback`,
             },
         });
         if (error)
@@ -28,7 +27,7 @@ export const handleOAuthCallback = async (req, res, next) => {
     try {
         if (!code)
             throw new Error("Authorization code missing");
-        const supabase = createClient({ req, res });
+        const supabase = res.locals.supabase;
         const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
         if (exchangeError)
             throw exchangeError;
@@ -65,8 +64,7 @@ export const handleOAuthCallback = async (req, res, next) => {
                 await pool.query(insertQuery, [uid, email, user_metadata?.name || ""]);
             }
             catch (err) {
-                if (err.code === "23505" &&
-                    err.constraint === "users_uid_key") {
+                if (err.code === "23505" && err.constraint === "users_uid_key") {
                     console.warn("Supabase UID collision detected. Deleting user from Supabase.");
                     await supabase.auth.admin.deleteUser(uid);
                     return res.redirect(`${CLIENT_URL}/home`);
@@ -84,7 +82,7 @@ export const handleOAuthCallback = async (req, res, next) => {
 };
 export const handleLogout = async (req, res, next) => {
     try {
-        const supabase = createClient({ req, res });
+        const supabase = res.locals.supabase;
         await supabase.auth.signOut();
         res.json({ message: "Logged out successfully" });
     }
@@ -94,7 +92,7 @@ export const handleLogout = async (req, res, next) => {
 };
 export const getCurrentUser = async (req, res, next) => {
     try {
-        const supabase = createClient({ req, res });
+        const supabase = res.locals.supabase;
         const { data: { user }, } = await supabase.auth.getUser();
         if (!user) {
             res.json({ user: null });
