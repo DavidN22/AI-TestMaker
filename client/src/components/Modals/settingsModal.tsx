@@ -7,6 +7,7 @@ import { showSuccess } from "../../store/Slices/toastSlice";
 import CustomCombobox from "./CustomCombobox";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { useClearAllTestResultsMutation } from "../../store/Slices/apiSlice";
+import { X, Trash2 } from "lucide-react";
 
 interface SettingsModalProps {
   onClose: (isSettingOpen: boolean) => void;
@@ -20,7 +21,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const [isHistoryConfirmOpen, setIsHistoryConfirmOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
   const [clearAllTestResults] = useClearAllTestResultsMutation();
-  const modelOptions = ["gemini","gpt-4o", "deepseek",  "claude"];
+  const modelOptions = ["gemini", "gpt-4o", "deepseek", "claude"];
   const [selectedModel, setSelectedModel] = useState("gemini");
 
   useEffect(() => {
@@ -63,7 +64,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
     deepseek: "Deepseek (Slowest Model)",
     claude: "Claude",
   };
-  
+
   return (
     <>
       <ModalTemplate isOpen={state} setIsOpen={onClose} title="Settings">
@@ -90,7 +91,6 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
             ),
           ]}
           displayValue={(model) => modelLabelMap[model] || model}
-
         />
         {/* Bug Report Section */}
         <div className="mt-8 text-sm text-gray-600 dark:text-gray-400 text-center">
@@ -129,11 +129,12 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
         </div>
 
         {/* Close Button */}
-        <div className="mt-4 flex justify-end">
+        <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 mt-6">
           <button
+            className="flex items-center gap-1 text-sm px-4 py-2 rounded-md border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#333]"
             onClick={() => onClose(false)}
-            className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
           >
+            <X className="w-4 h-4" />
             Close
           </button>
         </div>
@@ -149,20 +150,23 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
           Are you sure you want to permanently delete your data? This action
           cannot be undone.
         </p>
-        <div className="mt-6 flex justify-between">
+        <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 mt-6">
           <button
+            className="flex items-center gap-1 text-sm px-4 py-2 rounded-md border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#333]"
             onClick={() => setIsConfirmOpen(false)}
-            className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
           >
+            <X className="w-4 h-4" />
             Cancel
           </button>
+
           <button
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+            className="flex items-center gap-1 text-sm px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
             onClick={() => {
               deleteAccount();
               setIsConfirmOpen(false);
             }}
           >
+            <Trash2 className="w-4 h-4" />
             Yes, Delete
           </button>
         </div>
@@ -178,21 +182,24 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
           Are you sure you want to delete your test history? This action cannot
           be undone.
         </p>
-        <div className="mt-6 flex justify-between">
+        <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 mt-6">
           <button
+            className="flex items-center gap-1 text-sm px-4 py-2 rounded-md border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#333]"
             onClick={() => setIsHistoryConfirmOpen(false)}
-            className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
           >
+            <X className="w-4 h-4" />
             Cancel
           </button>
+
           <button
-            className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition"
+            className="flex items-center gap-1 text-sm px-4 py-2 rounded-md bg-yellow-600 text-white hover:bg-yellow-700 transition"
             onClick={() => {
               deleteHistoryData();
               setIsHistoryConfirmOpen(false);
             }}
           >
-            Yes, Delete History
+            <Trash2 className="w-4 h-4" />
+            Delete History
           </button>
         </div>
       </ModalTemplate>

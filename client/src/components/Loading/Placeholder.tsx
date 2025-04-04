@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { Hourglass } from "lucide-react";
-import Header from "../Header/Header";
 
 export default function LoadingPlaceholder() {
   return (
     <>
-      <Header />
+   
       <motion.div
         className="fixed inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-[#1E1E1E]/90"
         initial={{ opacity: 0 }}

@@ -6,12 +6,14 @@ import { useDeleteTestResultMutation } from "../../store/Slices/apiSlice";
 import { TestResults } from "@/Types/Results";
 import { Menu } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { Cloud, Landmark, Globe, BookOpen } from "lucide-react";
 
-const getEmoji = (title: string) => {
-  if (title.toLowerCase().includes("aws")) return "☁️";
-  if (title.toLowerCase().includes("azure")) return "🔷";
-  if (title.toLowerCase().includes("google")) return "🌍";
-  return "📚";
+const getIcon = (title: string) => {
+  const lower = title.toLowerCase();
+  if (lower.includes("aws")) return <Cloud className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
+  if (lower.includes("azure")) return <Landmark className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
+  if (lower.includes("google")) return <Globe className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
+  return <BookOpen className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
 };
 
 const formatDate = (isoString: string) => {
@@ -89,7 +91,7 @@ export default function TestResultCard({
 
       {/* Title & Icon */}
       <div className="flex items-center gap-3 min-w-0">
-        <span className="text-2xl">{getEmoji(testData.title)}</span>
+      <div>{getIcon(testData.title)}</div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white tracking-wide truncate group-hover:whitespace-normal group-hover:overflow-visible group-hover:text-ellipsis">
           {testData.title}
         </h2>

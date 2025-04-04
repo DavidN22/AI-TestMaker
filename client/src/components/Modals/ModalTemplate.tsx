@@ -11,8 +11,8 @@ interface ModalTemplateProps {
   setIsOpen: (isOpen: boolean) => void;
   title: string;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl"; // Size options for width
-  fullScreen?: boolean; // New prop to control full height
+  size?: "sm" | "md" | "lg" | "xl" | "custom";
+  fullScreen?: boolean; 
 }
 
 export default function ModalTemplate({
@@ -31,8 +31,9 @@ export default function ModalTemplate({
   const sizeClasses = {
     sm: "max-w-sm",
     md: "max-w-md",
-    lg: "max-w-2xl h-[55vh]", // Increase height for lg
+    lg: "max-w-2xl h-[55vh]",
     xl: "max-w-5xl",
+    custom: "max-w-md flex-col", 
   };
 
   return (

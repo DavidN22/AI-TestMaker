@@ -1,4 +1,3 @@
-import Header from "../Header/Header";
 import HeroSection from "../LandingPage/HeroSection";
 import FeaturesSection from "../LandingPage/FeaturesSection";
 import CTASection from "../LandingPage/CTASection";
@@ -11,7 +10,7 @@ import FeaturesPreviewSection from "../LandingPage/FeaturesPreviewSection";
 export default function LandingView() {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-[#1E1E1E]">
-      <Header />
+      
       <motion.div
         className="flex flex-col flex-1 overflow-hidden"
         initial={{ opacity: 0 }} // Start invisible

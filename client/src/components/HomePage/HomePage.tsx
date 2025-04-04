@@ -1,10 +1,12 @@
 import TestCard from "./TestCard";
 import { RootState } from "../../store/store";
 import { useSelector } from "react-redux";
-
+import CreateTestModal from "../Modals/CreateTestModal";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const filteredTests = useSelector(
     (state: RootState) => state.filter.filteredTests
   );
@@ -70,24 +72,24 @@ export default function HomePage() {
           ))}
           {/* Create Your Own Test - Coming Soon Card */}
           <div
-            className="relative bg-gradient-to-br from-gray-100 via-white to-gray-200 dark:from-[#2A2A2A] dark:via-[#1E1E1E] dark:to-[#2A2A2A]
-  border border-dashed border-gray-400 dark:border-gray-600 rounded-xl p-6 shadow-md flex flex-col min-h-[220px] 
-  items-center justify-center text-center transition-all duration-300 hover:shadow-lg group cursor-not-allowed"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="relative border border-dashed border-gray-400 dark:border-gray-600 
+    rounded-xl p-6 shadow-md flex flex-col min-h-[220px] items-center justify-center 
+    text-center transition-all duration-300 hover:shadow-lg group cursor-pointer 
+    bg-gradient-to-br from-gray-100 via-white to-gray-200 dark:from-[#2A2A2A] dark:via-[#1E1E1E] dark:to-[#2A2A2A]"
           >
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-4xl animate-pulse">🛠️</span>
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Create Your Own Test
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
-                Customize challenges to match your skills. Coming soon!
-              </p>
-              <div className="mt-3 text-xs text-blue-500 dark:text-blue-400 italic opacity-70">
-                Feature in development
-              </div>
-            </div>
+            <span className="text-5xl text-blue-500 group-hover:scale-110 transition-transform">
+              +
+            </span>
+            <h2 className="text-lg font-semibold mt-3 text-gray-800 dark:text-white">
+              Create Test
+            </h2>
           </div>
         </div>
+        <CreateTestModal
+          isOpen={isCreateModalOpen}
+          setIsOpen={setIsCreateModalOpen}
+        />
       </div>
     </div>
   );

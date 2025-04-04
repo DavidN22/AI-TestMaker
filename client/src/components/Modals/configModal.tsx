@@ -7,6 +7,8 @@ import axios from "axios";
 import CustomCombobox from "./CustomCombobox.tsx";
 import LoadingWithTrivia from "../Loading/LoadingSpinnerHints.tsx";
 import { useGetTokensQuery } from "../../store/Slices/tokenSlice.ts";
+import { X, PlayIcon } from "lucide-react";
+
 
 interface TestConfigModalProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -136,20 +138,24 @@ export default function TestConfigModal({
       />
 
       {/* Buttons */}
-      <div className="mt-6 flex justify-between">
-        <button
-          onClick={() => setIsOpen(false)}
-          className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
-        >
-          Cancel
-        </button>
-        <button
-          className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          onClick={handleStart}
-        >
-          Start Test
-        </button>
-      </div>
+      <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 mt-6">
+  <button
+    className="flex items-center gap-1 text-sm px-4 py-2 rounded-md border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#333]"
+    onClick={() => setIsOpen(false)}
+  >
+    <X className="w-4 h-4" />
+    Cancel
+  </button>
+
+  <button
+    className="flex items-center gap-1 text-sm px-4 py-2 rounded-md bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition"
+    onClick={handleStart}
+  >
+    <PlayIcon className="w-4 h-4" />
+    Start Test
+  </button>
+</div>
+
     </ModalTemplate>
   );
 }
