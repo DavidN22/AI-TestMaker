@@ -68,7 +68,7 @@ export default function TestPage() {
       refetchTestData();
 
       setTimeout(() => {
-        // adjust based on your actual return
+        
 
         navigate("/history", {
           replace: true,

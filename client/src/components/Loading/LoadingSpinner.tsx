@@ -20,7 +20,6 @@ export default function LoadingSpinner({ message }: { message: string }) {
         transition={{ duration: 1, repeat: Infinity }}
       >
         {message}
-        <span className="dots">...</span>
       </motion.p>
     </div>
   );
