@@ -6,16 +6,17 @@ interface Test {
     provider: string; 
     difficulty: string;
     id : number;
+    headline: string;
     description: string;
    
 }
 
-type FilterState = {
+interface FilterState {
     search: string;
     providers: string[];
     difficulty: string;
-    filteredTests: Test[]; // Type the filteredTests array
-};
+    filteredTests: Test[];
+}
 
 const initialState: FilterState = {
     search: "",

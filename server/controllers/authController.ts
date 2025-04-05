@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { pool } from "../db/db.js";
 import { CLIENT_URL, API_URL } from "../utils/config.js";
+import { sendWelcomeEmail } from "../utils/sendWelcomeEmail.js";
 
 export const handleLogin = async (
   req: Request,
@@ -70,6 +71,7 @@ export const handleOAuthCallback = async (
           user_metadata?.name || "",
           email,
         ]);
+      
       } else {
         console.log("User already exists with matching UID in local DB");
       }
@@ -78,7 +80,7 @@ export const handleOAuthCallback = async (
         INSERT INTO users (uid, email, name)
         VALUES ($1, $2, $3)
       `;
-
+  await sendWelcomeEmail(email, user_metadata?.name || "there");
       try {
         await pool.query(insertQuery, [uid, email, user_metadata?.name || ""]);
       } catch (err: any) {

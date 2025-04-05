@@ -6,20 +6,24 @@ import { useApi } from "../../utils/api.ts";
 import axios from "axios";
 import CustomCombobox from "./CustomCombobox.tsx";
 import LoadingWithTrivia from "../Loading/LoadingSpinnerHints.tsx";
-import { useGetTokensQuery } from "../../store/Slices/tokenSlice.ts";
+
+import { tokenApiSlice } from "../../store/Slices/tokenSlice.ts";
 import { X, PlayIcon } from "lucide-react";
+import { useDispatch } from "react-redux";
 
 
 interface TestConfigModalProps {
   setIsOpen: (isOpen: boolean) => void;
   testName: string;
   state: boolean;
+  description: string;
 }
 
 export default function TestConfigModal({
   setIsOpen,
   state,
   testName,
+  description,
 }: TestConfigModalProps) {
   const [weakPointMode, setWeakPointMode] = useState(false);
   const [timerEnabled, setTimerEnabled] = useState(false);
@@ -27,16 +31,19 @@ export default function TestConfigModal({
   const [timeLimit, setTimeLimit] = useState(5);
   const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { fetchTest, loading } = useApi();
-  const { refetch } = useGetTokensQuery();
+
   const handleStart = async () => {
     try {
       const questions = await fetchTest({
         testName,
         numQuestions,
         weakPointMode,
+        description
       });
-      refetch();
+     dispatch(tokenApiSlice.util.invalidateTags(["Tokens"]));
+
       setTimeout(() => {
         navigate(`/test/${testName}`, {
           state: {

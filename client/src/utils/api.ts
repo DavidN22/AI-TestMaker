@@ -4,28 +4,35 @@ import { QuizResult } from "@/Types/Results";
 import { handleApiError } from "./handleApiErrors";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { useDispatch } from "react-redux";
+import { tokenApiSlice } from "../store/Slices/tokenSlice";
 
 export function useApi() {
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const apiBase = useSelector((state: RootState) => state.config.apiBase);
-  const frontendBase = useSelector((state: RootState) => state.config.frontendBase);
-
+  const frontendBase = useSelector(
+    (state: RootState) => state.config.frontendBase
+  );
 
   const fetchTest = async ({
     testName,
     numQuestions,
     weakPointMode,
+  description,
   }: {
     testName: string;
     numQuestions: number;
     weakPointMode: boolean;
+    description: string;
   }) => {
     setLoading(true);
     try {
       const languageModel = localStorage.getItem("languageModel") || "gemini";
       const response = await axios.post(
         `${apiBase}/ai/getTest`,
-        { testName, numQuestions, weakPointMode, languageModel },
+        { testName, numQuestions, weakPointMode, languageModel,description },
         { withCredentials: true }
       );
       return response.data.message.questions;
@@ -76,6 +83,39 @@ export function useApi() {
     }
   };
 
+  const getPreviewTest = async ({
+    title,
+    description,
+    difficulty,
+  }: {
+    title: string;
+    description: string;
+    difficulty: string;
+    provider: string;
+  }) => {
+    setLoading(true);
+    try {
+      const languageModel = localStorage.getItem("languageModel") || "gemini";
+      const response = await axios.post(
+        `${apiBase}/ai/getPreviewTest`,
+        {
+          title,
+          description,
+          difficulty,
+          languageModel,
+        },
+        { withCredentials: true }
+      );
+      dispatch(tokenApiSlice.util.invalidateTags(["Tokens"]));
+      return response.data.message;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const deleteUserAccount = async () => {
     setLoading(true);
     try {
@@ -107,5 +147,6 @@ export function useApi() {
     reviewTest,
     deleteUserAccount,
     handleLogout,
+    getPreviewTest,
   };
 }

@@ -5,6 +5,7 @@ import toastReducer from "./Slices/toastSlice";
 import authReducer from "./Slices/authSlice";
 import { tokenApiSlice } from "./Slices/tokenSlice";
 import configReducer from "./Slices/configSlice";
+import { testsApi } from './Slices/customTestsApi'; 
 
 const store = configureStore({
   reducer: {
@@ -14,11 +15,14 @@ const store = configureStore({
     config: configReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     [tokenApiSlice.reducerPath]: tokenApiSlice.reducer,
+    [testsApi.reducerPath]: testsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(apiSlice.middleware)
-      .concat(tokenApiSlice.middleware),
+      .concat(tokenApiSlice.middleware)
+      .concat(testsApi.middleware),
+
 });
 
 export type RootState = ReturnType<typeof store.getState>;

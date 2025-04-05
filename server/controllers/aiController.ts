@@ -5,17 +5,20 @@ import { summary } from "../blueprint/weakPointBlueprint.js";
 
 import { pool } from "../db/db.js";
 import { getModel } from "../utils/getModel.js";
+import { decrementUserToken } from "../utils/decrementToken.js";
 
 const aiController = {
   getAiTest: async (req: Request, res: Response, next: NextFunction) => {
-    const { testName, numQuestions, languageModel } = req.body;
+    const { testName, numQuestions, languageModel, description } = req.body;
+    console.log("testName", testName);
+    console.log("numQuestions", numQuestions);
+    console.log("languageModel", languageModel);
+    console.log("description", description);
 
     try {
       const user = res.locals.user;
-      await pool.query(
-        "UPDATE users SET tokens = tokens - 1 WHERE email = $1",
-        [user]
-      );
+
+      await decrementUserToken(user);
       const result = await pool.query(
         `
     SELECT quiz_data
@@ -38,14 +41,14 @@ const aiController = {
 
       let prompt = `You are an API generating test questions in JSON.
 
-      Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz.
+      Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz based on this description: ${description}.
       
       Types:
       - Multiple choice (4 options, 1 correct),
       - Select two (5 options, 2 correct),
       - True/False (2 options, 1 correct).
       
-      Return only a valid JSON with the following format:
+      Return only a valid JSON with the following example test format:
       ${promptSchema}
       
       Rules:
@@ -72,6 +75,28 @@ const aiController = {
       message.questions = message.questions.map(
         ({ question_number, ...rest }: any) => ({ ...rest })
       );
+
+      res.json({ message });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  getAiPreview: async (req: Request, res: Response, next: NextFunction) => {
+    const { title, description, languageModel } = req.body;
+
+    try {
+      const user = res.locals.user;
+      const model = getModel(languageModel);
+
+      const prompt = `Generate a preview of the ${JSON.stringify(title)} quiz. Using the description 
+      ${JSON.stringify(description)}.
+Follow this format: ${promptSchema}. Keep it very brief and concise (5 questions).
+ONLY RESPOND IN JSON FORMAT!`;
+
+      const rawResponse = await model.generate(prompt);
+      await decrementUserToken(user);
+      const message = JSON.parse(rawResponse);
 
       res.json({ message });
     } catch (error) {

@@ -103,7 +103,7 @@ export default function TestSidebar({
       {title}
     </h2>
     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-      Basic AWS knowledge assessment
+      Test your knowledge and skills with this assessment.
     </p>
 
     {/* Timer */}

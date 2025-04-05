@@ -23,9 +23,11 @@ const baseQueryWithErrorHandling: typeof baseQuery = async (args, api, extraOpti
 export const tokenApiSlice = createApi({
   reducerPath: 'tokenApi',
   baseQuery: baseQueryWithErrorHandling,
+  tagTypes: ['Tokens'],
   endpoints: (builder) => ({
     getTokens: builder.query<{ token: string }, void>({
       query: () => 'tokens',
+      providesTags: ['Tokens'],
     }),
   }),
 });
