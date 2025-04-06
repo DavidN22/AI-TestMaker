@@ -13,7 +13,7 @@ export default function SidebarFilter() {
   } = useFilters();
 
   return (
-    <aside className="md:sticky top-0 h-screen w-80 bg-white dark:bg-[#1E1E1E] p-0 md:block hidden border-l border-r border-b border-gray-300 dark:border-gray-700 transition-all shadow-md dark:shadow-md">
+    <aside className="md:sticky top-0 h-screen w-80 bg-white dark:bg-[#1E1E1E] p-0 md:block hidden border-l border-r border-b border-gray-300 dark:border-gray-700 transition-all">
       {/* Scrollable content inside */}
       <div className="h-full overflow-auto p-6">
         {/* Header */}

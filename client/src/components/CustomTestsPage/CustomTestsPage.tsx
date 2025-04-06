@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useGetCustomTestsQuery } from "../../store/Slices/customTestsApi";
-import TestCard from "../HomePage/TestCard";
+import TestCard from "../Shared/TestCard";
 import CreateTestModal from "../Modals/CreateTestModal/CreateTestModal";
 import TestCardSkeleton from "../Loading/TestCardSkeleton";
 import { motion } from "framer-motion";
 
 export default function CustomTestsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const { data: customTests = [], isLoading } = useGetCustomTestsQuery();
+const { data: customTests = [], isLoading } = useGetCustomTestsQuery(undefined, { refetchOnMountOrArgChange: false });
 
   return (
      <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
@@ -45,6 +45,7 @@ export default function CustomTestsPage() {
                 title={test.title}
                 headline={test.headline}
                 description={test.description}
+                difficulty={test.difficulty}
                 testId={test.test_id}
                 showMenu={true}
               />

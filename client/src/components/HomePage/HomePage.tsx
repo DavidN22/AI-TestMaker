@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { motion } from "framer-motion";
-import TestCard from "./TestCard";
+import TestCard from "../Shared/TestCard";
 
 export default function HomePage() {
   const filteredTests = useSelector(
@@ -53,6 +53,7 @@ export default function HomePage() {
               title={test.title}
               headline={test.headline}
               description={test.description}
+              difficulty={test.difficulty} 
               testId={test.test_id} // testId exists only on custom tests
               showMenu={test.provider === "Custom"} // Show menu only for custom tests
             />

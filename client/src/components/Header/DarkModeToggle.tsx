@@ -27,7 +27,7 @@ export default function DarkModeToggle() {
             onClick={toggleTheme}
             className="relative cursor-pointer"
         >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            {isDark ? <Sun size={20} className="text-white" /> : <Moon size={20} />}
         </button>
     );
 }

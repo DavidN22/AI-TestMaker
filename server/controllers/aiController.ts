@@ -9,8 +9,7 @@ import { decrementUserToken } from "../utils/decrementToken.js";
 
 const aiController = {
   getAiTest: async (req: Request, res: Response, next: NextFunction) => {
-    const { testName, numQuestions, languageModel, description, types } = req.body;
-
+    const { testName, numQuestions, languageModel, description, types, difficulty } = req.body;
 
     try {
       const user = res.locals.user;
@@ -40,33 +39,23 @@ const aiController = {
 
       let prompt = `You are an API generating test questions in JSON.
 
-      Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz based on this description: ${description}.
+      Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz with **${difficulty}** difficulty, based on this description: ${description}.
       
-    
-
       Return only a valid JSON with the following example test format:
       ${promptSchema}
-
-      The user want their questions in this style only: ${typesString}.
-
+      
+      The user wants their questions in this style only: ${typesString}.
+      
       Rules:
       - "questions" array MUST contain **exactly ${numQuestions} items**
       - Do NOT include any explanation or commentary.
       - Do NOT include more or fewer than ${numQuestions} questions.
       - Follow the JSON structure strictly. No text before or after.
+      - All questions should reflect a **${difficulty}** difficulty level.
       - Make sure to follow the type format provided and only generate ${typesString} type questions in random order.
-      ${
-        res.locals.weakPoints?.length
-          ? `Focus especially on: ${res.locals.weakPoints.join(", ")}`
-          : ""
-      }
-      ${
-        previousQuestions.length
-          ? `Avoid generating questions similar to the following:\n- ${previousQuestions.join(
-              "\n- "
-            )}`
-          : ""
-      }`.trim();
+      ${res.locals.weakPoints?.length ? `- Focus especially on: ${res.locals.weakPoints.join(", ")}` : ""}
+      ${previousQuestions.length ? `- Avoid generating questions similar to the following:\n- ${previousQuestions.join("\n- ")}` : ""}
+      `.trim();
 
       const rawResponse = await model.generate(prompt);
       const message = JSON.parse(rawResponse);

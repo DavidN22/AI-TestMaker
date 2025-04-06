@@ -51,7 +51,7 @@ export default function Header() {
                   {/* Left Group: Main Nav Links */}
                   <div className="flex space-x-5">
                     <NavItem to="/home" label="Home" icon={Home} />
-                    <NavItem
+                     <NavItem
                       to="/custom"
                       label="Custom Tests"
                       icon={ListChecks}

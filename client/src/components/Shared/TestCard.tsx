@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TestConfigModal from "../Modals/configModal";
+import TestConfigModal from "../Modals/ConfigModal/configModal";
 import { Cloud, Landmark, Globe, BookOpen } from "lucide-react";
 import { Menu } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
@@ -17,7 +17,7 @@ const getIcon = (title: string) => {
   return <BookOpen className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
 };
 
-export default function TestCard({ title, headline, description, showMenu = false, testId }: TestCardProps) {
+export default function TestCard({ title, difficulty, headline, description, showMenu = false, testId }: TestCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteCustomTest, { isLoading }] = useDeleteCustomTestMutation();
@@ -90,6 +90,12 @@ export default function TestCard({ title, headline, description, showMenu = fals
       <p className="text-sm text-gray-700 dark:text-gray-400 leading-relaxed flex-grow line-clamp-3">
         {headline}
       </p>
+{/* Difficulty (optional) */}
+{difficulty && (
+  <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+    Difficulty: {difficulty}
+  </p>
+)}
 
       {/* Start Button */}
       <button
@@ -105,6 +111,7 @@ export default function TestCard({ title, headline, description, showMenu = fals
         state={isModalOpen}
         description={description}
         setIsOpen={setIsModalOpen}
+        difficulty={difficulty || ""}
       />
 
       {/* Delete Confirmation Modal */}

@@ -22,12 +22,14 @@ export function useApi() {
     weakPointMode,
     description,
     types = [],
+    difficulty
   }: {
     testName: string;
     numQuestions: number;
     weakPointMode: boolean;
     description: string;
     types: string[];
+    difficulty?: string;
   }) => {
     setLoading(true);
     try {
@@ -40,6 +42,7 @@ export function useApi() {
           weakPointMode,
           languageModel,
           description,
+          difficulty,
           types,
         },
         { withCredentials: true }

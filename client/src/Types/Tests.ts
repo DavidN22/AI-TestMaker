@@ -20,4 +20,5 @@ export interface TestCardProps {
     description: string;
     showMenu?: boolean;
     testId?: string;
+    difficulty?: string; 
   }

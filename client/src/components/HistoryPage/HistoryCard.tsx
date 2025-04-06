@@ -6,12 +6,16 @@ import { TestResults } from "@/Types/Results";
 import { Menu } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { Cloud, Landmark, Globe, BookOpen } from "lucide-react";
+import DeleteTestMenuItem from "./DeleteTestMenuItem";
 
 const getIcon = (title: string) => {
   const lower = title.toLowerCase();
-  if (lower.includes("aws")) return <Cloud className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
-  if (lower.includes("azure")) return <Landmark className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
-  if (lower.includes("google")) return <Globe className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
+  if (lower.includes("aws"))
+    return <Cloud className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
+  if (lower.includes("azure"))
+    return <Landmark className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
+  if (lower.includes("google"))
+    return <Globe className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
   return <BookOpen className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
 };
 
@@ -35,7 +39,6 @@ export default function TestResultCard({
   testData: TestResults;
   setFilteredHistory: React.Dispatch<React.SetStateAction<TestResults[]>>;
 }) {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
@@ -57,42 +60,28 @@ export default function TestResultCard({
     >
       {/* 3-dot menu */}
       <Menu as="div" className="absolute top-3 right-3 z-10 text-left">
-  <Menu.Button
-    onClick={(e) => e.stopPropagation()}
-    className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
-  >
-    <EllipsisVerticalIcon className="h-6 w-6" aria-hidden="true" />
-  </Menu.Button>
+        <Menu.Button
+          onClick={(e) => e.stopPropagation()}
+          className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+        >
+          <EllipsisVerticalIcon className="h-6 w-6" aria-hidden="true" />
+        </Menu.Button>
 
-  <Menu.Items
-    onClick={(e) => e.stopPropagation()}
-    className="absolute right-0 mt-2 w-32 origin-top-right bg-white dark:bg-[#2C2C2C] 
+        <Menu.Items
+          onClick={(e) => e.stopPropagation()}
+          className="absolute right-0 mt-2 w-32 origin-top-right bg-white dark:bg-[#2C2C2C] 
                border border-gray-200 dark:border-gray-600 divide-y divide-gray-100 dark:divide-gray-700 
                rounded-md shadow-lg focus:outline-none z-50"
-  >
-    <div className="px-1 py-1">
-      <Menu.Item>
-        {({ active }) => (
-          <button
-            onClick={() => setIsConfirmDeleteOpen(true)}
-            className={`${
-              active
-                ? "bg-gray-100 dark:bg-gray-700 text-red-700"
-                : "text-red-600"
-            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-          >
-            Delete
-          </button>
-        )}
-      </Menu.Item>
-    </div>
-  </Menu.Items>
-</Menu>
-
+        >
+          <div className="px-1 py-1">
+            <DeleteTestMenuItem onClick={() => setIsConfirmDeleteOpen(true)} />
+          </div>
+        </Menu.Items>
+      </Menu>
 
       {/* Title & Icon */}
       <div className="flex items-center gap-3 min-w-0">
-      <div>{getIcon(testData.title)}</div>
+        <div>{getIcon(testData.title)}</div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white tracking-wide truncate group-hover:whitespace-normal group-hover:overflow-visible group-hover:text-ellipsis">
           {testData.title}
         </h2>
