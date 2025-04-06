@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import SettingsModal from "../Modals/settingsModal.tsx";
 import MobileHeader from "./MobileHeader";
 import { useSelector } from "react-redux";
-import { Home, History, BarChart, Cpu } from "lucide-react";
+import { Home, History, BarChart, Cpu, ListChecks } from "lucide-react";
 import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api.ts";
 import DarkModeToggle from "./DarkModeToggle";
@@ -51,6 +51,11 @@ export default function Header() {
                   {/* Left Group: Main Nav Links */}
                   <div className="flex space-x-5">
                     <NavItem to="/home" label="Home" icon={Home} />
+                    <NavItem
+                      to="/custom"
+                      label="Custom Tests"
+                      icon={ListChecks}
+                    />
                     <NavItem to="/history" label="History" icon={History} />
                     <NavItem
                       to="/statistics"

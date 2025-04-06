@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface ModalTemplateProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  title: string;
+  title: React.ReactNode;
   children: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl" | "custom";
   fullScreen?: boolean; 
@@ -30,10 +30,10 @@ export default function ModalTemplate({
   // Define width classes based on the size prop
   const sizeClasses = {
     sm: "max-w-sm",
-    md: "max-w-md",
+    md: "max-w-sm",
     lg: "max-w-2xl h-[55vh]",
     xl: "max-w-5xl",
-    custom: "max-w-md flex-col", 
+    custom: "max-w-lg flex-col", 
   };
 
   return (
@@ -54,7 +54,8 @@ export default function ModalTemplate({
               transition={{ duration: 0.2, ease: "easeOut" }}
               className={`bg-white dark:bg-[#1E1E1E] rounded-lg shadow-lg p-6 w-full ${
                 sizeClasses[size]
-              } ${fullScreen ? "h-[90vh] max-h-[90vh] overflow-y-auto" : "max-h-[80vh]"} overflow-visible`}
+              } ${fullScreen ? "h-[90vh]" : "max-h-[80vh]"} overflow-y-auto`}
+              
             >
               <DialogPanel>
                 <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">

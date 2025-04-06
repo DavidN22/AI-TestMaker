@@ -1,7 +1,6 @@
 import { useState } from "react";
 import TestHistoryModal from "../Modals/TestHistoryModal";
 import ModalTemplate from "../Modals/ModalTemplate";
-import { TestResultCardProps } from "@/Types/Results";
 import { useDeleteTestResultMutation } from "../../store/Slices/apiSlice";
 import { TestResults } from "@/Types/Results";
 import { Menu } from "@headlessui/react";
@@ -32,9 +31,11 @@ const formatDate = (isoString: string) => {
 export default function TestResultCard({
   testData,
   setFilteredHistory,
-}: TestResultCardProps & {
+}: {
+  testData: TestResults;
   setFilteredHistory: React.Dispatch<React.SetStateAction<TestResults[]>>;
 }) {
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);

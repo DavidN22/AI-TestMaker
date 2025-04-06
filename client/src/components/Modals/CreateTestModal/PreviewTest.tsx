@@ -1,26 +1,19 @@
-interface Question {
-  question_number: number;
-  question: string;
-  answers: Record<string, string>;
-  correct_answer: string[];
-  hint: string;
-  explanation: string;
-  select_two?: boolean;
-}
+import { Question } from "@/Types/Question";
+
 
 interface PreviewTestProps {
-  preview: { questions: Question[] };
+  questions: Question[];
   onBack: () => void;
   onCreate: () => void;
 }
 
-export default function PreviewTest({ preview, onBack, onCreate }: PreviewTestProps) {
+export default function PreviewTest({ questions, onBack, onCreate }: PreviewTestProps) {
   return (
     <div className="space-y-4 overflow-y-auto max-h-[60vh] pr-2">
-      {preview.questions.map((q) => (
-        <div key={q.question_number} className="border rounded-lg p-4 dark:border-gray-700">
+      {questions.map((q, index) => (
+        <div key={index} className="border rounded-lg p-4 dark:border-gray-700">
           <h3 className="font-semibold text-lg mb-2">
-            {q.question_number}. {q.question}
+            {index + 1}. {q.question}
           </h3>
           <ul className="space-y-1 text-sm">
             {Object.entries(q.answers).map(([key, value]) => (

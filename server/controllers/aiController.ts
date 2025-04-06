@@ -9,11 +9,8 @@ import { decrementUserToken } from "../utils/decrementToken.js";
 
 const aiController = {
   getAiTest: async (req: Request, res: Response, next: NextFunction) => {
-    const { testName, numQuestions, languageModel, description } = req.body;
-    console.log("testName", testName);
-    console.log("numQuestions", numQuestions);
-    console.log("languageModel", languageModel);
-    console.log("description", description);
+    const { testName, numQuestions, languageModel, description, types } = req.body;
+
 
     try {
       const user = res.locals.user;
@@ -36,6 +33,8 @@ const aiController = {
         const quizData = result.rows[0].quiz_data;
         previousQuestions = quizData.map((q: any) => q.question);
       }
+      //make types a string
+      const typesString = types.join(",\n");
 
       const model = getModel(languageModel);
 
@@ -43,19 +42,19 @@ const aiController = {
 
       Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz based on this description: ${description}.
       
-      Types:
-      - Multiple choice (4 options, 1 correct),
-      - Select two (5 options, 2 correct),
-      - True/False (2 options, 1 correct).
-      
+    
+
       Return only a valid JSON with the following example test format:
       ${promptSchema}
-      
+
+      The user want their questions in this style only: ${typesString}.
+
       Rules:
       - "questions" array MUST contain **exactly ${numQuestions} items**
       - Do NOT include any explanation or commentary.
       - Do NOT include more or fewer than ${numQuestions} questions.
       - Follow the JSON structure strictly. No text before or after.
+      - Make sure to follow the type format provided and only generate ${typesString} type questions in random order.
       ${
         res.locals.weakPoints?.length
           ? `Focus especially on: ${res.locals.weakPoints.join(", ")}`
@@ -91,7 +90,7 @@ const aiController = {
 
       const prompt = `Generate a preview of the ${JSON.stringify(title)} quiz. Using the description 
       ${JSON.stringify(description)}.
-Follow this format: ${promptSchema}. Keep it very brief and concise (5 questions).
+Follow this format: ${promptSchema}. Keep it very brief and concise (5 questions) Make sure the correct answer is a mutliple choice selction like a,b,c,d or e and not the answer itself.
 ONLY RESPOND IN JSON FORMAT!`;
 
       const rawResponse = await model.generate(prompt);

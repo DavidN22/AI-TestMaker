@@ -9,17 +9,32 @@ import AppInitializer from "./AppInitializer";
 import PrivacyPolicy from "./components/LandingPage/PrivacyPolicy";
 import Header from "./components/Header/Header";
 import HeaderSkeleton from "./components/Loading/HeaderSkeleton";
+import CustomPageView from "./components/views/CustomPageView";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import ScrollToTop from "./utils/ScrollToTop";
+import { useEffect } from "react";
+
 
 function AppContent() {
   const location = useLocation();
   const isLoading = useSelector((state: RootState) => state.auth.isAuthLoading);
-
-  // Use regex to check if the current path matches /test/:id
   const isTestRoute = /^\/test\/[^/]+$/.test(location.pathname);
+  // Use regex to check if the current path matches /test/:id
+  
+  useEffect(() => {
+    const routeName = (() => {
+      if (location.pathname === "/") return "";
+      if (location.pathname.startsWith("/home")) return "Home";
+      if (location.pathname.startsWith("/test")) return "Test";
+      if (location.pathname.startsWith("/history")) return "History";
+      if (location.pathname.startsWith("/statistics")) return "Statistics";
+      if (location.pathname.startsWith("/privacy-policy")) return "Privacy Policy";
+      return "Teskro";
+    })();
 
+    document.title = routeName ? `Teskro - ${routeName}` : "Teskro";
+  }, [location.pathname]);
   return (
     <>
       <ScrollToTop />
@@ -32,6 +47,14 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <HomeView />
+            </ProtectedRoute>
+          }
+        />
+            <Route
+          path="/custom"
+          element={
+            <ProtectedRoute>
+              <CustomPageView />
             </ProtectedRoute>
           }
         />

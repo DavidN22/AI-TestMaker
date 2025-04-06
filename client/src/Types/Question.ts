@@ -10,17 +10,7 @@ export interface Question {
 }
 
 
-export interface RawQuestion {
+export interface PreviewQuestion extends Omit<Question, 'answers'> {
   question_number: number;
-  question: string;
   answers: Record<string, string>;
-  correct_answer: string[];
-  hint: string;
-  explanation: string;
-  select_two?: boolean;
-}
-
-
-export interface PreviewData {
-  questions: RawQuestion[];
 }

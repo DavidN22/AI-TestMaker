@@ -1,21 +1,23 @@
-export interface Difficulty {
-  level: "Beginner" | "Intermediate" | "Advanced";
-}
-
 export interface Test {
-  test_id: string;
+    test_id?: string;
   title: string;
   headline: string;
   description: string;
-  difficulty: Difficulty;
+  difficulty: string;
   provider: string;
 }
-
-export interface TestCardProps {
+export interface CreateTest {
+    test_id?: string;
   title: string;
   headline: string;
   description: string;
-  showMenu?: boolean;
-  testId?: string;
+  difficulty: string;
+  provider: string;
 }
-export type TestCreation = Omit<Test, "test_id">;
+export interface TestCardProps {
+    title: string;
+    headline: string;
+    description: string;
+    showMenu?: boolean;
+    testId?: string;
+  }

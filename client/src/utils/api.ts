@@ -20,19 +20,28 @@ export function useApi() {
     testName,
     numQuestions,
     weakPointMode,
-  description,
+    description,
+    types = [],
   }: {
     testName: string;
     numQuestions: number;
     weakPointMode: boolean;
     description: string;
+    types: string[];
   }) => {
     setLoading(true);
     try {
       const languageModel = localStorage.getItem("languageModel") || "gemini";
       const response = await axios.post(
         `${apiBase}/ai/getTest`,
-        { testName, numQuestions, weakPointMode, languageModel,description },
+        {
+          testName,
+          numQuestions,
+          weakPointMode,
+          languageModel,
+          description,
+          types,
+        },
         { withCredentials: true }
       );
       return response.data.message.questions;
