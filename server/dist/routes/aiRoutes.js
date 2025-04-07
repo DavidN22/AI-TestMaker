@@ -6,5 +6,6 @@ import { getTokenMiddleware } from '../middleware/getTokenMiddleware.js'; // Adj
 const router = express.Router();
 // Define your routes here
 router.post('/getTest', decodeUserMiddleware, getTokenMiddleware, getWeakPointsMiddleware, aiController.getAiTest);
+router.post('/getPreviewTest', decodeUserMiddleware, getTokenMiddleware, aiController.getAiPreview);
 router.post('/reviewTest', aiController.getWeakPoints);
 export default router;

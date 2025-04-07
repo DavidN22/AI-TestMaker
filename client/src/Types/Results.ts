@@ -13,11 +13,6 @@ export interface TestResults {
   title: string;
 }
 
-export interface TestResultCardProps {
-  testData: TestResults;
-}
-
-
 export interface QuizResult {
   score: string;
   correctCount: number;

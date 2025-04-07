@@ -1,8 +1,6 @@
-import Header from "../Header/Header";
-
 const PrivacyPolicy = () => (
   <>
-    <Header />
+   
     <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 shadow-md rounded px-8 py-10 my-12">
       <h1 className="text-3xl font-bold mb-6">Privacy Policy for Teskro</h1>
 

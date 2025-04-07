@@ -1,5 +1,5 @@
 export interface Question {
-  question: string;
+ question: string;
   answers: Record<string, string | undefined>;
   correct_answer: string[];
   user_answer?: string | string[];
@@ -8,4 +8,9 @@ export interface Question {
   select_two?: boolean;
   is_correct?: boolean;
 }
-  
+
+
+export interface PreviewQuestion extends Omit<Question, 'answers'> {
+  question_number: number;
+  answers: Record<string, string>;
+}

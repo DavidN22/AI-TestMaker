@@ -29,7 +29,6 @@ export const apiSlice = createApi({
       query: () => "/tests",
       providesTags: ["TestResults"],
     }),
-
     deleteTestResult: builder.mutation<void, string>({
       query: (testId) => ({
         url: `/tests/${testId}`,

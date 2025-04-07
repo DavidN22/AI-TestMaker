@@ -23,7 +23,8 @@
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
     "openai": "^4.91.0",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "resend": "^4.2.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

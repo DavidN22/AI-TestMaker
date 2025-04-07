@@ -13,6 +13,7 @@ import {
   Settings,
   BarChart,
   LogOut,
+  ListChecks,
 } from "lucide-react";
 import TokenDisplayMobile from "./TokenDisplayMobile";
 
@@ -32,7 +33,7 @@ export default function MobileHeader({
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden bg-white dark:bg-[#121212] shadow-sm sticky top-0 left-0 right-0 w-full z-50">
+      <header className="lg:hidden bg-white dark:bg-[#121212] shadow-sm sticky top-0 left-0 right-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -89,6 +90,7 @@ export default function MobileHeader({
             <nav className="flex-1 space-y-3">
               {[
                 { to: "/home", label: "Home", Icon: Home },
+                { to: "/custom", label: "Custom Tests", Icon: ListChecks },
                 { to: "/history", label: "History", Icon: History },
                 { to: "/statistics", label: "Statistics", Icon: BarChart },
               ].map(({ to, label, Icon }) => (

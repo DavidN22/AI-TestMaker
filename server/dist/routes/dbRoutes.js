@@ -6,6 +6,10 @@ const router = express.Router();
 router.post('/tests', decodeUserMiddleware, dbController.addQuizResult);
 router.get('/tests', decodeUserMiddleware, dbController.getQuizResults);
 router.delete('/delete', decodeUserMiddleware, dbController.deleteAccount);
-router.delete('/tests', decodeUserMiddleware, dbController.clearAllTestResults); // Clear all tests
-router.delete('/tests/:testId', decodeUserMiddleware, dbController.deleteSingleTestResult); // Delete one test by ID
+router.delete('/tests', decodeUserMiddleware, dbController.clearAllTestResults);
+router.delete('/tests/:testId', decodeUserMiddleware, dbController.deleteSingleTestResult);
+router.post("/custom", decodeUserMiddleware, dbController.createCustomTest);
+router.get("/custom", decodeUserMiddleware, dbController.getCustomTests);
+router.delete("/custom/:testId", decodeUserMiddleware, dbController.deleteCustomTest);
+router.patch("/custom/:testId", decodeUserMiddleware, dbController.updateCustomTest);
 export default router;

@@ -4,12 +4,12 @@ import { RootState } from "./store/store";
 import { toast, ToastContainer } from "react-toastify";
 import { clearError } from "./store/Slices/toastSlice";
 import useAuthCheck from "./Auth-helpers/useAuthCheck";
-import LoadingSpinner from "./components/Loading/LoadingSpinner";
+
 
 export default function AppInitializer({ children }: { children: JSX.Element }) {
   const dispatch = useDispatch();
   const { message, type } = useSelector((state: RootState) => state.toast);
-  const isLoading = useSelector((state: RootState) => state.auth.isAuthLoading);
+
 
   useAuthCheck();
 
@@ -30,14 +30,6 @@ export default function AppInitializer({ children }: { children: JSX.Element }) 
     }
   }, [message, type, dispatch]);
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <LoadingSpinner message="" />
-      </div>
-    );
-  }
-
   return (
     <>
       <ToastContainer
@@ -56,3 +48,4 @@ export default function AppInitializer({ children }: { children: JSX.Element }) 
     </>
   );
 }
+

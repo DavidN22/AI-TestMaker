@@ -1,5 +1,6 @@
 import { pool } from "../db/db.js";
 import { CLIENT_URL, API_URL } from "../utils/config.js";
+import { sendWelcomeEmail } from "../utils/sendWelcomeEmail.js";
 export const handleLogin = async (req, res, next) => {
     try {
         const supabase = res.locals.supabase;
@@ -60,6 +61,7 @@ export const handleOAuthCallback = async (req, res, next) => {
         INSERT INTO users (uid, email, name)
         VALUES ($1, $2, $3)
       `;
+            await sendWelcomeEmail(email, user_metadata?.name || "there");
             try {
                 await pool.query(insertQuery, [uid, email, user_metadata?.name || ""]);
             }

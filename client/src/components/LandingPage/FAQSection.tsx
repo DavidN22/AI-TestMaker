@@ -22,7 +22,7 @@ const faqs = [
   {
     question: "Will more features be added?",
     answer:
-      "Yes! More features will be added including a more detailed analytics dashboard, and a way to create your own tests!",
+      "Yes! More features will be added including a more detailed analytics dashboard!",
   },
   {
     question: "Is this free to use?",

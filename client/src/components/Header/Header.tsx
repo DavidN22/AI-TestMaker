@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import SettingsModal from "../Modals/settingsModal.tsx";
 import MobileHeader from "./MobileHeader";
 import { useSelector } from "react-redux";
-import { Home, History, BarChart, Cpu } from "lucide-react";
+import { Home, History, BarChart, Cpu, ListChecks } from "lucide-react";
 import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api.ts";
 import DarkModeToggle from "./DarkModeToggle";
@@ -28,7 +28,7 @@ export default function Header() {
   return (
     <>
       {/* Desktop Header */}
-      <header className="hidden md:block bg-white/70 dark:bg-[#1E1E1E] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 left-0 right-0 w-full z-50">
+      <header className="hidden lg:block bg-white/70 dark:bg-[#1E1E1E] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 left-0 right-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex justify-between items-center h-14">
             {/* Branding */}
@@ -51,6 +51,11 @@ export default function Header() {
                   {/* Left Group: Main Nav Links */}
                   <div className="flex space-x-5">
                     <NavItem to="/home" label="Home" icon={Home} />
+                     <NavItem
+                      to="/custom"
+                      label="Custom Tests"
+                      icon={ListChecks}
+                    />
                     <NavItem to="/history" label="History" icon={History} />
                     <NavItem
                       to="/statistics"

@@ -42,7 +42,7 @@ export default function UserDropdown({ onSettingsOpen, onLogout }: UserDropdownP
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <MenuItems className="absolute right-0 mt-3 w-56 origin-top-right rounded-2xl bg-white/80 dark:bg-[#1e1e1e]/90 backdrop-blur-md shadow-xl ring-1 ring-black/5 focus:outline-none z-50 divide-y divide-gray-200 dark:divide-gray-700">
+        <MenuItems className="absolute right-0 mt-3 w-56 origin-top-right rounded-2xl bg-white dark:bg-[#1e1e1e] backdrop-blur-md shadow-xl ring-1 focus:outline-none z-50 divide-y divide-gray-200 dark:divide-gray-700 dark:ring-white/10 ring-gray-900/10">
           <div className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
             <div className="font-medium text-gray-800 dark:text-gray-200">Signed in</div>
             <div className="truncate">{email}</div>

@@ -37,7 +37,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900 dark:text-white">
-            Master Cloud Certs <br />
+            Prepare for Any Exam <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 dark:from-yellow-300 dark:to-yellow-500 glow-text">
               Smarter
             </span>{" "}
@@ -45,8 +45,8 @@ const HeroSection = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-md">
-            Teskro helps you generate, practice, and improve with curated cloud
-            exam questions powered by AI.
+            Teskro helps you generate, practice, and master any exam—from school
+            tests to certifications and custom quizzes—powered by AI.
           </p>
 
           {user ? (
@@ -91,9 +91,8 @@ const HeroSection = () => {
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
             />
-
             <div className="absolute bottom-4 text-sm text-gray-400 dark:text-gray-500 text-center w-full z-10">
-              Your AI-powered cloud study partner
+              Your AI-powered study partner for any subject
             </div>
           </div>
         </motion.div>
