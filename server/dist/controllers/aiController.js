@@ -36,6 +36,9 @@ const aiController = {
       The user wants their questions in this style only: ${typesString}.
       
       Rules:
+      - Multiple choice questions MUST have 4 options (a, b, c, d).
+      - True/False questions MUST have 2 options (True, False).
+      - "select two" questions MUST have 2 correct answers and 5 options.
       - "questions" array MUST contain **exactly ${numQuestions} items**
       - Do NOT include any explanation or commentary.
       - Do NOT include more or fewer than ${numQuestions} questions.
