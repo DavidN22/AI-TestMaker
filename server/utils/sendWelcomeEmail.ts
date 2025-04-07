@@ -15,7 +15,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
   try {
     const formattedName = formatName(name);
 
-    await resend.emails.send({
+    const res = await resend.emails.send({
       from: 'Teskro <welcome@teskro.com>',
       to: email,
       subject: '🚀 Welcome to Teskro – Start Generating AI-Powered Exams',
@@ -45,7 +45,9 @@ export async function sendWelcomeEmail(email: string, name: string) {
         </div>
       `,
     });
+
     console.log(`Welcome email sent to ${email}`);
+    console.log(res);
   } catch (err) {
     console.error("Failed to send welcome email:", err);
   }
