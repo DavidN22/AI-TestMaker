@@ -1,9 +1,10 @@
 // components/Modals/CreateTestActions.tsx
-import { Eye, CheckCircle, X } from "lucide-react";
+import { Eye, CheckCircle, X, Save } from "lucide-react";
 
 interface CreateTestActionsProps {
   isCreating: boolean;
   isFormValid: () => boolean;
+  isEditing: boolean;
   onCancel: () => void;
   onCreate: () => void;
   onGeneratePreview: () => void;
@@ -11,6 +12,7 @@ interface CreateTestActionsProps {
 
 export default function CreateTestActions({
   isCreating,
+  isEditing,
   onCancel,
   onCreate,
   onGeneratePreview,
@@ -40,8 +42,17 @@ export default function CreateTestActions({
         className="flex items-center gap-1 text-sm px-4 py-2 rounded-md bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition"
         onClick={onCreate}
       >
+        {isEditing ? (
+          <>
+        <Save className="w-4 h-4" />
+        Save
+          </>
+        ) : (
+          <>
         <CheckCircle className="w-4 h-4" />
         Create
+          </>
+        )}
       </button>
     </div>
   );

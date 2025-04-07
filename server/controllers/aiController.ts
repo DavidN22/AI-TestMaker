@@ -66,7 +66,10 @@ const aiController = {
 
       res.json({ message });
     } catch (error) {
-      next(error);
+      const err = new Error("Failed to generate test questions. Please try again.");
+  (err as any).status = 500;
+  next(err);
+
     }
   },
 

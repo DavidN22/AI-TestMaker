@@ -3,11 +3,10 @@ import TestHistoryModal from "../Modals/TestHistoryModal";
 import ModalTemplate from "../Modals/ModalTemplate";
 import { useDeleteTestResultMutation } from "../../store/Slices/apiSlice";
 import { TestResults } from "@/Types/Results";
-import { Menu } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { Cloud, Landmark, Globe, BookOpen } from "lucide-react";
 import DeleteTestMenuItem from "./DeleteTestMenuItem";
 
+import { useRef } from "react";
 const getIcon = (title: string) => {
   const lower = title.toLowerCase();
   if (lower.includes("aws"))
@@ -40,16 +39,19 @@ export default function TestResultCard({
   setFilteredHistory: React.Dispatch<React.SetStateAction<TestResults[]>>;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDropdownOpen] = useState(false);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const [deleteTest] = useDeleteTestResultMutation();
+  const skipNextClickRef = useRef(false);
 
-  const handleCardClick = () => {
-    if (!isDropdownOpen) {
-      setIsModalOpen(true);
-    }
-  };
+ const handleCardClick = () => {
+  if (skipNextClickRef.current) {
+    skipNextClickRef.current = false;
+    return;
+  }
+  setIsModalOpen(true);
+};
+
 
   return (
     <div
@@ -59,25 +61,11 @@ export default function TestResultCard({
       onClick={handleCardClick}
     >
       {/* 3-dot menu */}
-      <Menu as="div" className="absolute top-3 right-3 z-10 text-left">
-        <Menu.Button
-          onClick={(e) => e.stopPropagation()}
-          className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
-        >
-          <EllipsisVerticalIcon className="h-6 w-6" aria-hidden="true" />
-        </Menu.Button>
+      <DeleteTestMenuItem
+  onDelete={() => setIsConfirmDeleteOpen(true)}
+  skipNextClickRef={skipNextClickRef}
+/>
 
-        <Menu.Items
-          onClick={(e) => e.stopPropagation()}
-          className="absolute right-0 mt-2 w-32 origin-top-right bg-white dark:bg-[#2C2C2C] 
-               border border-gray-200 dark:border-gray-600 divide-y divide-gray-100 dark:divide-gray-700 
-               rounded-md shadow-lg focus:outline-none z-50"
-        >
-          <div className="px-1 py-1">
-            <DeleteTestMenuItem onClick={() => setIsConfirmDeleteOpen(true)} />
-          </div>
-        </Menu.Items>
-      </Menu>
 
       {/* Title & Icon */}
       <div className="flex items-center gap-3 min-w-0">

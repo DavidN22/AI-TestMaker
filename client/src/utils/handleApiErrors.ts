@@ -3,11 +3,15 @@ import { showError } from "../store/Slices/toastSlice";
 import store from "../store/store";
 
 export const handleApiError = (error: unknown): void => {
-  const message =
-    axios.isAxiosError(error) && error.response?.data?.message
-      ? error.response.data.message
-      : error instanceof Error
-      ? error.message
-      : "An unexpected error occurred.";
+  let message = "An unexpected error occurred.";
+
+  if (typeof error === "string") {
+    message = error;
+  } else if (axios.isAxiosError(error) && error.response?.data?.message) {
+    message = error.response.data.message;
+  } else if (error instanceof Error) {
+    message = error.message;
+  }
+
   store.dispatch(showError(message));
 };

@@ -27,6 +27,14 @@ export const testsApi = createApi({
       query: () => '/custom',
       providesTags: ['CustomTests'],
     }),
+    updateCustomTest: builder.mutation<Test, { testId: string; updatedData: Partial<Test> }>({
+      query: ({ testId, updatedData }) => ({
+        url: `/custom/${testId}`,
+        method: 'PATCH',
+        body: updatedData,
+      }),
+      invalidatesTags: ['CustomTests'],
+    }),
     createCustomTest: builder.mutation<Test, Partial<Test>>({
       query: (newTest) => ({
         url: '/custom',
@@ -47,6 +55,7 @@ export const testsApi = createApi({
 
 export const {
   useGetCustomTestsQuery,
+  useUpdateCustomTestMutation,
   useCreateCustomTestMutation,
   useDeleteCustomTestMutation, 
 } = testsApi;

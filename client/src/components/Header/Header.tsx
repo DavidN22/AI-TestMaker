@@ -28,7 +28,7 @@ export default function Header() {
   return (
     <>
       {/* Desktop Header */}
-      <header className="hidden md:block bg-white/70 dark:bg-[#1E1E1E] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 left-0 right-0 w-full z-50">
+      <header className="hidden lg:block bg-white/70 dark:bg-[#1E1E1E] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 left-0 right-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex justify-between items-center h-14">
             {/* Branding */}

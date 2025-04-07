@@ -13,5 +13,6 @@ router.delete('/tests/:testId', decodeUserMiddleware, dbController.deleteSingleT
 router.post("/custom", decodeUserMiddleware, dbController.createCustomTest); 
 router.get("/custom", decodeUserMiddleware, dbController.getCustomTests); 
 router.delete("/custom/:testId", decodeUserMiddleware, dbController.deleteCustomTest);
+router.patch("/custom/:testId", decodeUserMiddleware, dbController.updateCustomTest);
 
 export default router;

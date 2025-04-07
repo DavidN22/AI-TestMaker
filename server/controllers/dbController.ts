@@ -61,20 +61,21 @@ const dbController = {
   deleteAccount: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const supabase = createClient({ req, res });
-
+  
       await supabase.auth.signOut();
       let userid = res.locals.uid;
       let user = res.locals.user;
-
+  
       await supabase.auth.admin.deleteUser(userid);
-      const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`;
-      await pool.query(deleteQuery, [user]);
-
+      await pool.query(`DELETE FROM devtests WHERE "user" = $1`, [user]);
+      await pool.query(`DELETE FROM customtests WHERE "user" = $1`, [user]);
+  
       res.json({ message: "Account deleted successfully" });
     } catch (error) {
       next(error);
     }
   },
+  
   clearAllTestResults: async (
     req: Request,
     res: Response,
@@ -117,7 +118,7 @@ const dbController = {
       const { title, headline, description, difficulty } = req.body;
 
       let user = res.locals.user;
-  
+
       const query = `
         INSERT INTO customtests ("user", title, headline, description, difficulty)
         VALUES ($1, $2, $3, $4, $5)
@@ -140,7 +141,8 @@ const dbController = {
     try {
       let user = res.locals.user;
       const query = `
-        SELECT * FROM customtests WHERE "user" = $1;
+        SELECT * FROM customtests WHERE "user" = $1 
+        ORDER BY created_at ASC;
       `;
       const result = await pool.query(query, [user]);
 
@@ -160,6 +162,34 @@ const dbController = {
       res
         .status(200)
         .json({ message: `Custom test ${testId} deleted successfully.` });
+    } catch (error) {
+      next(error);
+    }
+  },
+  updateCustomTest: async (
+    req: Request,
+
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { testId } = req.params;
+      const { title, headline, description, difficulty } = req.body;
+      
+      let user = res.locals.user;
+
+      const query = `
+        UPDATE customtests
+        SET title = $1, headline = $2, description = $3, difficulty = $4
+        WHERE test_id = $5 AND "user" = $6
+      `;
+
+      const values = [title, headline, description, difficulty, testId, user];
+      await pool.query(query, values);
+
+      res.status(200).json({
+        message: "Custom test updated successfully",
+      });
     } catch (error) {
       next(error);
     }
