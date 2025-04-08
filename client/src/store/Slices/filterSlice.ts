@@ -14,8 +14,8 @@ const initialState: StaticTestsState = {
   search: "",
   providers: [],
   difficulty: "",
-  allTests: tests,        // Just the static tests from your array
-  filteredTests: tests,   // Same at first, filtered client-side
+  allTests: tests,      
+  filteredTests: tests,
 };
 
 const staticTestsSlice = createSlice({

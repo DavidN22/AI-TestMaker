@@ -71,7 +71,53 @@ export const tests = [
     provider: "Google Cloud",
     test_id: "static-google-2",
   },
+  {
+    id: "9",
+    title: "CompTIA Cloud+",
+    headline: "Vendor-neutral cloud certification.",
+    description: "Covers cloud infrastructure, security, deployment, and troubleshooting. Ideal for multi-cloud professionals.",
+    difficulty: "Intermediate",
+    provider: "CompTIA",
+    test_id: "static-comptia-1",
+  },
+  {
+    id: "10",
+    title: "AWS Security Specialty",
+    headline: "Security-focused AWS certification.",
+    description: "Specialized certification focused on securing AWS environments, identity access, and incident response.",
+    difficulty: "Advanced",
+    provider: "AWS",
+    test_id: "static-aws-5",
+  },
+  {
+    id: "11",
+    title: "Google Cloud Security Engineer",
+    headline: "Secure GCP workloads.",
+    description: "Covers identity, data protection, incident response, and network security in GCP environments.",
+    difficulty: "Advanced",
+    provider: "Google Cloud",
+    test_id: "static-google-3",
+  },
+  {
+    id: "12",
+    title: "Microsoft Cybersecurity Architect",
+    headline: "Advanced cloud security strategy.",
+    description: "Designs and evolves cybersecurity strategy to protect cloud-based assets across Azure and hybrid environments.",
+    difficulty: "Advanced",
+    provider: "Azure",
+    test_id: "static-azure-3",
+  },
+  {
+    id: "13",
+    title: "Certified Kubernetes Administrator (CKA)",
+    headline: "Kubernetes infrastructure management.",
+    description: "Demonstrates your ability to install, configure, and manage Kubernetes clusters.",
+    difficulty: "Advanced",
+    provider: "Linux Foundation",
+    test_id: "static-k8s-1",
+  }
 ];
+
 
 
 

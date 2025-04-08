@@ -9,14 +9,13 @@ import { useApi } from "../../utils/api.ts";
 import DarkModeToggle from "./DarkModeToggle";
 import UserDropdown from "./UserDropdown";
 import TokenDisplay from "./TokenDisplay";
-
+import { motion } from "framer-motion";
 
 export default function Header() {
- 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
-
   const { handleLogout } = useApi();
+
   const handleGoogleSignIn = () => {
     const loginUrl =
       window.location.hostname === "localhost"
@@ -27,45 +26,33 @@ export default function Header() {
 
   return (
     <>
-      {/* Desktop Header */}
-      <header className="hidden lg:block bg-white/70 dark:bg-[#1E1E1E] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 left-0 right-0 w-full z-50">
-        <div className="max-w-6xl mx-auto px-6">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="hidden lg:block sticky top-0 z-50 w-full backdrop-blur-lg bg-white/10 dark:bg-black/10 border-b"
+      >
+       <div className="w-full px-10">
+
           <div className="flex justify-between items-center h-14">
-            {/* Branding */}
-            <Link
-              to="/"
-              className="group flex items-center gap-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white hover:opacity-80 transition"
-            >
-              <Cpu
-                size={20}
-                className="text-black dark:text-white transition-transform duration-300 group-hover:rotate-12"
-              />
-              <span className="tracking-wider">Teskro</span>
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 text-sm font-medium text-black dark:text-white tracking-widest uppercase">
+              <Cpu size={18} />
+              Teskro
             </Link>
 
-            {/* Desktop Navigation */}
-
-            <nav className="flex items-center justify-end w-full space-x-5">
+            {/* Navigation */}
+            <nav className="flex items-center space-x-8">
               {email ? (
                 <>
-                  {/* Left Group: Main Nav Links */}
-                  <div className="flex space-x-5">
+                  <div className="flex space-x-6">
                     <NavItem to="/home" label="Home" icon={Home} />
-                     <NavItem
-                      to="/custom"
-                      label="Custom Tests"
-                      icon={ListChecks}
-                    />
+                    <NavItem to="/custom" label="Custom" icon={ListChecks} />
                     <NavItem to="/history" label="History" icon={History} />
-                    <NavItem
-                      to="/statistics"
-                      label="Statistics"
-                      icon={BarChart}
-                    />
+                    <NavItem to="/statistics" label="Stats" icon={BarChart} />
                   </div>
 
-                  {/* Right Group: Theme Toggle + User Dropdown */}
-                  <div className="flex items-center space-x-5 ml-10 pr-4">
+                  <div className="flex items-center gap-4 pl-10">
                     <TokenDisplay />
                     <DarkModeToggle />
                     <UserDropdown
@@ -75,46 +62,48 @@ export default function Header() {
                   </div>
                 </>
               ) : (
-                <div className="flex items-center space-x-5 pr-4 ml-10">
-                  <DarkModeToggle />
-                  <button
-                    onClick={handleGoogleSignIn}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400 
-hover:bg-indigo-50 dark:hover:bg-indigo-900 transition-colors duration-200 text-sm font-medium shadow-sm"
+                <div className="flex items-center gap-4">
+                <DarkModeToggle />
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
+                  whileHover={{ scale: 1.03 }}
+                  onClick={handleGoogleSignIn}
+                  className="flex items-center gap-2 text-sm font-medium px-5 py-2 rounded-full border border-neutral-800 dark:border-neutral-200 text-neutral-800 dark:text-neutral-200 shadow-sm transition-all duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:shadow-md"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    viewBox="0 0 533.5 544.3"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 48 48"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fill="#4285F4"
-                        d="M24 9.5c3.06 0 5.67 1.06 7.77 2.8l5.8-5.8C33.11 3.06 28.89 1 24 1 14.61 1 6.84 6.64 3.61 14.29l6.76 5.26C12.04 13.46 17.57 9.5 24 9.5z"
-                      />
-                      <path
-                        fill="#34A853"
-                        d="M46.5 24c0-1.57-.14-3.1-.4-4.58H24v9.11h12.73c-.56 3.04-2.25 5.63-4.77 7.37l7.45 5.8c4.35-4.01 6.89-9.93 6.89-16.7z"
-                      />
-                      <path
-                        fill="#FBBC05"
-                        d="M10.37 28.45A14.4 14.4 0 019.5 24c0-1.55.26-3.04.72-4.45l-6.76-5.26A23.86 23.86 0 001 24c0 3.82.91 7.43 2.5 10.63l6.87-6.18z"
-                      />
-                      <path
-                        fill="#EA4335"
-                        d="M24 46c6.54 0 12.03-2.16 16.06-5.87l-7.45-5.8c-2.07 1.39-4.73 2.22-8.61 2.22-6.43 0-11.96-3.96-13.63-9.55l-6.87 6.18C6.84 41.36 14.61 46 24 46z"
-                      />
-                      <path fill="none" d="M1 1h46v46H1z" />
-                    </svg>
-                    Login with Google
-                  </button>
-                </div>
+                    <path
+                      d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.2H272v95h146.7c-6.3 34-25 62.7-53.2 82v68.2h85.9c50.2-46.2 79.1-114.4 79.1-195z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M272 544.3c71.8 0 132-23.8 176-64.5l-85.9-68.2c-23.8 16-54.2 25.4-90.1 25.4-69 0-127.4-46.6-148.3-109.2H34v68.7C77.8 480.6 168.7 544.3 272 544.3z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M123.7 327.9c-10.3-30.5-10.3-63.6 0-94.1V165h-89.7c-36.2 72.4-36.2 158.6 0 231l89.7-68.1z"
+                      fill="#FBBC04"
+                    />
+                    <path
+                      d="M272 107.7c38.9-.6 76.1 13.3 104.6 38.6l78.1-78.1C410.2 24.8 343.3-.5 272 0 168.7 0 77.8 63.7 34 165l89.7 68.8c20.9-62.6 79.3-109.2 148.3-109.2z"
+                      fill="#EA4335"
+                    />
+                  </svg>
+                  Login with Google
+                </motion.button>
+              </div>
+              
+              
               )}
             </nav>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      {/* Mobile Header only if authenticated */}
+      {/* Mobile Header */}
       {email && (
         <MobileHeader
           onSettingsOpen={setIsSettingsOpen}
@@ -128,7 +117,6 @@ hover:bg-indigo-50 dark:hover:bg-indigo-900 transition-colors duration-200 text-
   );
 }
 
-/* 📌 Nav Item Component using NavLink */
 function NavItem({
   to,
   label,
@@ -142,14 +130,13 @@ function NavItem({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `relative flex items-center gap-1 text-gray-700 dark:text-gray-300 transition-colors 
-        hover:text-indigo-600 dark:hover:text-indigo-400
-        before:absolute before:left-0 before:-bottom-1 before:h-[2px] 
-        before:bg-indigo-600 dark:before:bg-indigo-400 before:transition-all before:duration-300
+        `relative flex items-center gap-1 text-sm font-medium text-black dark:text-white transition 
+        before:absolute before:left-0 before:-bottom-1 before:h-[1px] before:bg-black dark:before:bg-white 
+        before:transition-all before:duration-300
         ${isActive ? "before:w-full" : "before:w-0 hover:before:w-full"}`
       }
     >
-      <Icon size={16} />
+      <Icon size={15} />
       {label}
     </NavLink>
   );

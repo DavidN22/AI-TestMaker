@@ -69,10 +69,13 @@ export default function TestCard({
   };
 
   return (
-    <div
-      className="relative bg-white dark:bg-[#1E1E1E] border border-gray-300 dark:border-gray-700 
-      rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-gray-900 
-      dark:hover:border-white cursor-pointer flex flex-col min-h-[240px] space-y-3 group"
+<div
+  className="relative bg-white dark:bg-[#1E1E1E] border border-gray-300 dark:border-gray-700 
+  rounded-xl p-3 shadow-sm transition-all duration-300 hover:shadow-md hover:border-gray-900 
+  dark:hover:border-white cursor-pointer flex flex-col min-h-[180px] space-y-1.5 group"
+
+
+    
       onClick={handleCardClick}
     >
       {showMenu && (
@@ -90,13 +93,15 @@ export default function TestCard({
 {/* Title section */}
 <div className="flex items-center gap-3 min-w-0 h-[40px]">
   <div>{getIcon(title)}</div>
-  <h2 className="text-lg font-semibold text-gray-900 dark:text-white tracking-wide line-clamp-2">
+  <h2 className="text-base font-semibold text-gray-900 dark:text-white tracking-wide line-clamp-2">
+
     {title}
   </h2>
 </div>
 
 {/* Headline section */}
-<p className="text-sm text-gray-700 dark:text-gray-400 leading-relaxed line-clamp-2 h-[58px] mt-1.5">
+<p className="text-sm text-gray-700 dark:text-gray-400 leading-relaxed line-clamp-2 h-[48px] mt-1">
+
   {headline}
 </p>
 

@@ -6,6 +6,7 @@ import authReducer from "./Slices/authSlice";
 import { tokenApiSlice } from "./Slices/tokenSlice";
 import configReducer from "./Slices/configSlice";
 import { testsApi } from './Slices/customTestsApi'; 
+import customFilterReducer from "./Slices/customFilterSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,9 +14,11 @@ const store = configureStore({
     toast: toastReducer,
     auth: authReducer,
     config: configReducer,
+    customFilter: customFilterReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     [tokenApiSlice.reducerPath]: tokenApiSlice.reducer,
     [testsApi.reducerPath]: testsApi.reducer,
+
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

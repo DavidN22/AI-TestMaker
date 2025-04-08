@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import MobileFilterModal from "../Modals/MobileFilterModal";
+import CustomMobileFilterModal from "../Modals/CustomMobileFilterModal";
 import { useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
 import { useSelector } from "react-redux";
@@ -29,7 +30,7 @@ export default function MobileHeader({
   const email = useSelector((state: RootState) => state.auth.email);
 
   const showFilterModal = location.pathname === "/home";
-
+  const showCustomFilterModal = location.pathname === "/custom";
   return (
     <>
       {/* Mobile Header */}
@@ -49,12 +50,16 @@ export default function MobileHeader({
               <DarkModeToggle />
 
               {showFilterModal && <MobileFilterModal />}
+              {showCustomFilterModal && <CustomMobileFilterModal />}
+
+  
               <button
                 className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
                 onClick={() => setIsMobileMenuOpen(true)}
               >
                 <Menu size={24} />
               </button>
+
             </div>
           </div>
         </div>
