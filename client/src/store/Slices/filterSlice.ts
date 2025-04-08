@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { tests } from "../../data/globalTestCardsStatic";
-import { Test } from "../../Types/Tests";
+import { CreateTest } from "../../Types/Tests";
 
 interface StaticTestsState {
   search: string;
   providers: string[];
   difficulty: string;
-  allTests: Test[];
-  filteredTests: Test[];
+  allTests: CreateTest[];
+  filteredTests: CreateTest[];
 }
 
 const initialState: StaticTestsState = {

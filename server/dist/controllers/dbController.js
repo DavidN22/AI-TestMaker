@@ -3,11 +3,11 @@ import { createClient } from "../utils/supabaseServerClient.js";
 const dbController = {
     addQuizResult: async (req, res, next) => {
         try {
-            const { score, correctCount, wrongCount, unansweredCount, updatedQuizData, testName, weakPoints, summary, } = req.body.resultsWithWeakPoints;
+            const { score, correctCount, wrongCount, unansweredCount, updatedQuizData, testName, weakPoints, summary, provider, } = req.body.resultsWithWeakPoints;
             let user = res.locals.user;
             const query = `
-        INSERT INTO devtests (score, "user", correct_count, wrong_count, unanswered_count, title, weak_points, summary, quiz_data)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        INSERT INTO devtests (score, "user", correct_count, wrong_count, provider, unanswered_count, title, weak_points, summary, quiz_data)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING test_id;
       `;
             const values = [
@@ -15,6 +15,7 @@ const dbController = {
                 user,
                 correctCount,
                 wrongCount,
+                provider,
                 unansweredCount,
                 testName,
                 weakPoints,

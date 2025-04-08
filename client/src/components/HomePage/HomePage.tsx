@@ -7,6 +7,7 @@ export default function HomePage() {
   const filteredTests = useSelector(
     (state: RootState) => state.filter.filteredTests
   );
+
   const name = useSelector((state: RootState) => state.auth.fullName);
 
   const firstName = name?.split(" ")[0]
@@ -60,12 +61,14 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredTests.map((test, index) => (
+
               <TestCard
                 key={index}
                 title={test.title}
                 headline={test.headline}
                 description={test.description}
                 difficulty={test.difficulty}
+                provider={test.provider}
                 testId={test.test_id}
                 showMenu={test.provider === "Custom"}
               />

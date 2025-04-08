@@ -32,6 +32,7 @@ export default function TestPage() {
 
   const {
     testName,
+    provider,
     timer: initialTimer,
     questions: testQuestions,
   } = location.state || {};
@@ -64,7 +65,7 @@ export default function TestPage() {
 
     const results = gradeQuiz(questions);
     try {
-      const getId = await reviewTest({ results, testName });
+      const getId = await reviewTest({ results, testName, provider });
       refetchTestData();
 
       setTimeout(() => {

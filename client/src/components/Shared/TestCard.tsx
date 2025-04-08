@@ -27,6 +27,7 @@ export default function TestCard({
   description,
   showMenu = false,
   testId,
+  provider,
 }: TestCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -127,6 +128,7 @@ export default function TestCard({
         description={description}
         setIsOpen={setIsModalOpen}
         difficulty={difficulty || ""}
+        provider={provider || "Custom"}
       />
 
       <ModalTemplate

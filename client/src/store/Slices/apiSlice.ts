@@ -28,6 +28,7 @@ export const apiSlice = createApi({
     getTestResults: builder.query<TestResults[], void>({
       query: () => "/tests",
       providesTags: ["TestResults"],
+      keepUnusedDataFor: Number.POSITIVE_INFINITY,
     }),
     deleteTestResult: builder.mutation<void, string>({
       query: (testId) => ({

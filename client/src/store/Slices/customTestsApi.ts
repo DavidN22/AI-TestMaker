@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Test } from '../../Types/Tests';
+import { CreateTest } from '../../Types/Tests';
 import { handleApiError } from '../../utils/handleApiErrors';
 
 const baseQuery = fetchBaseQuery({
@@ -23,19 +23,20 @@ export const testsApi = createApi({
   baseQuery: baseQueryWithErrorHandling,
   tagTypes: ['CustomTests'],
   endpoints: (builder) => ({
-    getCustomTests: builder.query<Test[], void>({
+    getCustomTests: builder.query<CreateTest[], void>({
       query: () => '/custom',
       providesTags: ['CustomTests'],
+      keepUnusedDataFor: Number.POSITIVE_INFINITY,
     }),
-    updateCustomTest: builder.mutation<Test, { testId: string; updatedData: Partial<Test> }>({
+    updateCustomTest: builder.mutation<CreateTest, { testId: string; updatedData: Partial<CreateTest> }>({
       query: ({ testId, updatedData }) => ({
         url: `/custom/${testId}`,
         method: 'PATCH',
         body: updatedData,
       }),
       invalidatesTags: ['CustomTests'],
-    }),
-    createCustomTest: builder.mutation<Test, Partial<Test>>({
+    }), 
+    createCustomTest: builder.mutation<CreateTest, Partial<CreateTest>>({
       query: (newTest) => ({
         url: '/custom',
         method: 'POST',

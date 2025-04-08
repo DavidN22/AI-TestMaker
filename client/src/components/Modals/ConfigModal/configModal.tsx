@@ -17,6 +17,7 @@ interface TestConfigModalProps {
   state: boolean;
   description: string;
   difficulty: string;
+  provider?: string;
 }
 
 export default function TestConfigModal({
@@ -25,6 +26,7 @@ export default function TestConfigModal({
   testName,
   description,
   difficulty,
+  provider
 }: TestConfigModalProps) {
   const [weakPointMode, setWeakPointMode] = useState(false);
   const [timerEnabled, setTimerEnabled] = useState(false);
@@ -35,7 +37,7 @@ export default function TestConfigModal({
 
   const numQuestionsList = [10, 20, 25, 30, 40, 45, 50];
   const timeLimitList = [5, 10, 15, 20, 30, 45, 60];
-
+console.log(provider)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { fetchTest, loading } = useApi();
@@ -60,6 +62,7 @@ export default function TestConfigModal({
         navigate(`/test/${testName}`, {
           state: {
             testName,
+            provider,
             timer: timerEnabled ? timeLimit * 60 : null,
             questions,
           },

@@ -16,6 +16,8 @@ export default function CustomTestsPage() {
     undefined,
     {
       refetchOnMountOrArgChange: false,
+      refetchOnFocus: false,
+      refetchOnReconnect: false,
     }
   );
   const dispatch = useDispatch();

@@ -59,9 +59,11 @@ export function useApi() {
   const reviewTest = async ({
     results,
     testName,
+    provider,
   }: {
     results: QuizResult;
     testName: string;
+    provider?: string;
   }) => {
     setLoading(true);
     try {
@@ -78,6 +80,7 @@ export function useApi() {
         testName,
         weakPoints: weakpoints,
         summary,
+        provider,
       };
 
       const dbRes = await axios.post(
