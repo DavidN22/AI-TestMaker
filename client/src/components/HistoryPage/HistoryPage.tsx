@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TestResults } from "@/Types/Results";
@@ -12,20 +12,17 @@ import ModalTemplate from "../Modals/ModalTemplate";
 import SearchAndFilterControls from "./SearchAndFilterControls";
 import TestHistoryTable from "./TestHistoryTable";
 import TestResultCard from "./HistoryCard";
-import { useIsMobile } from "../../utils/useIsMobile"; // 👈 Import mobile hook
+import { useIsMobile } from "../../utils/useIsMobile";
 import SkeletonLoader from "../Loading/SkeletonLoader";
+import InlineSpinner from "../Loading/InlineSpinner";
 
 export default function HistoryPage() {
   const {
     data: testHistory = [],
     error,
     isLoading: loading,
-  } = useGetTestResultsQuery(undefined, {
-    refetchOnMountOrArgChange: false,
-    refetchOnReconnect: false,
-    refetchOnFocus: false,
-  });
-
+  } = useGetTestResultsQuery();
+  
   const [filteredHistory, setFilteredHistory] = useState<TestResults[]>([]);
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<"recent" | "oldest">("recent");
@@ -33,9 +30,9 @@ export default function HistoryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTest, setSelectedTest] = useState<TestResults | null>(null);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-
   const [deleteTest] = useDeleteTestResultMutation();
   const isMobile = useIsMobile();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,12 +40,12 @@ export default function HistoryPage() {
   const testId = location.state?.testId;
 
   useEffect(() => {
-    if (!testHistory.length) return;
-
+    if (!testHistory) return;
+  
     let filtered = testHistory.filter((test) =>
       test.title.toLowerCase().includes(search.toLowerCase())
     );
-
+  
     if (dateFilter) {
       filtered = filtered.filter((test) => {
         const testDateUTC = new Date(test.date);
@@ -60,15 +57,20 @@ export default function HistoryPage() {
         return localTestDate.toISOString().split("T")[0] === dateFilter;
       });
     }
-
+  
     filtered.sort((a, b) =>
       sortOrder === "recent"
         ? new Date(b.date).getTime() - new Date(a.date).getTime()
         : new Date(a.date).getTime() - new Date(b.date).getTime()
     );
-
-    setFilteredHistory(filtered);
-  }, [search, dateFilter, sortOrder, testHistory]);
+  
+    const prev = JSON.stringify(filteredHistory.map((t) => t.test_id));
+    const next = JSON.stringify(filtered.map((t) => t.test_id));
+    if (prev !== next) {
+      setFilteredHistory(filtered);
+    }
+  }, [search, dateFilter, sortOrder, testHistory, filteredHistory]);
+  
 
   useEffect(() => {
     if (justSubmitted && testId && filteredHistory.length > 0 && !loading) {
@@ -172,37 +174,51 @@ export default function HistoryPage() {
           />
 
           {/* ❌ Delete Modal */}
-          <ModalTemplate
-            isOpen={isConfirmDeleteOpen}
-            setIsOpen={setIsConfirmDeleteOpen}
-            title="Confirm Deletion"
-          >
-            <p className="text-gray-700 dark:text-gray-300">
-              Are you sure you want to delete this test result? This action
-              cannot be undone.
-            </p>
-            <div className="mt-6 flex justify-between">
-              <button
-                onClick={() => setIsConfirmDeleteOpen(false)}
-                className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-                onClick={() => {
-                  if (!selectedTest) return;
-                  setFilteredHistory((prev) =>
-                    prev.filter((test) => test.test_id !== selectedTest.test_id)
-                  );
-                  setIsConfirmDeleteOpen(false);
-                  deleteTest(selectedTest.test_id);
-                }}
-              >
-                Yes, Delete
-              </button>
-            </div>
-          </ModalTemplate>
+      <ModalTemplate
+  isOpen={isConfirmDeleteOpen}
+  setIsOpen={setIsConfirmDeleteOpen}
+  title="Confirm Deletion"
+>
+  {isDeleting ? (
+    <div className="flex justify-center items-center min-h-[120px]">
+      <InlineSpinner />
+    </div>
+  ) : (
+    <>
+      <p className="text-gray-700 dark:text-gray-300">
+        Are you sure you want to delete this test result? This action
+        cannot be undone.
+      </p>
+      <div className="mt-6 flex justify-between">
+        <button
+          onClick={() => setIsConfirmDeleteOpen(false)}
+          className="cursor-pointer px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+        >
+          Cancel
+        </button>
+        <button
+          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+          onClick={async () => {
+            if (!selectedTest) return;
+            try {
+              setIsDeleting(true);
+              await deleteTest(selectedTest.test_id);
+              
+            } catch (err) {
+              console.error("Failed to delete test result:", err);
+            } finally {
+              setIsDeleting(false);
+              setIsConfirmDeleteOpen(false);
+            }
+          }}
+        >
+          Yes, Delete
+        </button>
+      </div>
+    </>
+  )}
+</ModalTemplate>
+
         </motion.div>
       </div>
     </div>

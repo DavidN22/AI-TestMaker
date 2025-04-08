@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { setAllCustomTests } from "../../store/Slices/customFilterSlice";
 import { useCustomFilters } from "../../utils/useCustomFilters";
 import { useEffect } from "react";
+import { useRef } from "react";
+import { CreateTest } from "@/Types/Tests";
 
 export default function CustomTestsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -22,12 +24,18 @@ export default function CustomTestsPage() {
   );
   const dispatch = useDispatch();
   const { filteredCustomTests } = useCustomFilters();
+  const prevDataRef = useRef<CreateTest[] | null>(null);
 
   useEffect(() => {
-    if (customTests.length > 0) {
+    const stringifiedNew = JSON.stringify(customTests);
+    const stringifiedPrev = JSON.stringify(prevDataRef.current);
+  
+    if (stringifiedNew !== stringifiedPrev) {
       dispatch(setAllCustomTests(customTests));
+      prevDataRef.current = customTests;
     }
   }, [customTests, dispatch]);
+  
   return (
     <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
       <CustomSidebarFilter />
