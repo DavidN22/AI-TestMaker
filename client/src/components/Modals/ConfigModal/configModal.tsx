@@ -37,7 +37,6 @@ export default function TestConfigModal({
 
   const numQuestionsList = [10, 20, 25, 30, 40, 45, 50];
   const timeLimitList = [5, 10, 15, 20, 30, 45, 60];
-console.log(provider)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { fetchTest, loading } = useApi();
