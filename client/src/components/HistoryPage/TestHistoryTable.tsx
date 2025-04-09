@@ -21,7 +21,7 @@ export default function TestHistoryTable({
 }: Props) {
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-500";
-    if (score >= 50) return "text-yellow-500";
+    if (score >= 50) return "text-yellow-600";
     return "text-red-500";
   };
 
@@ -43,7 +43,10 @@ export default function TestHistoryTable({
 
       {loading ? (
         [...Array(2)].map((_, i) => (
-          <div key={i} className="py-4 px-2 border-b border-gray-200 dark:border-gray-700">
+          <div
+            key={i}
+            className="py-4 px-2 border-b border-gray-200 dark:border-gray-700"
+          >
             <SkeletonLoaderTable />
           </div>
         ))
@@ -53,7 +56,7 @@ export default function TestHistoryTable({
         </div>
       ) : (
         testData.map((test) => (
-            <div
+          <div
             key={test.test_id}
             onClick={() => onView(test)}
             className="flex items-center justify-between px-2 py-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-[#2c2c2c] transition-colors cursor-pointer"
@@ -65,19 +68,23 @@ export default function TestHistoryTable({
                 day: "numeric",
               })}
             </div>
-          
+
             <div className="w-1/4 text-sm font-medium text-gray-900 dark:text-white">
               {test.title}
             </div>
-          
-            <div className={`w-1/6 text-sm font-semibold ${getScoreColor(Number(test.score))}`}>
+
+            <div
+              className={`w-1/6 text-sm font-semibold ${getScoreColor(
+                parseFloat(test.score.toString().replace("%", ""))
+              )}`}
+            >
               {test.score}
             </div>
-          
+
             <div className="w-1/5 text-sm text-gray-700 dark:text-gray-300">
               {test.correct_count} / {test.quiz_data.length}
             </div>
-          
+
             <div
               className="w-1/6 flex items-center gap-4"
               onClick={(e) => e.stopPropagation()} // Prevent triggering `onView` when clicking delete
@@ -97,7 +104,6 @@ export default function TestHistoryTable({
               </button>
             </div>
           </div>
-          
         ))
       )}
     </div>
