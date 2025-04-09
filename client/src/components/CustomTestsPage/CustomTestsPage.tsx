@@ -31,7 +31,7 @@ export default function CustomTestsPage() {
     const stringifiedPrev = JSON.stringify(prevDataRef.current);
   
     if (stringifiedNew !== stringifiedPrev) {
-      dispatch(setAllCustomTests(customTests));
+    
       prevDataRef.current = customTests;
     }
   }, [customTests, dispatch]);
