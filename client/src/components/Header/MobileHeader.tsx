@@ -72,7 +72,7 @@ export default function MobileHeader({
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "tween", duration: 0.3 }}
-            className="fixed inset-0 bg-white dark:bg-[#121212] z-50 flex flex-col px-6 py-8"
+            className="fixed inset-0 bg-white dark:bg-[#121212] z-50 flex flex-col px-6 py-8 overflow-y-auto"
           >
             <button
               className="self-end text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
