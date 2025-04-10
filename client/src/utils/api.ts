@@ -60,10 +60,12 @@ export function useApi() {
     results,
     testName,
     provider,
+    difficulty
   }: {
     results: QuizResult;
     testName: string;
     provider?: string;
+    difficulty?: string;
   }) => {
     setLoading(true);
     try {
@@ -81,6 +83,7 @@ export function useApi() {
         weakPoints: weakpoints,
         summary,
         provider,
+        difficulty,
       };
 
       const dbRes = await axios.post(

@@ -8,6 +8,7 @@ export interface TestResults {
   unanswered_count: number;
   quiz_data: Question[];
   weak_points: string;
+  difficulty: string;
   summary: string;
   date: string;
   title: string;

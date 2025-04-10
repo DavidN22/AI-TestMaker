@@ -64,6 +64,7 @@ export default function TestConfigModal({
             provider,
             timer: timerEnabled ? timeLimit * 60 : null,
             questions,
+            difficulty: selectedDifficulty || difficulty,
           },
         });
       }, 100);

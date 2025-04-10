@@ -15,11 +15,12 @@ const dbController = {
         weakPoints,
         summary,
         provider,
+        difficulty,
       } = req.body.resultsWithWeakPoints;
       let user = res.locals.user;
       const query = `
-        INSERT INTO devtests (score, "user", correct_count, wrong_count, provider, unanswered_count, title, weak_points, summary, quiz_data)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        INSERT INTO devtests (score, "user", correct_count, wrong_count, provider, difficulty, unanswered_count, title, weak_points, summary, quiz_data)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING test_id;
       `;
 
@@ -29,6 +30,7 @@ const dbController = {
         correctCount,
         wrongCount,
         provider,
+        difficulty,
         unansweredCount,
         testName,
         weakPoints,

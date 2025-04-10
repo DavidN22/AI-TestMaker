@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import TestHistoryModal from "../Modals/TestHistoryModal";
 import ModalTemplate from "../Modals/ModalTemplate";
 import { useDeleteTestResultMutation } from "../../store/Slices/apiSlice";
@@ -6,7 +6,6 @@ import { TestResults } from "@/Types/Results";
 import { Cloud, Landmark, Globe, BookOpen } from "lucide-react";
 import DeleteTestMenuItem from "./DeleteTestMenuItem";
 
-import { useRef } from "react";
 const getIcon = (title: string) => {
   const lower = title.toLowerCase();
   if (lower.includes("aws"))
@@ -31,6 +30,13 @@ const formatDate = (isoString: string) => {
   });
 };
 
+const getDifficultyColor = (difficulty: string) => {
+  if (difficulty === "easy") return "text-green-600";
+  if (difficulty === "medium") return "text-yellow-700";
+  if (difficulty === "hard") return "text-red-600";
+  return "text-gray-500";
+};
+
 export default function TestResultCard({
   testData,
   setFilteredHistory,
@@ -44,14 +50,13 @@ export default function TestResultCard({
   const [deleteTest] = useDeleteTestResultMutation();
   const skipNextClickRef = useRef(false);
 
- const handleCardClick = () => {
-  if (skipNextClickRef.current) {
-    skipNextClickRef.current = false;
-    return;
-  }
-  setIsModalOpen(true);
-};
-
+  const handleCardClick = () => {
+    if (skipNextClickRef.current) {
+      skipNextClickRef.current = false;
+      return;
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <div
@@ -62,10 +67,9 @@ export default function TestResultCard({
     >
       {/* 3-dot menu */}
       <DeleteTestMenuItem
-  onDelete={() => setIsConfirmDeleteOpen(true)}
-  skipNextClickRef={skipNextClickRef}
-/>
-
+        onDelete={() => setIsConfirmDeleteOpen(true)}
+        skipNextClickRef={skipNextClickRef}
+      />
 
       {/* Title & Icon */}
       <div className="flex items-center gap-3 min-w-0">
@@ -80,13 +84,16 @@ export default function TestResultCard({
         {formatDate(testData.date)}
       </p>
 
-      {/* Score & Accuracy */}
-      <div className="text-sm text-gray-700 dark:text-gray-400">
+      {/* Score, Accuracy, Difficulty */}
+      <div className="text-sm text-gray-700 dark:text-gray-400 space-y-1">
         <p className="font-semibold text-gray-900 dark:text-white">
           Score: <span className="text-blue-500">{testData.score}</span>
         </p>
         <p>
           {testData.correct_count} / {testData.quiz_data.length} correct
+        </p>
+        <p className={`capitalize font-medium ${getDifficultyColor(testData.difficulty)}`}>
+          Difficulty: {testData.difficulty}
         </p>
       </div>
 

@@ -25,6 +25,13 @@ export default function TestHistoryTable({
     return "text-red-500";
   };
 
+  const getDifficultyColor = (difficulty: string) => {
+    if (difficulty === "easy") return "text-green-600";
+    if (difficulty === "medium") return "text-yellow-700";
+    if (difficulty === "hard") return "text-red-600";
+    return "text-gray-500";
+  };
+
   return (
     <div className="space-y-0">
       {/* Header row */}
@@ -38,6 +45,7 @@ export default function TestHistoryTable({
         <div className="w-1/4">Test Title</div>
         <div className="w-1/6">Score</div>
         <div className="w-1/5">Correct</div>
+        <div className="w-1/6">Difficulty</div>
         <div className="w-1/6">Actions</div>
       </div>
 
@@ -86,8 +94,16 @@ export default function TestHistoryTable({
             </div>
 
             <div
+              className={`w-1/6 text-sm font-medium ${getDifficultyColor(
+                test.difficulty
+              )}`}
+            >
+              {test.difficulty}
+            </div>
+
+            <div
               className="w-1/6 flex items-center gap-4"
-              onClick={(e) => e.stopPropagation()} // Prevent triggering `onView` when clicking delete
+              onClick={(e) => e.stopPropagation()}
             >
               <span
                 onClick={() => onView(test)}

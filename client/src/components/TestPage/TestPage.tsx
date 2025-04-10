@@ -35,6 +35,7 @@ export default function TestPage() {
     provider,
     timer: initialTimer,
     questions: testQuestions,
+    difficulty,
   } = location.state || {};
 
   const [questions, setQuestions] = useState<Question[]>(
@@ -65,7 +66,7 @@ export default function TestPage() {
 
     const results = gradeQuiz(questions);
     try {
-      const getId = await reviewTest({ results, testName, provider });
+      const getId = await reviewTest({ results, testName, provider, difficulty });
       refetchTestData();
 
       setTimeout(() => {
