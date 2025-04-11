@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import SettingsModal from "../Modals/settingsModal.tsx";
 import MobileHeader from "./MobileHeader";
@@ -22,6 +22,29 @@ export default function Header() {
     document.documentElement.classList.contains("dark")
   );
 
+  const [showHeader, setShowHeader] = useState(true);
+  const lastScrollY = useRef(0);
+  // Watch for scroll direction
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < 50) {
+        setShowHeader(true); // At top
+      } else if (currentScrollY > lastScrollY.current) {
+        setShowHeader(false); // Scrolling down
+      } else {
+        setShowHeader(true); // Scrolling up
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Watch for dark mode changes
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.documentElement.classList.contains("dark"));
@@ -46,9 +69,9 @@ export default function Header() {
   return (
     <>
       <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        initial={{ opacity: 1, y: 0 }}
+        animate={showHeader ? { opacity: 1, y: 0 } : { opacity: 0, y: -50 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className="hidden lg:block sticky top-0 z-50 w-full backdrop-blur-lg bg-white/10 dark:bg-black/10 border-b"
       >
         <div className="w-full px-10">
@@ -60,9 +83,9 @@ export default function Header() {
                 alt="Teskro Logo"
                 className="w-13 h-13"
               />
-                <span className="text-2xl font-extrabold text-black dark:text-white">
+              <span className="text-2xl font-extrabold text-black dark:text-white">
                 Teskro
-                </span>
+              </span>
             </Link>
 
             {/* Navigation */}
@@ -152,14 +175,18 @@ function NavItem({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `relative flex items-center gap-1 text-sm font-medium text-black dark:text-white transition 
-        before:absolute before:left-0 before:-bottom-1 before:h-[1px] before:bg-black dark:before:bg-white 
-        before:transition-all before:duration-300
-        ${isActive ? "before:w-full" : "before:w-0 hover:before:w-full"}`
+        `relative flex items-center gap-2 px-2 py-1 text-sm font-medium transition-colors 
+        ${
+          isActive
+            ? "text-black dark:text-white before:w-full"
+            : "text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white before:w-0 hover:before:w-full"
+        } 
+        before:absolute before:left-0 before:-bottom-0.5 before:h-[2px] before:bg-black dark:before:bg-white before:transition-all before:duration-300`
       }
     >
-      <Icon size={15} />
+      <Icon size={16} />
       {label}
     </NavLink>
   );
 }
+
