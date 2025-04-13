@@ -10,7 +10,8 @@ const CTASection = () => {
 
   const handleCTA = () => {
     if (user) {
-      navigate("/home");
+      navigate("/home", { replace: true });
+
     } else {
       window.location.href = "https://api.teskro.com/api/auth/login";
     }

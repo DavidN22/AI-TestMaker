@@ -30,13 +30,14 @@ export function useFilters() {
 
   useEffect(() => {
     const params: Record<string, string> = {};
-
+  
     if (search) params.search = search;
     if (providers.length > 0) params.provider = providers.join(",");
     if (difficulty) params.difficulty = difficulty;
-
-    setSearchParams(params);
+  
+    setSearchParams(params, { replace: true });
   }, [search, providers, difficulty, setSearchParams]);
+  
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearch(e.target.value));

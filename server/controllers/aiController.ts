@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express"; // Import essential Express types
 //import schema from "../blueprint/questionSchema.ts";
 import { promptSchema } from "../blueprint/promptSchema.js";
 import { summary } from "../blueprint/weakPointBlueprint.js";
@@ -7,15 +7,15 @@ import { pool } from "../db/db.js";
 import { getModel } from "../utils/getModel.js";
 import { decrementUserToken } from "../utils/decrementToken.js";
 
-const aiController = {
-  getAiTest: async (req: Request, res: Response, next: NextFunction) => {
+const aiController = { // Main controller object for handling AI-related requests
+  getAiTest: async (req: Request, res: Response, next: NextFunction) => { // Generate AI test questions based on request parameters
     const { testName, numQuestions, languageModel, description, types, difficulty } = req.body;
 
     try {
-      const user = res.locals.user;
+      const user = res.locals.user; // Retrieve and utilize user information if necessary // Retrieve user information from response locals
 
-      await decrementUserToken(user);
-      const result = await pool.query(
+      await decrementUserToken(user); // Decrement user's token for the request handling // Decrement user's token for the request handling
+      const result = await pool.query( // Fetch the latest quiz data from the database
         `
     SELECT quiz_data
     FROM devtests
@@ -29,13 +29,13 @@ const aiController = {
       let previousQuestions: string[] = [];
 
       if (result.rows.length > 0) {
-        const quizData = result.rows[0].quiz_data;
+        const quizData = result.rows[0].quiz_data; // Extract quiz data from the result
         previousQuestions = quizData.map((q: any) => q.question);
       }
       //make types a string
-      const typesString = types.join(",\n");
+      const typesString = types.join(",\n"); // Convert question types array to a formatted string
 
-      const model = getModel(languageModel);
+      const model = getModel(languageModel); // Obtain the correct AI model based on the languageModel parameter // Get the language model instance based on parameters
 
       let prompt = `You are an API generating test questions in JSON.
 
@@ -60,23 +60,23 @@ const aiController = {
       ${previousQuestions.length ? `- Avoid generating questions similar to the following:\n- ${previousQuestions.join("\n- ")}` : ""}
       `.trim();
 
-      const rawResponse = await model.generate(prompt);
-      const message = JSON.parse(rawResponse);
+      const rawResponse = await model.generate(prompt); // Use model to generate weak points and summary // Generate preview using AI model // Generate questions using the AI model
+      const message = JSON.parse(rawResponse); // Parse the AI model response to JSON format
 
-      message.questions = message.questions.map(
+      message.questions = message.questions.map( // Remove question numbers from the parsed JSON
         ({ question_number, ...rest }: any) => ({ ...rest })
       );
 
       res.json({ message });
     } catch (error) {
-      const err = new Error("Failed to generate test questions. Please try again.");
+      const err = new Error("Failed to generate test questions. Please try again."); // Error handling for question generation failures
   (err as any).status = 500;
   next(err);
 
     }
   },
 
-  getAiPreview: async (req: Request, res: Response, next: NextFunction) => {
+  getAiPreview: async (req: Request, res: Response, next: NextFunction) => { // Generate a brief preview of the quiz
     const { title, description, languageModel } = req.body;
 
     try {
@@ -97,7 +97,7 @@ ONLY RESPOND IN JSON FORMAT!`;
       next(error);
     }
   },
-  getWeakPoints: async (req: Request, res: Response, next: NextFunction) => {
+  getWeakPoints: async (req: Request, res: Response, next: NextFunction) => { // Identify weak points in the quiz results
     const { results, languageModel } = req.body;
 
     try {

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../db/db.js"; // Ensure your database connection is configured
+import { pool } from "../db/db.js"; // Ensure your database connection is configured // Ensure your database connection is configured
 import { createClient } from "../utils/supabaseServerClient.js";
 
-const dbController = {
-  addQuizResult: async (req: Request, res: Response, next: NextFunction) => {
+const dbController = { // Main controller object for handling database-related interactions
+  addQuizResult: async (req: Request, res: Response, next: NextFunction) => { // Add user's quiz results to the database
     try {
       const {
         score,
@@ -18,7 +18,7 @@ const dbController = {
         difficulty,
       } = req.body.resultsWithWeakPoints;
       let user = res.locals.user;
-      const query = `
+      const query = `// SQL query to insert new custom test data// SQL query to fetch quiz results in descending order by date// SQL query to insert quiz result data into the database
         INSERT INTO devtests (score, "user", correct_count, wrong_count, provider, difficulty, unanswered_count, title, weak_points, summary, quiz_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING test_id;
@@ -37,7 +37,7 @@ const dbController = {
         summary,
         JSON.stringify(updatedQuizData),
       ];
-      const result = await pool.query(query, values);
+      const result = await pool.query(query, values); // Execute SQL query with provided values
 
       res.status(201).json({
         message: "Quiz result saved successfully",
@@ -48,7 +48,7 @@ const dbController = {
     }
   },
 
-  getQuizResults: async (req: Request, res: Response, next: NextFunction) => {
+  getQuizResults: async (req: Request, res: Response, next: NextFunction) => { // Retrieve all quiz results for the authenticated user
     try {
       let user = res.locals.user;
       const query = `
@@ -62,7 +62,7 @@ const dbController = {
     }
   },
 
-  deleteAccount: async (req: Request, res: Response, next: NextFunction) => {
+  deleteAccount: async (req: Request, res: Response, next: NextFunction) => { // Delete user account and related data
     try {
       const supabase = createClient({ req, res });
   
@@ -70,7 +70,7 @@ const dbController = {
       let userid = res.locals.uid;
       let user = res.locals.user;
   
-      await supabase.auth.admin.deleteUser(userid);
+      await supabase.auth.admin.deleteUser(userid); // Remove user from Supabase authentication
       await pool.query(`DELETE FROM devtests WHERE "user" = $1`, [user]);
       await pool.query(`DELETE FROM customtests WHERE "user" = $1`, [user]);
   
@@ -80,14 +80,14 @@ const dbController = {
     }
   },
   
-  clearAllTestResults: async (
+  clearAllTestResults: async ( // Clear all stored test results for a user
     req: Request,
     res: Response,
     next: NextFunction
   ) => {
     try {
       let user = res.locals.user;
-      const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`;
+      const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`; // SQL query to delete all user test records
       await pool.query(deleteQuery, [user]);
 
       res
@@ -98,7 +98,7 @@ const dbController = {
     }
   },
 
-  deleteSingleTestResult: async (
+  deleteSingleTestResult: async ( // Delete a specific test result by test ID
     req: Request,
     res: Response,
     next: NextFunction
@@ -117,7 +117,7 @@ const dbController = {
     }
   },
 
-  createCustomTest: async (req: Request, res: Response, next: NextFunction) => {
+  createCustomTest: async (req: Request, res: Response, next: NextFunction) => { // Create a new custom test in the database
     try {
       const { title, headline, description, difficulty } = req.body;
 
@@ -141,7 +141,7 @@ const dbController = {
     }
   },
 
-  getCustomTests: async (req: Request, res: Response, next: NextFunction) => {
+  getCustomTests: async (req: Request, res: Response, next: NextFunction) => { // Fetch all custom tests created by the user
     try {
       let user = res.locals.user;
       const query = `
@@ -156,7 +156,7 @@ const dbController = {
     }
   },
 
-  deleteCustomTest: async (req: Request, res: Response, next: NextFunction) => {
+  deleteCustomTest: async (req: Request, res: Response, next: NextFunction) => { // Remove a specific custom test by test ID
     try {
       const { testId } = req.params;
       const user = res.locals.user;
@@ -170,7 +170,7 @@ const dbController = {
       next(error);
     }
   },
-  updateCustomTest: async (
+  updateCustomTest: async ( // Update details of a specific custom test in the database
     req: Request,
 
     res: Response,

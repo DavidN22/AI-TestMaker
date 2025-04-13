@@ -18,7 +18,8 @@ const HeroSection = () => {
   };
 
   const handleNavToHome = () => {
-    navigate("/home");
+    navigate("/home", { replace: true });
+
   };
 
   return (

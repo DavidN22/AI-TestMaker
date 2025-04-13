@@ -3,13 +3,13 @@ import { pool } from "../db/db.js";
 import { CLIENT_URL, API_URL } from "../utils/config.js";
 import { sendWelcomeEmail } from "../utils/sendWelcomeEmail.js";
 
-export const handleLogin = async (
+export const handleLogin = async ( // Handle login through OAuth
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const supabase = res.locals.supabase;
+    const supabase = res.locals.supabase; // Access Supabase client instance from locals
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -20,7 +20,7 @@ export const handleLogin = async (
 
     if (error) throw error;
 
-    if (data.url) {
+    if (data.url) { // Redirect to the URL provided by Supabase after successful OAuth
       res.redirect(data.url);
     } else {
       throw new Error("Login failed");
@@ -30,19 +30,19 @@ export const handleLogin = async (
   }
 };
 
-export const handleOAuthCallback = async (
+export const handleOAuthCallback = async ( // Handle OAuth callback and user session exchange
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const code = req.query.code as string;
+  const code = req.query.code as string; // Extract authorization code from the query string
 
   try {
     if (!code) throw new Error("Authorization code missing");
 
     const supabase = res.locals.supabase;
 
-    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code); // Exchange authorization code for a session
     if (exchangeError) throw exchangeError;
 
     const {
@@ -54,14 +54,14 @@ export const handleOAuthCallback = async (
 
     const { id: uid, email, user_metadata } = user;
 
-    const existingEmailQuery = "SELECT * FROM users WHERE email = $1";
+    const existingEmailQuery = "SELECT * FROM users WHERE email = $1"; // Query to check if the user email already exists
     const { rows } = await pool.query(existingEmailQuery, [email]);
 
     if (rows.length > 0) {
       const existingUser = rows[0];
 
       if (existingUser.uid !== uid) {
-        const updateQuery = `
+        const updateQuery = `// Update user details if the UID does not match then existing one
           UPDATE users
           SET uid = $1, name = $2
           WHERE email = $3
@@ -86,8 +86,8 @@ export const handleOAuthCallback = async (
       } catch (err: any) {
         if (err.code === "23505" && err.constraint === "users_uid_key") {
           console.warn("Supabase UID collision detected. Deleting user from Supabase.");
-          await supabase.auth.admin.deleteUser(uid);
-          return res.redirect(`${CLIENT_URL}/home`);
+          await supabase.auth.admin.deleteUser(uid); // Delete the user from Supabase to resolve UID collisions
+          return res.redirect(`${CLIENT_URL}/home`); // Redirect to the home page after successful login or registration
         } else {
           throw err;
         }
@@ -100,7 +100,7 @@ export const handleOAuthCallback = async (
   }
 };
 
-export const handleLogout = async (
+export const handleLogout = async ( // Handle logout and session termination
   req: Request,
   res: Response,
   next: NextFunction
@@ -108,14 +108,14 @@ export const handleLogout = async (
   try {
     const supabase = res.locals.supabase;
 
-    await supabase.auth.signOut();
+    await supabase.auth.signOut(); // Terminate user session using Supabase
     res.json({ message: "Logged out successfully" });
   } catch (error) {
     next(error);
   }
 };
 
-export const getCurrentUser = async (
+export const getCurrentUser = async ( // Retrieve current user information from Supabase
   req: Request,
   res: Response,
   next: NextFunction
@@ -127,7 +127,7 @@ export const getCurrentUser = async (
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (!user) { // Handle scenario where no user is found
       res.json({ user: null });
       return;
     }
@@ -138,7 +138,7 @@ export const getCurrentUser = async (
   }
 };
 
-export const getUserToken = async (
+export const getUserToken = async ( // Retrieve user token values from the database
   req: Request,
   res: Response,
   next: NextFunction
@@ -149,7 +149,7 @@ export const getUserToken = async (
       return next(new Error("Unauthorized: User email missing"));
     }
 
-    const result = await pool.query(
+    const result = await pool.query( // Execute query to fetch user tokens based on email
       "SELECT tokens FROM users WHERE email = $1",
       [email]
     );
