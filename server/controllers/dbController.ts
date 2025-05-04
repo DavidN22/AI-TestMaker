@@ -18,7 +18,7 @@ const dbController = { // Main controller object for handling database-related i
         difficulty,
       } = req.body.resultsWithWeakPoints;
       let user = res.locals.user;
-      const query = `// SQL query to insert new custom test data// SQL query to fetch quiz results in descending order by date// SQL query to insert quiz result data into the database
+      const query = `
         INSERT INTO devtests (score, "user", correct_count, wrong_count, provider, difficulty, unanswered_count, title, weak_points, summary, quiz_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING test_id;

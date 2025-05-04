@@ -19,16 +19,32 @@ export default function TestPage() {
   const { refetch: refetchTestData } = useGetTestResultsQuery();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-
   useEffect(() => {
-    if (
+    const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ""; // Show default browser confirmation
+      return "";
+    };
+  
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+    return () => window.removeEventListener("beforeunload", beforeUnloadHandler);
+  }, []);
+  
+  useEffect(() => {
+    const isReload =
+      (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming)?.type === "reload";
+  
+    const stateIsInvalid =
       !location.state ||
       !location.state.testName ||
-      !location.state.questions
-    ) {
-      navigate("/home", { replace: true, state: {} });
+      !location.state.questions;
+  
+    if (isReload || stateIsInvalid) {
+      window.history.replaceState(null, "", "/home");
+      window.location.href = "/home";
     }
   }, [location, navigate]);
+  
 
   const {
     testName,
