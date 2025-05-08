@@ -60,8 +60,8 @@ export const handleOAuthCallback = async ( // Handle OAuth callback and user ses
     if (rows.length > 0) {
       const existingUser = rows[0];
 
-      if (existingUser.uid !== uid) {
-        const updateQuery = `// Update user details if the UID does not match then existing one
+      if (existingUser.uid !== uid) { 
+        const updateQuery = `
           UPDATE users
           SET uid = $1, name = $2
           WHERE email = $3

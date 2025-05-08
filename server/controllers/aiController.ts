@@ -15,7 +15,7 @@ const aiController = { // Main controller object for handling AI-related request
       const user = res.locals.user; // Retrieve and utilize user information if necessary // Retrieve user information from response locals
 
       await decrementUserToken(user); // Decrement user's token for the request handling // Decrement user's token for the request handling
-      const result = await pool.query( // Fetch the latest quiz data from the database
+      const result = await pool.query( // Fetch the latest quiz data from the database to prevent creating similar questions
         `
     SELECT quiz_data
     FROM devtests
