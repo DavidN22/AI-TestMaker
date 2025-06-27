@@ -18,10 +18,22 @@ AI-TestMaker is a full-stack web application for generating, taking, and managin
 
 ```
 AI-TestMaker/
-├── client/         # Frontend (React, Vite)
-├── server/         # Backend (Node.js, Express, Supabase)
-├── package.json    # Root scripts and dependencies
-├── README.md       # Project documentation
+├── client/                  # Frontend (React + Vite)
+│   ├── public/              # Static assets (images, favicon, etc.)
+│   └── src/
+│       ├── components/      # UI components
+│       ├── store/           # State management
+│       ├── utils/           # Utilities and hooks
+│       ├── Types/           # TypeScript types
+│       └── ...              # Other frontend code
+├── server/                  # Backend (Node.js, Express, Supabase)
+│   ├── controllers/         # Route controllers
+│   ├── routes/              # API routes
+│   ├── db/                  # Database connection
+│   ├── middleware/          # Express middleware
+│   └── ...                  # Other backend code
+├── package.json             # Root scripts and dependencies
+├── README.md                # Project documentation
 └── ...
 ```
 
@@ -34,6 +46,7 @@ AI-TestMaker/
 - npm or yarn
 - PostgreSQL database (for production)
 - Supabase project (for authentication)
+- Google Cloud project with OAuth 2.0 credentials configured (for Google OAuth setup)
 
 ### 1. Clone the repository
 ```sh
@@ -82,17 +95,17 @@ OPENAI_API_KEY=your_openai_api_key
 - Ensure your PostgreSQL database is running.
 - Run migrations or create the `users` table as needed (see `server/db/db.ts`).
 
-### 5. Start the Development Servers
-#### Start Backend:
+### 5. Quick Start
+- To start both frontend and backend together, run:
+
 ```sh
-cd server
-npm run dev
+npm start
 ```
-#### Start Frontend:
-```sh
-cd ../client
-npm run dev
-```
+
+- To start servers individually:
+  - Backend: `cd server && npm start`
+  - Frontend: `cd client && npm run dev`
+
 - Frontend: [http://localhost:8000](http://localhost:8000)
 - Backend: [http://localhost:3000](http://localhost:3000)
 
@@ -107,6 +120,7 @@ npm run dev
 
 ## Deployment
 - Vercel configuration files are present in both `client/` and `server/` for easy deployment.
+- **Important:** Before deploying the server to Vercel, make sure to build the server code (`cd server && npm run build`). This ensures Vercel serves the built JavaScript files instead of the TypeScript source files.
 - Set environment variables in your deployment platform.
 
 ---
@@ -119,9 +133,20 @@ npm run dev
 ---
 
 ## Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+To contribute:
 
----
+1. **Fork the repository** on GitHub and clone your fork locally.
+2. **Create a new branch** for your feature or bugfix:
+   ```sh
+   git checkout -b my-feature-branch
+   ```
+3. **Make your changes** and commit them with clear, descriptive messages.
+4. **Push your branch** to your forked repository:
+   ```sh
+   git push origin my-feature-branch
+   ```
+5. **Open a Pull Request** from your branch to the `main` branch of this repository. Please provide a clear description of your changes and reference any related issues.
+6. For major changes, open an issue first to discuss your proposal before submitting a pull request.
 
-## License
-[MIT](LICENSE)
+All contributions should follow the existing code style and include relevant documentation or tests where appropriate. Thank you for helping improve AI-TestMaker!
+
