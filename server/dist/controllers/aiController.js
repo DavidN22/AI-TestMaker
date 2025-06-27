@@ -1,5 +1,6 @@
 //import schema from "../blueprint/questionSchema.ts";
 import { promptSchema } from "../blueprint/promptSchema.js";
+import { promptSchemaMultipleChoice, promptSchemaSelectTwo, promptSchemaTrueFalse, } from "../blueprint/promptSchemaVariants.js";
 import { summary } from "../blueprint/weakPointBlueprint.js";
 import { pool } from "../db/db.js";
 import { getModel } from "../utils/getModel.js";
@@ -24,28 +25,44 @@ const aiController = {
                 const quizData = result.rows[0].quiz_data; // Extract quiz data from the result
                 previousQuestions = quizData.map((q) => q.question);
             }
-            //make types a string
-            const typesString = types.join(",\n"); // Convert question types array to a formatted string
             const model = getModel(languageModel); // Obtain the correct AI model based on the languageModel parameter // Get the language model instance based on parameters
+            // Determine which schema to use based on types
+            let schemaExample;
+            if (!types || types.length === 0 || types.length === 3) {
+                // None or all types selected: use full promptSchema
+                schemaExample = promptSchema;
+            }
+            else if (types.length === 1 && types[0] === "multiple choice") {
+                schemaExample = promptSchemaMultipleChoice;
+            }
+            else if (types.length === 1 && types[0] === "select two") {
+                schemaExample = promptSchemaSelectTwo;
+            }
+            else if (types.length === 1 && types[0] === "true/false") {
+                schemaExample = promptSchemaTrueFalse;
+            }
+            else {
+                // If multiple but not all, build a combined schema or default to promptSchema
+                schemaExample = promptSchema;
+            }
             let prompt = `You are an API generating test questions in JSON.
 
       Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz with **${difficulty}** difficulty, based on this description: ${description}.
       
       Return only a valid JSON with the following example test format:
-      ${promptSchema}
+      ${schemaExample}
       
-      The user wants their questions in this style only: ${typesString}.
+      The user wants their questions in this style only: ${types.join(", ")}.
       
       Rules:
-      - Multiple choice questions MUST have 4 options (a, b, c, d).
-      - True/False questions MUST have 2 options (True, False).
-      - "select two" questions MUST have 2 correct answers and 5 options.
-      - "questions" array MUST contain **exactly ${numQuestions} items**
-      - Do NOT include any explanation or commentary.
+      - Strictly follow the structure and field types shown in the example schema above for every question.
+      - The "questions" array MUST contain **exactly ${numQuestions} items**.
+      - Do NOT include any explanation or commentary outside the JSON.
       - Do NOT include more or fewer than ${numQuestions} questions.
-      - Follow the JSON structure strictly. No text before or after.
+      - No text before or after the JSON.
       - All questions should reflect a **${difficulty}** difficulty level.
-      - Make sure to follow the type format provided and only generate ${typesString} type questions in random order.
+      - Only generate ${types.join(", ")} type questions in random order.
+      - Double check that all correct answers are accurate before generating the exam, especially for "select two" questions.
       ${res.locals.weakPoints?.length ? `- Focus especially on: ${res.locals.weakPoints.join(", ")}` : ""}
       ${previousQuestions.length ? `- Avoid generating questions similar to the following:\n- ${previousQuestions.join("\n- ")}` : ""}
       `.trim();

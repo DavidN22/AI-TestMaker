@@ -5,17 +5,16 @@ const statController = {
             const user = res.locals.user;
             const query = `
   SELECT 
-    TO_CHAR(date, 'YYYY-MM-DD') AS date,
-    REPLACE(score, '%', '')::FLOAT AS score,
-    provider,
-    difficulty,
-    weak_points,
-    title
-  FROM devtests
-  WHERE "user" = $1
-  ORDER BY date DESC
-  LIMIT 100;
-`;
+  date,
+  REPLACE(score, '%', '')::FLOAT AS score,
+  provider,
+  difficulty,
+  weak_points,
+  title
+FROM devtests
+WHERE "user" = $1
+ORDER BY date DESC
+LIMIT 100`;
             const { rows } = await pool.query(query, [user]);
             const total_tests = rows.length;
             const avg_score = rows.reduce((sum, r) => sum + r.score, 0) / (rows.length || 1);
