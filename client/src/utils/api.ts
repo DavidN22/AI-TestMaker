@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useDispatch } from "react-redux";
 import { tokenApiSlice } from "../store/Slices/tokenSlice";
+import { statsApi } from "../store/Slices/statsApi";
 
 export function useApi() {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ export function useApi() {
         results,
         languageModel,
       });
+     dispatch(statsApi.util.invalidateTags(["Dashboard"]));
       const { weakpoints, summary } = reviewRes.data.message;
 
       const resultsWithWeakPoints = {

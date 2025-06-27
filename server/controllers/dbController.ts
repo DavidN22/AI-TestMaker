@@ -198,6 +198,26 @@ const dbController = { // Main controller object for handling database-related i
       next(error);
     }
   },
+
+  // New: Get summary stats for dashboard
+  // getStatsSummary: async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     let user = res.locals.user;
+  //     // Example: total tests, average score, most recent test date
+  //     const summaryQuery = `
+  //       SELECT 
+  //         COUNT(*) AS total_tests,
+  //         COALESCE(AVG(score), 0) AS avg_score,
+  //         MAX(date) AS last_test_date
+  //       FROM devtests
+  //       WHERE "user" = $1;
+  //     `;
+  //     const { rows } = await pool.query(summaryQuery, [user]);
+  //     res.json(rows[0]);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // },
 };
 
 export default dbController;

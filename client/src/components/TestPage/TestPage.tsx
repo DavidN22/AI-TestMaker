@@ -1,50 +1,29 @@
 import { motion } from "framer-motion";
 import TestQuestion from "./TestQuestions";
 import TestSidebar from "./TestSidebar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Question } from "@/Types/Question";
 import gradeQuiz from "../../utils/gradeQuiz";
 import { useApi } from "../../utils/api";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
+//import {useGetDashboardDataQuery} from "../../store/Slices/statsApi";
 import CancelTest from "../Modals/CancelTestModal";
 import SubmitTest from "../Modals/SubmitTestModal";
 
+
+
 export default function TestPage() {
+
   const { reviewTest } = useApi();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { refetch: refetchTestData } = useGetTestResultsQuery();
+  //const {refetch: refetchDashboardData} = useGetDashboardDataQuery();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-  useEffect(() => {
-    const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = ""; // Show default browser confirmation
-      return "";
-    };
-  
-    window.addEventListener("beforeunload", beforeUnloadHandler);
-    return () => window.removeEventListener("beforeunload", beforeUnloadHandler);
-  }, []);
-  
-  useEffect(() => {
-    const isReload =
-      (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming)?.type === "reload";
-  
-    const stateIsInvalid =
-      !location.state ||
-      !location.state.testName ||
-      !location.state.questions;
-  
-    if (isReload || stateIsInvalid) {
-      window.history.replaceState(null, "", "/home");
-      window.location.href = "/home";
-    }
-  }, [location, navigate]);
-  
 
   const {
     testName,
@@ -84,6 +63,7 @@ export default function TestPage() {
     try {
       const getId = await reviewTest({ results, testName, provider, difficulty });
       refetchTestData();
+      //dispatch(statsApi.util.invalidateTags(["Dashboard"]));
 
       setTimeout(() => {
         

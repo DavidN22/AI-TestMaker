@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 // HomeView.tsx
 export default function CustomPageView() {
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)] dark:bg-[#1E1E1E]">
+    <div className="flex flex-col h-[calc(100vh-57px)] dark:bg-[#1E1E1E]">
       <motion.div
         className="flex flex-1 overflow-hidden"
         initial={{ opacity: 0 }}
