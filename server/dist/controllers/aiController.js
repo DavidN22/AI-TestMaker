@@ -8,9 +8,10 @@ const aiController = {
     getAiTest: async (req, res, next) => {
         const { testName, numQuestions, languageModel, description, types, difficulty } = req.body;
         try {
-            const user = res.locals.user;
-            await decrementUserToken(user);
-            const result = await pool.query(`
+            const user = res.locals.user; // Retrieve and utilize user information if necessary // Retrieve user information from response locals
+            await decrementUserToken(user); // Decrement user's token for the request handling // Decrement user's token for the request handling
+            const result = await pool.query(// Fetch the latest quiz data from the database to prevent creating similar questions
+            `
     SELECT quiz_data
     FROM devtests
     WHERE "user" = $1
@@ -20,12 +21,12 @@ const aiController = {
             // Step 2: Extract previous questions if any
             let previousQuestions = [];
             if (result.rows.length > 0) {
-                const quizData = result.rows[0].quiz_data;
+                const quizData = result.rows[0].quiz_data; // Extract quiz data from the result
                 previousQuestions = quizData.map((q) => q.question);
             }
             //make types a string
-            const typesString = types.join(",\n");
-            const model = getModel(languageModel);
+            const typesString = types.join(",\n"); // Convert question types array to a formatted string
+            const model = getModel(languageModel); // Obtain the correct AI model based on the languageModel parameter // Get the language model instance based on parameters
             let prompt = `You are an API generating test questions in JSON.
 
       Generate **EXACTLY** ${numQuestions} questions for a ${testName} quiz with **${difficulty}** difficulty, based on this description: ${description}.
@@ -48,13 +49,14 @@ const aiController = {
       ${res.locals.weakPoints?.length ? `- Focus especially on: ${res.locals.weakPoints.join(", ")}` : ""}
       ${previousQuestions.length ? `- Avoid generating questions similar to the following:\n- ${previousQuestions.join("\n- ")}` : ""}
       `.trim();
-            const rawResponse = await model.generate(prompt);
-            const message = JSON.parse(rawResponse);
-            message.questions = message.questions.map(({ question_number, ...rest }) => ({ ...rest }));
+            const rawResponse = await model.generate(prompt); // Use model to generate weak points and summary // Generate preview using AI model // Generate questions using the AI model
+            const message = JSON.parse(rawResponse); // Parse the AI model response to JSON format
+            message.questions = message.questions.map(// Remove question numbers from the parsed JSON
+            ({ question_number, ...rest }) => ({ ...rest }));
             res.json({ message });
         }
         catch (error) {
-            const err = new Error("Failed to generate test questions. Please try again.");
+            const err = new Error("Failed to generate test questions. Please try again."); // Error handling for question generation failures
             err.status = 500;
             next(err);
         }

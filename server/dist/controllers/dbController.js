@@ -1,4 +1,4 @@
-import { pool } from "../db/db.js"; // Ensure your database connection is configured
+import { pool } from "../db/db.js"; // Ensure your database connection is configured // Ensure your database connection is configured
 import { createClient } from "../utils/supabaseServerClient.js";
 const dbController = {
     addQuizResult: async (req, res, next) => {
@@ -23,7 +23,7 @@ const dbController = {
                 summary,
                 JSON.stringify(updatedQuizData),
             ];
-            const result = await pool.query(query, values);
+            const result = await pool.query(query, values); // Execute SQL query with provided values
             res.status(201).json({
                 message: "Quiz result saved successfully",
                 quizId: result.rows[0],
@@ -52,7 +52,7 @@ const dbController = {
             await supabase.auth.signOut();
             let userid = res.locals.uid;
             let user = res.locals.user;
-            await supabase.auth.admin.deleteUser(userid);
+            await supabase.auth.admin.deleteUser(userid); // Remove user from Supabase authentication
             await pool.query(`DELETE FROM devtests WHERE "user" = $1`, [user]);
             await pool.query(`DELETE FROM customtests WHERE "user" = $1`, [user]);
             res.json({ message: "Account deleted successfully" });
@@ -61,10 +61,11 @@ const dbController = {
             next(error);
         }
     },
-    clearAllTestResults: async (req, res, next) => {
+    clearAllTestResults: async (// Clear all stored test results for a user
+    req, res, next) => {
         try {
             let user = res.locals.user;
-            const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`;
+            const deleteQuery = `DELETE FROM devtests WHERE "user" = $1`; // SQL query to delete all user test records
             await pool.query(deleteQuery, [user]);
             res
                 .status(200)
@@ -74,7 +75,8 @@ const dbController = {
             next(error);
         }
     },
-    deleteSingleTestResult: async (req, res, next) => {
+    deleteSingleTestResult: async (// Delete a specific test result by test ID
+    req, res, next) => {
         try {
             const { testId } = req.params;
             const user = res.locals.user;
@@ -136,7 +138,8 @@ const dbController = {
             next(error);
         }
     },
-    updateCustomTest: async (req, res, next) => {
+    updateCustomTest: async (// Update details of a specific custom test in the database
+    req, res, next) => {
         try {
             const { testId } = req.params;
             const { title, headline, description, difficulty } = req.body;
@@ -156,5 +159,24 @@ const dbController = {
             next(error);
         }
     },
+    // New: Get summary stats for dashboard
+    // getStatsSummary: async (req: Request, res: Response, next: NextFunction) => {
+    //   try {
+    //     let user = res.locals.user;
+    //     // Example: total tests, average score, most recent test date
+    //     const summaryQuery = `
+    //       SELECT 
+    //         COUNT(*) AS total_tests,
+    //         COALESCE(AVG(score), 0) AS avg_score,
+    //         MAX(date) AS last_test_date
+    //       FROM devtests
+    //       WHERE "user" = $1;
+    //     `;
+    //     const { rows } = await pool.query(summaryQuery, [user]);
+    //     res.json(rows[0]);
+    //   } catch (error) {
+    //     next(error);
+    //   }
+    // },
 };
 export default dbController;

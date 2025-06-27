@@ -5,6 +5,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import dbRoutes from './routes/dbRoutes.js';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 dotenv.config();
 //import authRoutes from './routes/authRoutes';
 //import dbRoutes from './routes/dbRoutes';
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/api/ai', aiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/db', dbRoutes);
+app.use('/api/stats', statsRoutes);
 app.get('/api', (req, res) => {
     res.json({ server: 'Hello, this is your Express server!' });
 });
