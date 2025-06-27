@@ -84,15 +84,15 @@ export default function StatPage() {
       </section>
 
       {/* Main Chart Grid with asymmetric layout */}
-      <section className="grid grid-cols-5 gap-6">
-        <div className={`col-span-3 ${cardClass}`}>
+      <section className="grid grid-cols-1 sm:grid-cols-5 gap-6">
+        <div className="col-span-1 sm:col-span-3 bg-white/70 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/10 rounded-xl shadow p-6">
           <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
             🧠 Avg Score by Difficulty
           </h3>
           <AvgScoreByDifficultyChart tests={tests} />
         </div>
 
-        <div className={`col-span-2 ${cardClass}`}>
+        <div className="col-span-1 sm:col-span-2 bg-white/70 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/10 rounded-xl shadow p-6">
           <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
             🥧 Tests by Provider
           </h3>
