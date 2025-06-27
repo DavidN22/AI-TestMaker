@@ -5,6 +5,7 @@ import { useDeleteTestResultMutation } from "../../store/Slices/apiSlice";
 import { TestResults } from "@/Types/Results";
 import { Cloud, Landmark, Globe, BookOpen } from "lucide-react";
 import DeleteTestMenuItem from "./DeleteTestMenuItem";
+import {getDateKey} from "../StatsPage/Charts/dateUtils";
 
 const getIcon = (title: string) => {
   const lower = title.toLowerCase();
@@ -17,17 +18,9 @@ const getIcon = (title: string) => {
   return <BookOpen className="w-5 h-5 text-gray-800 dark:text-gray-200" />;
 };
 
-const formatDate = (isoString: string) => {
-  const date = new Date(isoString);
-  return date.toLocaleString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return getDateKey(date);
 };
 
 const getDifficultyColor = (difficulty: string) => {

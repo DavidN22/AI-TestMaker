@@ -30,6 +30,7 @@ export function getModel(languageModel: string) {
     };
   }
 
+  // 🟣 GPT-4o
   if (languageModel === "gpt-4o") {
     const openai = new OpenAI({
       apiKey: openaiApiKey,
@@ -56,6 +57,24 @@ export function getModel(languageModel: string) {
   }
   
 
+  // 🟢 Gemini
+  if (languageModel === "gemini") {
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json",
+      },
+    });
+    return {
+      generate: async (prompt: string) => {
+        const result = await model.generateContent(prompt);
+        return result.response.text();
+      },
+    };
+  }
+
+  // Default: Gemini (for backward compatibility)
   const genAI = new GoogleGenerativeAI(geminiApiKey);
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash",
@@ -63,7 +82,6 @@ export function getModel(languageModel: string) {
       responseMimeType: "application/json",
     },
   });
-
   return {
     generate: async (prompt: string) => {
       const result = await model.generateContent(prompt);

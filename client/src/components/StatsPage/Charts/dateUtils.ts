@@ -4,9 +4,18 @@ export function getTodayDateObj() {
 }
 
 export function getDateKey(date: string | Date) {
-  return new Date(date).toLocaleDateString("en-US", {
+  const d = new Date(date);
+  return d.toLocaleString("en-US", {
     year: "numeric",
-    month: "numeric",
-    day: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   });
+
+
 }
+
+

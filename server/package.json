@@ -21,10 +21,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "gemini-zod": "^0.1.2",
     "nodemon": "^3.1.9",
     "openai": "^4.91.0",
     "pg": "^8.13.1",
-    "resend": "^4.2.0"
+    "resend": "^4.2.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

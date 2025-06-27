@@ -18,7 +18,6 @@ export default function StatPage() {
     return (
       <div className="p-8 text-sm text-destructive">Error loading stats.</div>
     );
-
   const { meta, tests } = data;
   const { total_tests, avg_score, last_test_date } = meta;
 
