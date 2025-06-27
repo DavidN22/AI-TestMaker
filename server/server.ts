@@ -5,6 +5,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import dbRoutes from './routes/dbRoutes.js';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 dotenv.config();
 
 //import authRoutes from './routes/authRoutes';
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/ai', aiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/db', dbRoutes);
+app.use('/api/stats', statsRoutes);
   
 app.get('/api', (req: Request, res: Response) => {
     res.json({ server: 'Hello, this is your Express server!' });
@@ -39,4 +41,4 @@ app.use((err: any, req: Request, res: Response, next: Function) => {
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`); 
-});    
+});

@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from "react-route
 import HomeView from "./components/views/HomeView";
 import TestView from "./components/views/TestView";
 import HistoryView from "./components/views/HistoryView";
-import LoadingPlaceholder from "./components/Loading/Placeholder";
 import Landing from "./components/views/LandingView";
 import ProtectedRoute from "./Auth-helpers/ProtectedRoute";
 import AppInitializer from "./AppInitializer";
@@ -14,12 +13,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import ScrollToTop from "./utils/ScrollToTop";
 import { useEffect } from "react";
+import StatPage from "./components/StatsPage/StatPage";
+import { useGetDashboardDataQuery } from "./store/Slices/statsApi";
 
 
 function AppContent() {
   const location = useLocation();
   const isLoading = useSelector((state: RootState) => state.auth.isAuthLoading);
   const isTestRoute = /^\/test\/[^/]+$/.test(location.pathname);
+  //useGetDashboardDataQuery();  This triggers on each route change, which is not ideal for performance but has instant 
+  //dashboard data display without needing to invalidate rtk query tags.
+
   // Use regex to check if the current path matches /test/:id
   
   useEffect(() => {
@@ -78,7 +82,7 @@ function AppContent() {
           path="/statistics"
           element={
             <ProtectedRoute>
-              <LoadingPlaceholder />
+              <StatPage />
             </ProtectedRoute>
           }
         />

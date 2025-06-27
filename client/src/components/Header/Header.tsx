@@ -18,9 +18,9 @@ export default function Header() {
   const email = useSelector((state: RootState) => state.auth.email);
   const { handleLogout } = useApi();
 
-  const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.classList.contains("dark")
-  );
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+      return document.documentElement.classList.contains("dark");
+  });
 
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
@@ -56,6 +56,11 @@ export default function Header() {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // On mount, sync with current classList (handles reload in dark mode)
+    setIsDarkMode(document.documentElement.classList.contains("dark"));
   }, []);
 
   const handleGoogleSignIn = () => {

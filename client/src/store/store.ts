@@ -7,6 +7,7 @@ import { tokenApiSlice } from "./Slices/tokenSlice";
 import configReducer from "./Slices/configSlice";
 import { testsApi } from './Slices/customTestsApi'; 
 import customFilterReducer from "./Slices/customFilterSlice";
+import { statsApi } from "./Slices/statsApi";
 
 const store = configureStore({
   reducer: {
@@ -18,13 +19,15 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     [tokenApiSlice.reducerPath]: tokenApiSlice.reducer,
     [testsApi.reducerPath]: testsApi.reducer,
+    [statsApi.reducerPath]: statsApi.reducer,
 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(apiSlice.middleware)
       .concat(tokenApiSlice.middleware)
-      .concat(testsApi.middleware),
+      .concat(testsApi.middleware)
+      .concat(statsApi.middleware),
 
 });
 

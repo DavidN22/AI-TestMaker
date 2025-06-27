@@ -18,7 +18,7 @@ const dbController = { // Main controller object for handling database-related i
         difficulty,
       } = req.body.resultsWithWeakPoints;
       let user = res.locals.user;
-      const query = `// SQL query to insert new custom test data// SQL query to fetch quiz results in descending order by date// SQL query to insert quiz result data into the database
+      const query = `
         INSERT INTO devtests (score, "user", correct_count, wrong_count, provider, difficulty, unanswered_count, title, weak_points, summary, quiz_data)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING test_id;
@@ -198,6 +198,26 @@ const dbController = { // Main controller object for handling database-related i
       next(error);
     }
   },
+
+  // New: Get summary stats for dashboard
+  // getStatsSummary: async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     let user = res.locals.user;
+  //     // Example: total tests, average score, most recent test date
+  //     const summaryQuery = `
+  //       SELECT 
+  //         COUNT(*) AS total_tests,
+  //         COALESCE(AVG(score), 0) AS avg_score,
+  //         MAX(date) AS last_test_date
+  //       FROM devtests
+  //       WHERE "user" = $1;
+  //     `;
+  //     const { rows } = await pool.query(summaryQuery, [user]);
+  //     res.json(rows[0]);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // },
 };
 
 export default dbController;

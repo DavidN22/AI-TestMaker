@@ -1,34 +1,29 @@
 import { motion } from "framer-motion";
 import TestQuestion from "./TestQuestions";
 import TestSidebar from "./TestSidebar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Question } from "@/Types/Question";
 import gradeQuiz from "../../utils/gradeQuiz";
 import { useApi } from "../../utils/api";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { useGetTestResultsQuery } from "../../store/Slices/apiSlice";
+//import {useGetDashboardDataQuery} from "../../store/Slices/statsApi";
 import CancelTest from "../Modals/CancelTestModal";
 import SubmitTest from "../Modals/SubmitTestModal";
 
+
+
 export default function TestPage() {
+
   const { reviewTest } = useApi();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { refetch: refetchTestData } = useGetTestResultsQuery();
+  //const {refetch: refetchDashboardData} = useGetDashboardDataQuery();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-
-  useEffect(() => {
-    if (
-      !location.state ||
-      !location.state.testName ||
-      !location.state.questions
-    ) {
-      navigate("/home", { replace: true, state: {} });
-    }
-  }, [location, navigate]);
 
   const {
     testName,
@@ -68,6 +63,7 @@ export default function TestPage() {
     try {
       const getId = await reviewTest({ results, testName, provider, difficulty });
       refetchTestData();
+      //dispatch(statsApi.util.invalidateTags(["Dashboard"]));
 
       setTimeout(() => {
         
