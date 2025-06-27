@@ -5,7 +5,6 @@ const statController = {
 getDashboardData: async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = res.locals.user;
-
 const query = `
   SELECT 
   date,

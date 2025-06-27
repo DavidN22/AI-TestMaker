@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import HomeView from "./components/views/HomeView";
 import TestView from "./components/views/TestView";
 import HistoryView from "./components/views/HistoryView";
@@ -16,16 +21,22 @@ import { useEffect } from "react";
 import StatPage from "./components/StatsPage/StatPage";
 import { useGetDashboardDataQuery } from "./store/Slices/statsApi";
 
-
 function AppContent() {
+  const isAuthLoading = useSelector(
+    (state: RootState) => state.auth.isAuthLoading
+  );
+  const email = useSelector((state: RootState) => state.auth.email);
   const location = useLocation();
   const isLoading = useSelector((state: RootState) => state.auth.isAuthLoading);
   const isTestRoute = /^\/test\/[^/]+$/.test(location.pathname);
-  //useGetDashboardDataQuery();  This triggers on each route change, which is not ideal for performance but has instant 
+  //useGetDashboardDataQuery();  This triggers on each route change, which is not ideal for performance but has instant
   //dashboard data display without needing to invalidate rtk query tags.
 
   // Use regex to check if the current path matches /test/:id
-  
+
+  useGetDashboardDataQuery(undefined, {
+    skip: isAuthLoading || !email,
+  });
   useEffect(() => {
     const routeName = (() => {
       if (location.pathname === "/") return "";
@@ -33,7 +44,8 @@ function AppContent() {
       if (location.pathname.startsWith("/test")) return "Test";
       if (location.pathname.startsWith("/history")) return "History";
       if (location.pathname.startsWith("/statistics")) return "Statistics";
-      if (location.pathname.startsWith("/privacy-policy")) return "Privacy Policy";
+      if (location.pathname.startsWith("/privacy-policy"))
+        return "Privacy Policy";
       return "Teskro";
     })();
 
@@ -54,7 +66,7 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-            <Route
+        <Route
           path="/custom"
           element={
             <ProtectedRoute>

@@ -57,51 +57,59 @@ export function useApi() {
     }
   };
 
-  const reviewTest = async ({
-    results,
-    testName,
-    provider,
-    difficulty
-  }: {
-    results: QuizResult;
-    testName: string;
-    provider?: string;
-    difficulty?: string;
-  }) => {
-    setLoading(true);
-    try {
-      const languageModel = localStorage.getItem("languageModel") || "gemini";
+ const reviewTest = async ({
+  results,
+  testName,
+  provider,
+  difficulty,
+}: {
+  results: QuizResult;
+  testName: string;
+  provider?: string;
+  difficulty?: string;
+}) => {
+  setLoading(true);
+  try {
+    const languageModel = localStorage.getItem("languageModel") || "gemini";
 
-      const reviewRes = await axios.post(`${apiBase}/ai/reviewTest`, {
-        results,
-        languageModel,
-      });
-     dispatch(statsApi.util.invalidateTags(["Dashboard"]));
-      const { weakpoints, summary } = reviewRes.data.message;
+    // Step 1: Run AI review
+    const reviewRes = await axios.post(`${apiBase}/ai/reviewTest`, {
+      results,
+      languageModel,
+    });
 
-      const resultsWithWeakPoints = {
-        ...results,
-        testName,
-        weakPoints: weakpoints,
-        summary,
-        provider,
-        difficulty,
-      };
+    const { weakpoints, summary } = reviewRes.data.message;
 
-      const dbRes = await axios.post(
-        `${apiBase}/db/tests`,
-        { resultsWithWeakPoints },
-        { withCredentials: true }
-      );
+    // Step 2: Compose full results with weak points
+    const resultsWithWeakPoints = {
+      ...results,
+      testName,
+      weakPoints: weakpoints,
+      summary,
+      provider,
+      difficulty,
+    };
 
-      const quizId = dbRes.data.quizId.test_id;
-      return { ...resultsWithWeakPoints, test_id: quizId };
-    } catch (error) {
-      handleApiError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Step 3: Save test result to the DB
+    const dbRes = await axios.post(
+      `${apiBase}/db/tests`,
+      { resultsWithWeakPoints },
+      { withCredentials: true }
+    );
+
+    const quizId = dbRes.data.quizId.test_id;
+
+    // ✅ Step 4: Invalidate *after* test is saved
+    dispatch(statsApi.util.invalidateTags(["Dashboard"]));
+
+    return { ...resultsWithWeakPoints, test_id: quizId };
+  } catch (error) {
+    handleApiError(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const getPreviewTest = async ({
     title,
