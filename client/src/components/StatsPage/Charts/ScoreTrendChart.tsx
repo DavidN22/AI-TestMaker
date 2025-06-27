@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { useMemo, useState, useEffect } from "react";
 import ScoreTrendFilter from "./ScoreTrendFilter";
+import { getDateKey } from "./dateUtils";
 
 interface ScoreTrendChartProps {
   tests: {
@@ -28,17 +29,20 @@ export default function ScoreTrendChart({ tests }: ScoreTrendChartProps) {
     return tests
       .filter(
         (t) =>
-          (filters.title === "All" || (t.title ?? "Untitled") === filters.title) &&
+          (filters.title === "All" ||
+            (t.title ?? "Untitled") === filters.title) &&
           (filters.provider === "All" || t.provider === filters.provider)
       )
-      .map(({ date, score }) => ({ date, score }))
+      .map(({ date, score }) => ({
+        date: getDateKey(date),
+        score,
+      }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [tests, filters]);
 
   const getThemeColors = () => {
     const isDark =
-      typeof window !== "undefined" &&
-      localStorage.getItem("theme") === "dark";
+      typeof window !== "undefined" && localStorage.getItem("theme") === "dark";
     return {
       isDark,
       axisColor: isDark ? "#d1d5db" : "#374151",

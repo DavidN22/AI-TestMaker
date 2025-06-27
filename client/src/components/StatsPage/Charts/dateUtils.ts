@@ -2,3 +2,11 @@
 export function getTodayDateObj() {
   return new Date();
 }
+
+export function getDateKey(date: string | Date) {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+}

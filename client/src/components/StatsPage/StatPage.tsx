@@ -7,6 +7,7 @@ import TestActivityCalendar from "./Charts/TestActivityCalendar";
 import AvgScoreByDifficultyChart from "./Charts/AvgScoreByDifficultyChart";
 import CircularProgressBars from "./Charts/CircularProgressBars";
 import StatPageSkeleton from "./StatPageSkeleton";
+import { getDateKey } from "./Charts/dateUtils";
 
 export default function StatPage() {
   const { data, isLoading, error } = useGetDashboardDataQuery();
@@ -53,16 +54,11 @@ export default function StatPage() {
         />
         <StatCard
           label="Last Test"
-      value={
-  last_test_date
-    ? new Date(last_test_date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        timeZone: "UTC",
-      })
-    : "-"
-}
+          value={
+            last_test_date
+              ? getDateKey(last_test_date)
+              : "-"
+          }
           icon={<PieChart className="w-6 h-6" />}
         />
       </section>

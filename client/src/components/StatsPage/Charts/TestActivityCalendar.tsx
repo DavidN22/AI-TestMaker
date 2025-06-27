@@ -4,7 +4,7 @@ import { subDays } from "date-fns";
 import { useMemo, useEffect, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import { getTodayDateObj } from "./dateUtils";
+import { getTodayDateObj, getDateKey } from "./dateUtils";
 
 interface TestActivityCalendarProps {
   tests: {
@@ -16,12 +16,7 @@ export default function TestActivityCalendar({ tests }: TestActivityCalendarProp
 const data = useMemo(() => {
   const countMap: Record<string, number> = {};
   tests.forEach(({ date }) => {
-    const key = new Date(date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        timeZone: "UTC",
-      });
+    const key = getDateKey(date);
     countMap[key] = (countMap[key] || 0) + 1;
   });
   return Object.entries(countMap).map(([date, count]) => ({ date, count }));
