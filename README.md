@@ -1,6 +1,6 @@
-# AI-TestMaker
+# Teskro
 
-AI-TestMaker is a full-stack web application for generating, taking, and managing AI-powered tests. It features Google OAuth authentication, user management, and a modern React frontend with a Node.js/Express backend and Supabase integration.
+Teskro is a full-stack web application for generating, taking, and managing AI-powered tests. It features Google OAuth authentication, user management, and a modern React frontend with a Node.js/Express backend and Supabase integration.
 
 ---
 
@@ -17,7 +17,7 @@ AI-TestMaker is a full-stack web application for generating, taking, and managin
 ## Project Structure
 
 ```
-AI-TestMaker/
+Teskro/
 ├── client/                  # Frontend (React + Vite)
 │   ├── public/              # Static assets (images, favicon, etc.)
 │   └── src/

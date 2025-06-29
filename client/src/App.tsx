@@ -20,6 +20,7 @@ import ScrollToTop from "./utils/ScrollToTop";
 import { useEffect } from "react";
 import StatPage from "./components/StatsPage/StatPage";
 import { useGetDashboardDataQuery } from "./store/Slices/statsApi";
+import ChatbotWidget from "./components/Chatbot/ChatbotWidget";
 
 function AppContent() {
   const isAuthLoading = useSelector(
@@ -37,6 +38,7 @@ function AppContent() {
   useGetDashboardDataQuery(undefined, {
     skip: isAuthLoading || !email,
   });
+
   useEffect(() => {
     const routeName = (() => {
       if (location.pathname === "/") return "";
@@ -100,6 +102,7 @@ function AppContent() {
         />
         <Route path="*" element={<Landing />} />
       </Routes>
+      {email && !isTestRoute && <ChatbotWidget />}
     </>
   );
 }
