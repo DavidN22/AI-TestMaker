@@ -14,8 +14,11 @@ export function getDateKey(date: string | Date) {
     hour12: true,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   });
+}
 
-
+export function getDateKeyOnly(date: string | Date) {
+  const d = new Date(date);
+  return d.toLocaleDateString("en-US");
 }
 
 

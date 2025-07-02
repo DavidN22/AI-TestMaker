@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useChatbot } from "./useChatbot";
 import MessageList from "./MessageList";
 import { BotIcon, X } from "lucide-react";
-import { useGetDashboardDataQuery } from "../../store/Slices/statsApi";
 import QuickReplies from "./QuickReplies";
 import { useDispatch } from "react-redux";
 import { clearMessages } from "../../store/Slices/chatHistorySlice";
@@ -18,9 +17,8 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
     endRef,
   } = useChatbot();
 
-  const { data: dashboardData } = useGetDashboardDataQuery();
   const dispatch = useDispatch();
-
+  const isBotLoading = messages.some((m) => m.role === "bot" && m.loading);
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -63,7 +61,7 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
         </div>
       </div>
 
-      <QuickReplies endRef={endRef} key={quickRepliesKey} />
+      <QuickReplies endRef={endRef} resetKey={quickRepliesKey} />
 
       {/* Message Area */}
       <div className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-50 via-white to-white dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-900 px-4 pt-4 pb-2 custom-scrollbar">
@@ -75,17 +73,42 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
         onSubmit={handleSend}
         className="flex items-center gap-2 px-4 py-3 border-t bg-white/70 dark:bg-zinc-800/70 border-gray-200 dark:border-zinc-700 backdrop-blur-md"
       >
-        <input
-          type="text"
-          className="flex-1 border border-gray-300 dark:border-zinc-600 rounded-xl px-4 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Ask your assistant..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
+<textarea
+  className="flex-1 min-h-[40px] max-h-[130px] resize-none border border-gray-300 dark:border-zinc-600 rounded-xl px-4 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+  placeholder="Ask your assistant..."
+  value={input}
+  ref={el => {
+    // Attach ref to textarea for resetting height after submit
+    if (el && input === "") {
+      el.style.height = 'auto';
+    }
+  }}
+  onChange={(e) => {
+    setInput(e.target.value);
+    e.target.style.height = 'auto';
+    const maxHeight = 160;
+    const newHeight = Math.min(e.target.scrollHeight, maxHeight);
+    e.target.style.height = `${newHeight}px`;
+    e.target.style.overflow = e.target.scrollHeight > maxHeight ? 'auto' : 'hidden';
+  }}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const form = e.currentTarget.form;
+      if (form) {
+        const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+        form.dispatchEvent(submitEvent);
+      }
+    }
+  }}
+  rows={1}
+/>
+
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-blue-700 transition"
-        >
+          disabled={isBotLoading}
+           className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700"
+>
           Send
         </button>
       </form>

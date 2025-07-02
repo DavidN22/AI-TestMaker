@@ -6,10 +6,10 @@ import { quickReplies } from "./quickRepliesData";
 
 interface QuickRepliesProps {
   endRef: React.RefObject<HTMLDivElement>;
-  key?: number;
+  resetKey?: number;
 }
 
- const QuickReplies = ({ endRef, key: resetKey }: QuickRepliesProps) => {
+const QuickReplies = ({ endRef, resetKey }: QuickRepliesProps) => {
   const [hidden, setHidden] = useState(false);
   const dispatch = useDispatch();
   const messages = useSelector((state: RootState) => state.chatHistory.messages);
