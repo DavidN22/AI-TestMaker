@@ -91,16 +91,22 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
     e.target.style.height = `${newHeight}px`;
     e.target.style.overflow = e.target.scrollHeight > maxHeight ? 'auto' : 'hidden';
   }}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      const form = e.currentTarget.form;
-      if (form) {
-        const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
-        form.dispatchEvent(submitEvent);
-      }
+onKeyDown={(e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+
+    if (isBotLoading) return; // ✅ Block sending if bot is busy
+
+    const form = e.currentTarget.form;
+    if (form) {
+      const submitEvent = new Event('submit', {
+        cancelable: true,
+        bubbles: true,
+      });
+      form.dispatchEvent(submitEvent);
     }
-  }}
+  }
+}}
   rows={1}
 />
 

@@ -4,6 +4,9 @@ export type ChatMessage = {
   role: "user" | "bot";
   text: string;
   loading?: boolean;
+  confirmation?: {
+    options: "yes" | "no";
+  };
 };
 
 interface ChatHistoryState {
@@ -35,8 +38,26 @@ const chatHistorySlice = createSlice({
         };
       }
     },
+clearConfirmation(state) {
+  const index = state.messages.findIndex(
+    (msg) => msg.role === "bot" && msg.confirmation
+  );
+  if (index !== -1) {
+    state.messages[index] = {
+      ...state.messages[index],
+      confirmation: undefined,
+    };
+  }
+}
   },
 });
 
-export const { addMessage, setMessages, clearMessages, updateLastMessage } = chatHistorySlice.actions;
+export const {
+  addMessage,
+  setMessages,
+  clearMessages,
+  updateLastMessage,
+  clearConfirmation,
+} = chatHistorySlice.actions;
+
 export default chatHistorySlice.reducer;

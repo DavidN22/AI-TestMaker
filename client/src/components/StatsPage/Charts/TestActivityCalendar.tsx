@@ -15,7 +15,6 @@ interface TestActivityCalendarProps {
 export default function TestActivityCalendar({ tests }: TestActivityCalendarProps) {
   const data = useMemo(() => {
     const countMap: Record<string, number> = {};
-    console.log("Tests data:", tests);
     tests.forEach(({ date }) => {
       const key = getDateKeyOnly(date);
       countMap[key] = (countMap[key] || 0) + 1;

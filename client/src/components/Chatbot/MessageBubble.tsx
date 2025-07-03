@@ -1,5 +1,4 @@
 import ChatbotLoading from "./ChatbotLoading";
-
 const MessageBubble = ({
   role,
   text,
@@ -8,6 +7,7 @@ const MessageBubble = ({
   role: "user" | "bot";
   text: string;
   loading?: boolean;
+  confirmation?: { options: "yes" | "no" };
 }) => {
   const isBot = role === "bot";
 
@@ -21,13 +21,17 @@ const MessageBubble = ({
     >
       {loading ? (
         <ChatbotLoading />
-      ) : isBot ? (
-        <div
-          className="[&>ul]:list-disc [&>ul]:pl-5 [&>li]:mt-1 space-y-1"
-          dangerouslySetInnerHTML={{ __html: text }}
-        />
       ) : (
-        <div>{text}</div>
+        <>
+          {isBot ? (
+            <div
+              className="[&>ul]:list-disc [&>ul]:pl-5 [&>li]:mt-1 space-y-1"
+              dangerouslySetInnerHTML={{ __html: text }}
+            />
+          ) : (
+            <div>{text}</div>
+          )}
+        </>
       )}
     </div>
   );

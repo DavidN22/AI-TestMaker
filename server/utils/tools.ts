@@ -1,6 +1,7 @@
 import { tool } from "@openai/agents";
 import { z } from "zod";
 import { pool } from "../db/db.js";
+import {teskroInfo } from "../utils/faq.js";
 
 // 1. Safe SELECT query tool
 export const customSelectTool = tool({
@@ -81,5 +82,64 @@ export const getLast100TestsTool = tool({
       console.error("Fallback Query Error:", err);
       return `Failed to fetch last 100 tests: ${err.message}`;
     }
+  },
+});
+
+export const faqTool = tool({
+  name: "faq_tool",
+  description: "Returns a list of statements that explain what Teskro is and what it can do.",
+  parameters: z.object({
+    question: z.string().describe("Any question — will be ignored. This tool always returns the Teskro info."),
+  }),
+  async execute(_) {
+    return teskroInfo;
+  },
+});
+
+export const createCustomTestTool = tool({
+  name: "create_custom_test",
+  description: "Creates a new custom test for the user with a title and description. Optionally includes headline and difficulty.",
+ parameters: z.object({
+  user: z.string().describe("The user's email"),
+  title: z.string().min(1).describe("The name of the test"),
+  description: z.string().min(1).describe("A short description of the test"),
+  headline: z.string().nullable().default(null).describe("Short headline for the test (optional; defaults to title)"),
+  difficulty: z.enum(["Beginner", "Intermediate", "Advanced"]).default("Intermediate").describe("Difficulty level (defaults to Intermediate)"),
+}),
+
+  async execute({ user, title, description, headline, difficulty }) {
+    const resolvedHeadline = headline || title;
+    const resolvedDifficulty = difficulty || "Intermediate";
+
+    try {
+      const result = await pool.query(
+        `
+          INSERT INTO customtests ("user", title, headline, description, difficulty)
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING test_id, created_at
+        `,
+        [user, title, resolvedHeadline, description, resolvedDifficulty]
+      );
+      return {
+        message: `✅ Custom test "${title}" created successfully!`,
+        test_id: result.rows[0].test_id,
+        created_at: result.rows[0].created_at,
+      };
+    } catch (err: any) {
+      console.error("Create Custom Test Error:", err);
+      return `❌ Failed to create test: ${err.message}`;
+    }
+  },
+});
+
+export const confirmTool = tool({
+  name: "confirm_action",
+  description: "Returns a confirmation object with 'yes' and 'no' options. Use during your confirmation message.",
+  parameters: z.object({}),
+  async execute() {
+    return {
+      type: "confirmation",
+      options: ["yes", "no"],
+    };
   },
 });

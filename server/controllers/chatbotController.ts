@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { run } from "@openai/agents";
-import { tutoringAgent } from "../utils/agents.js";
+import { triageAgent } from "../utils/agents.js";
 
 export const handleChatbotQuery = async (
   req: Request,
@@ -8,7 +8,6 @@ export const handleChatbotQuery = async (
 ): Promise<void> => {
   const userId = res.locals.user; // Get userId from decoded user middleware
 
-  console.log("User ID:", userId); // Log the userId for debugging
   try {
     const { question } = req.body;
 
@@ -17,16 +16,23 @@ export const handleChatbotQuery = async (
       return;
     }
 
+    // Construct the full prompt from chat history
     const chatInput = [
       `The current userId is "${userId}".`,
       ...question.map((msg) => `[${msg.role}]: ${msg.content}`),
     ].join("\n");
 
-    const result = await run(tutoringAgent, chatInput);
+    const result = await run(triageAgent, chatInput);
+    const output = result.finalOutput;
 
-    res.json({ answer: result.finalOutput });
+    // Normalize response format
+    if (typeof output === "object" && output !== null) {
+      res.json({ answer: output.message, confirmation: output.confirmation }); // Already structured: message, confirmation, etc.
+    } else {
+      res.json({ answer: String(output) }); // Wrap plain string into message format
+    }
   } catch (err: any) {
-    console.error(err);
+    console.error("Chatbot error:", err);
     res.status(500).json({ error: "Failed to process chatbot query." });
   }
 };

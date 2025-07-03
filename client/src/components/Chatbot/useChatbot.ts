@@ -7,18 +7,20 @@ import {
   updateLastMessage,
   clearMessages,
 } from "../../store/Slices/chatHistorySlice";
-import { quickReplies } from "./quickRepliesData"; 
+import { quickReplies } from "./quickRepliesData";
 import { useApi } from "../../utils/api";
 
 // Custom hook that centralizes chatbot logic
 export const useChatbot = () => {
   const { sendChatToBot } = useApi();
   const dispatch = useDispatch();
-  const messages = useSelector((state: RootState) => state.chatHistory.messages);
+  const messages = useSelector(
+    (state: RootState) => state.chatHistory.messages
+  );
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
 
-const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, skipUserBubble = false) => {
   if (!text.trim()) return;
 
   const normalizedInput = text.trim().toLowerCase();
@@ -26,11 +28,20 @@ const sendMessage = async (text: string) => {
     ({ question }) => question.trim().toLowerCase() === normalizedInput
   );
 
-  // Slice old messages if needed
-  const updatedMessages = messages.length >= 10 ? messages.slice(1) : messages;
-  dispatch(setMessagesRedux(updatedMessages));
+  const trimmed = messages.length >= 10 ? messages.slice(1) : messages;
 
-  dispatch(addMessage({ role: "user", text }));
+  const cleaned = trimmed.map((msg) =>
+    msg.role === "bot" && msg.confirmation
+      ? { ...msg, confirmation: undefined }
+      : msg
+  );
+// uncomment this line if you want to keep the cleaned messages in Redux
+  //dispatch(setMessagesRedux(cleaned));
+
+  if (!skipUserBubble) {
+    dispatch(addMessage({ role: "user", text }));
+  }
+
   dispatch(addMessage({ role: "bot", text: "", loading: true }));
 
   try {
@@ -40,17 +51,25 @@ const sendMessage = async (text: string) => {
       replyText = matchedQuickReply.answer;
     } else {
       const formattedHistory = [
-        ...updatedMessages.map((m) => ({ role: m.role, content: m.text })),
+        ...cleaned.map((m) => ({ role: m.role, content: m.text })),
         { role: "user", content: text },
       ];
 
       const response = await sendChatToBot(formattedHistory);
-      replyText = response.answer || "Sorry, I couldn't understand that.";
-    }
 
-    dispatch(updateLastMessage({ loading: false, text: replyText }));
+      replyText = response.answer || "Sorry, I couldn't understand that.";
+      dispatch(
+        updateLastMessage({
+          text: replyText,
+          loading: false,
+          confirmation: response.confirmation ?? undefined,
+        })
+      );
+    }
   } catch (err) {
-    dispatch(updateLastMessage({ loading: false, text: "Error talking to server." }));
+    dispatch(
+      addMessage({ role: "bot", text: "Error talking to server.", loading: false })
+    );
     console.error("Chatbot error:", err);
   }
 
@@ -59,14 +78,13 @@ const sendMessage = async (text: string) => {
 
 
 
-const handleSend = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!input.trim()) return;
-  const messageToSend = input.trim();
-  setInput(""); // clear immediately
-  sendMessage(messageToSend);
-};
-
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    const messageToSend = input.trim();
+    setInput(""); // clear immediately
+    sendMessage(messageToSend);
+  };
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
