@@ -18,6 +18,6 @@ export const teskroInfo = [
   "All created custom tests can be edited and deleted by the user.",
   "Difficulty levels for each tests are set in place but can be changed in the test configuration settings.",
   "Before making a custom tests, you can generate preview instead of create test to see what the test will look like (This will consume a token).",
-  "Our newest and lastest features allow users to create custom tests via chatbot interface without leaving the chat window.",
-  "This chatbot (You are the chatbot) can also answer any questions about the users test data and performance, as well as general questions about Teskro.",
+  "Our newest and lastest feature (Teskro Assistant) allow users to create custom tests via chatbot interface without leaving the chat window.",
+  "This chatbot thats answering AKA Teskro Assistant (You are the chatbot) can also answer any questions about the users test data and performance, as well as general questions about Teskro.",
 ];

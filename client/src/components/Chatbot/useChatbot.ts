@@ -6,6 +6,7 @@ import {
   setMessages as setMessagesRedux,
   updateLastMessage,
   clearMessages,
+  clearConfirmation,
 } from "../../store/Slices/chatHistorySlice";
 import { quickReplies } from "./quickRepliesData";
 import { useApi } from "../../utils/api";
@@ -21,6 +22,7 @@ export const useChatbot = () => {
   const endRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = async (text: string, skipUserBubble = false) => {
+    dispatch(clearConfirmation()); // Clear any existing confirmation state
   if (!text.trim()) return;
 
   const normalizedInput = text.trim().toLowerCase();
@@ -47,25 +49,37 @@ export const useChatbot = () => {
   try {
     let replyText = "";
 
-    if (matchedQuickReply) {
-      replyText = matchedQuickReply.answer;
-    } else {
-      const formattedHistory = [
-        ...cleaned.map((m) => ({ role: m.role, content: m.text })),
-        { role: "user", content: text },
-      ];
+if (matchedQuickReply) {
+  replyText = matchedQuickReply.answer;
 
-      const response = await sendChatToBot(formattedHistory);
+ setTimeout(() => {
+    dispatch(
+      updateLastMessage({
+        text: replyText,
+        loading: false,
+      })
+    );
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, 600);
 
-      replyText = response.answer || "Sorry, I couldn't understand that.";
-      dispatch(
-        updateLastMessage({
-          text: replyText,
-          loading: false,
-          confirmation: response.confirmation ?? undefined,
-        })
-      );
-    }
+} else {
+  const formattedHistory = [
+    ...cleaned.map((m) => ({ role: m.role, content: m.text })),
+    { role: "user", content: text },
+  ];
+
+  const response = await sendChatToBot(formattedHistory);
+
+  replyText = response.answer || "Sorry, I couldn't understand that.";
+  dispatch(
+    updateLastMessage({
+      text: replyText,
+      loading: false,
+      confirmation: response.confirmation ?? undefined,
+    })
+  );
+}
+
   } catch (err) {
     dispatch(
       addMessage({ role: "bot", text: "Error talking to server.", loading: false })

@@ -30,6 +30,7 @@ const chatHistorySlice = createSlice({
     clearMessages(state) {
       state.messages = [];
     },
+    // Updates the last message in the chat history, used for changing loading state or text
     updateLastMessage(state, action: PayloadAction<Partial<ChatMessage>>) {
       if (state.messages.length > 0) {
         state.messages[state.messages.length - 1] = {

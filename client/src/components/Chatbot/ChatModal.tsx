@@ -20,13 +20,15 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
   const dispatch = useDispatch();
   const isBotLoading = messages.some((m) => m.role === "bot" && m.loading);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.7, rotate: -10 }} // Changed closing effect: fade out, shrink, and rotate
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      className="fixed bottom-20 right-6 z-50 w-99 shadow-2xl rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-gray-200 dark:border-zinc-700 flex flex-col h-[34rem] overflow-hidden"
-    >
+<motion.div
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, scale: 0.7, rotate: -10 }}
+  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+  className="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-6 z-50 w-[95vw] max-w-sm sm:w-[25rem] shadow-2xl rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-gray-200 dark:border-zinc-700 flex flex-col h-[34rem] overflow-hidden"
+>
+
+
       {/* Header */}
       <div className="relative px-5 py-4 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-700 dark:to-blue-800 text-white shadow-md">
         <div className="flex justify-between items-start">

@@ -9,8 +9,6 @@ const ConfirmationPanel = () => {
 
 const handleClick = async (value: "yes" | "no") => {
   dispatch(clearConfirmation());
-  // Remove this line ↓ to prevent the bubble
-  // dispatch(addMessage({ role: "user", text: value }));
   await sendMessage(value, true); // skip user bubble
 
 };

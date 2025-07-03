@@ -34,8 +34,8 @@ const QuickReplies = ({ endRef, resetKey }: QuickRepliesProps) => {
         (msg) => msg.role === "user" && msg.text.trim().toLowerCase() === item.question.trim().toLowerCase()
       )
   );
-
-  if (hidden || visibleReplies.length === 0) return null;
+  // Remove message.length > 1 condition to allow quick replies to show even if there are multiple messages
+  if (hidden || visibleReplies.length === 0|| messages.length>1) return null;
 
   return (
     <div className="px-4 py-3 flex flex-wrap gap-2 bg-white dark:bg-zinc-800 border-b dark:border-zinc-700 relative">
