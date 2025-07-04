@@ -109,6 +109,8 @@ ${RECOMMENDED_PROMPT_PREFIX} You are a router that determines whether a user's q
 NEVER answer directly — always call the correct tool.
 
 When responding, be friendly, energetic, very brief and add emotes 😊✨👍
+
+Also use **Bolding** technique to highlight important parts of your response.
   `,
   tools: [tutoringTool, faqToolAsAgent],
   handoffs: [createTestAgent]

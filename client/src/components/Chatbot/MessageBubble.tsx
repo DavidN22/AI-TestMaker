@@ -1,4 +1,5 @@
 import ChatbotLoading from "./ChatbotLoading";
+
 const MessageBubble = ({
   role,
   text,
@@ -11,6 +12,12 @@ const MessageBubble = ({
 }) => {
   const isBot = role === "bot";
 
+  function formatBotText(text: string) {
+    const bolded = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    const withLineBreaks = bolded.replace(/\n/g, "<br>");
+    return withLineBreaks;
+  }
+
   return (
     <div
       className={`max-w-[80%] px-4 py-2 rounded-xl text-sm whitespace-pre-wrap ${
@@ -21,17 +28,13 @@ const MessageBubble = ({
     >
       {loading ? (
         <ChatbotLoading />
+      ) : isBot ? (
+        <div
+          className="[&>ul]:list-disc [&>ul]:pl-5 [&>li]:mt-1 space-y-1"
+          dangerouslySetInnerHTML={{ __html: formatBotText(text) }}
+        />
       ) : (
-        <>
-          {isBot ? (
-            <div
-              className="[&>ul]:list-disc [&>ul]:pl-5 [&>li]:mt-1 space-y-1"
-              dangerouslySetInnerHTML={{ __html: text }}
-            />
-          ) : (
-            <div>{text}</div>
-          )}
-        </>
+        <div>{text}</div>
       )}
     </div>
   );
