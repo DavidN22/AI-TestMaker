@@ -82,7 +82,10 @@ if (matchedQuickReply) {
 
   } catch (err) {
     dispatch(
-      addMessage({ role: "bot", text: "Error talking to server.", loading: false })
+      updateLastMessage({
+        text: "Error talking to server.",
+        loading: false,
+      })
     );
     console.error("Chatbot error:", err);
   }

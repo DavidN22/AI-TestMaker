@@ -170,17 +170,17 @@ export function useApi() {
   };
 
 const sendChatToBot = async (messages: { role: string; content: string }[]) => {
-  const response = await fetch("/api/chatbot/query", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question: messages }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch chatbot response");
+  try {
+    const response = await axios.post(
+      `${apiBase}/chatbot/query`,
+      { question: messages },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
   }
-
-  return response.json(); 
 };
 
 
