@@ -7,7 +7,8 @@
     "start": "nodemon --exec tsx server.ts",
     "start:ts-node": "ts-node --project tsconfig.node.json server.ts",
     "build": "tsc --project tsconfig.node.json",
-    "test": "tsc --project tsconfig.node.json --noEmit"
+    "test": "tsc --project tsconfig.node.json --noEmit",
+    "announcement": "tsx scripts/sendAnnouncement.ts"
   },
   "keywords": [],
   "author": "",

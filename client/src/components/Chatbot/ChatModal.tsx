@@ -30,38 +30,39 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
 
 
       {/* Header */}
-      <div className="relative px-5 py-4 bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-700 dark:to-blue-800 text-white shadow-md">
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shadow-inner">
-              <BotIcon className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold">Teskro Assistant</h2>
-              <p className="text-xs opacity-90 leading-tight">
-                Ask anything about your tests or progress
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-2 items-center">
-            <button
-              onClick={() => dispatch(clearMessages())}
-              className="hover:ring-2 hover:ring-white/30 rounded-full p-1 transition text-xs bg-white/20 px-3 py-1 mr-1"
-              aria-label="Clear Chatbot"
-              title="Clear Chat"
-            >
-              Clear
-            </button>
-            <button
-              onClick={onClose}
-              className="hover:ring-2 hover:ring-white/30 rounded-full p-1 transition"
-              aria-label="Close Chatbot"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+<div className="relative px-5 py-4 bg-gradient-to-r from-neutral-900 to-neutral-800 dark:from-zinc-900 dark:to-zinc-800 text-white shadow-md border-b border-neutral-700">
+  <div className="flex justify-between items-start">
+    <div className="flex items-center gap-3">
+      <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shadow-inner">
+        <BotIcon className="w-5 h-5 text-white" />
       </div>
+      <div>
+        <h2 className="text-base font-semibold">Teskro Assistant</h2>
+        <p className="text-xs opacity-90 leading-tight">
+          Ask anything about your tests or progress
+        </p>
+      </div>
+    </div>
+    <div className="flex gap-2 items-center">
+      <button
+        onClick={() => dispatch(clearMessages())}
+        className="hover:ring-2 hover:ring-white/30 rounded-full text-xs px-3 py-1 bg-white/10 transition"
+        aria-label="Clear Chatbot"
+        title="Clear Chat"
+      >
+        Clear
+      </button>
+      <button
+        onClick={onClose}
+        className="hover:ring-2 hover:ring-white/30 rounded-full p-1 transition"
+        aria-label="Close Chatbot"
+      >
+        <X className="w-5 h-5 text-white" />
+      </button>
+    </div>
+  </div>
+</div>
+
 
       <QuickReplies endRef={endRef} resetKey={quickRepliesKey} />
 
@@ -76,7 +77,7 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
         className="flex items-center gap-2 px-4 py-3 border-t bg-white/70 dark:bg-zinc-800/70 border-gray-200 dark:border-zinc-700 backdrop-blur-md"
       >
 <textarea
-  className="flex-1 min-h-[40px] max-h-[130px] resize-none border border-gray-300 dark:border-zinc-600 rounded-xl px-4 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+  className="flex-1 min-h-[40px] max-h-[130px] resize-none border border-gray-300 dark:border-zinc-600 rounded-xl px-4 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/30 dark:focus:ring-white/30 transition-all"
   placeholder="Ask your assistant..."
   value={input}
   ref={el => {
@@ -115,7 +116,7 @@ onKeyDown={(e) => {
         <button
           type="submit"
           disabled={isBotLoading}
-           className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700"
+           className="bg-neutral-800 dark:bg-zinc-700 text-white px-4 py-2 rounded-xl text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-700 dark:hover:bg-zinc-600 hover:ring-2 hover:ring-white/30"
 >
           Send
         </button>

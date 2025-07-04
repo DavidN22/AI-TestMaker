@@ -55,7 +55,7 @@ export const getDevtestsSchema = tool({
 // 3. Fallback tool
 export const getLast100TestsTool = tool({
     name: "get_last_100_tests",
-    description: "Fetch the latest 100 test records for the current user from the devtests table.",
+    description: "Fallback that fetches the latest 100 test records for the current user from the devtests table.",
     parameters: z.object({
         userId: z.string().describe("The user ID (email) to fetch test results for."),
     }),
@@ -117,14 +117,47 @@ export const createCustomTestTool = tool({
         }
     },
 });
-export const confirmTool = tool({
-    name: "confirm_action",
-    description: "Returns a confirmation object with 'yes' and 'no' options. Use during your confirmation message.",
-    parameters: z.object({}),
-    async execute() {
-        return {
-            type: "confirmation",
-            options: ["yes", "no"],
-        };
+// 4. Quiz select tool
+export const getQuizDataById = tool({
+    name: "get_quiz_data_by_id",
+    description: `Returns the quiz_data for a specific test using userId, title, and test_id. If test_id is null, returns the most recent matching test.`,
+    parameters: z.object({
+        userId: z.string().describe("The user's email"),
+        title: z.string().describe("The title of the quiz"),
+        test_id: z.string().nullable().describe("The ID of the test. Pass null to get the most recent test."),
+    }),
+    async execute({ userId, title, test_id }) {
+        try {
+            let query;
+            let values;
+            if (test_id) {
+                query = `
+          SELECT quiz_data
+          FROM devtests
+          WHERE "user" = $1 AND title = $2 AND test_id = $3
+          LIMIT 1
+        `;
+                values = [userId, title, test_id];
+            }
+            else {
+                query = `
+          SELECT quiz_data
+          FROM devtests
+          WHERE "user" = $1 AND title = $2
+          ORDER BY date DESC
+          LIMIT 1
+        `;
+                values = [userId, title];
+            }
+            const result = await pool.query(query, values);
+            if (result.rows.length === 0) {
+                return `❌ No quiz found for title "${title}"${test_id ? ` with ID "${test_id}"` : ""}.`;
+            }
+            return result.rows[0].quiz_data;
+        }
+        catch (err) {
+            console.error("Quiz Data Fetch Error:", err);
+            return `Query error: ${err.message}`;
+        }
     },
 });
