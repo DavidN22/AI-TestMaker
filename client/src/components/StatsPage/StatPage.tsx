@@ -11,7 +11,6 @@ import { getDateKey } from "./Charts/dateUtils";
 
 export default function StatPage() {
   const { data, isLoading, error } = useGetDashboardDataQuery();
-
     if (isLoading) return <StatPageSkeleton />;
 
   if (error || !data)

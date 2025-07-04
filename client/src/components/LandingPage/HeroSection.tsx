@@ -47,8 +47,29 @@ const HeroSection = () => {
 
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-md">
             Teskro helps you generate, practice, and master any exam—from school
-            tests to certifications and custom quizzes—powered by AI.
+            tests to certifications and custom quizzes, powered by AI.
           </p>
+<motion.div
+  className="bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/10 border border-yellow-300/40 dark:border-yellow-500/30 rounded-xl p-5 shadow-lg max-w-md"
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.4 }}
+>
+  <div className="flex items-center gap-2 mb-2">
+    <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-0.5 rounded-full animate-pulse">
+      🧠 New
+    </span>
+    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+      Introducing Teskro Assistant!
+    </h3>
+  </div>
+  <p className="text-sm text-gray-700 dark:text-gray-300">
+    Get smarter about how you study. Ask Teskro Assistant about your recent scores,
+    weak topics, and even auto-generate quizzes based on where you need improvement.
+    <strong> Must be signed in to use.</strong>
+  </p>
+</motion.div>
+
 
           {user ? (
             <motion.button

@@ -1,6 +1,6 @@
-# AI-TestMaker
+# Teskro
 
-AI-TestMaker is a full-stack web application for generating, taking, and managing AI-powered tests. It features Google OAuth authentication, user management, and a modern React frontend with a Node.js/Express backend and Supabase integration.
+Teskro is a full-stack web application for generating, taking, and managing AI-powered tests. It features Google OAuth authentication, user management, and a modern React frontend with a Node.js/Express backend and Supabase integration.
 
 ---
 
@@ -17,7 +17,7 @@ AI-TestMaker is a full-stack web application for generating, taking, and managin
 ## Project Structure
 
 ```
-AI-TestMaker/
+Teskro/
 ├── client/                  # Frontend (React + Vite)
 │   ├── public/              # Static assets (images, favicon, etc.)
 │   └── src/
@@ -38,6 +38,66 @@ AI-TestMaker/
 ```
 
 ---
+## Global State Management
+
+This application uses Redux Toolkit for global state management. The store is configured with the following slices:
+
+### Core State Slices
+- **Auth Slice** (`authSlice.ts`) - Manages user authentication state including:
+  - User email, full name, and avatar URL
+  - Authentication loading status
+  - Login/logout actions
+
+- **Toast Slice** (`toastSlice.ts`) - Handles UI notifications:
+  - Success and error message display
+  - Toast message types and content
+  - Clear message actions
+
+- **Config Slice** (`configSlice.ts`) - Environment-specific configuration:
+  - API base URLs (localhost vs production)
+  - Frontend base URLs for different environments
+  - Automatic environment detection
+
+- **Chat History Slice** (`chatHistorySlice.ts`) - Chatbot conversation management:
+  - Message history storage (user and bot messages)
+  - Loading states for ongoing conversations
+  - Confirmation panel states
+  - Message clearing and management
+
+### Filter Management
+- **Filter Slice** (`filterSlice.ts`) - Static/predefined test filtering:
+  - Search term filtering
+  - Provider-based filtering
+  - Difficulty level filtering
+  - Filter application and clearing
+
+- **Custom Filter Slice** (`customFilterSlice.ts`) - User-created test filtering:
+  - Custom test search functionality
+  - Difficulty filtering for custom tests
+  - Filtered results management
+
+### API State Management (RTK Query)
+- **API Slice** (`apiSlice.ts`) - Test results management:
+  - Fetches and caches test results data
+  - Automatic cache invalidation
+  - Infinite cache retention for performance
+
+- **Token API Slice** (`tokenSlice.ts`) - User credit system:
+  - Token/credit balance management
+  - Token usage tracking
+  - Credit-based feature access
+
+- **Custom Tests API** (`customTestsApi.ts`) - User test CRUD operations:
+  - Create, read, update, delete custom tests
+  - Custom test data caching
+  - Test management operations
+
+- **Stats API** (`statsApi.ts`) - Dashboard and analytics:
+  - User statistics and performance metrics
+  - Dashboard data aggregation
+  - Test history analytics
+
+All API slices include automatic error handling via `handleApiError` utility and optimized caching for enhanced performance.
 
 ## Getting Started
 

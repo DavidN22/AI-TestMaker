@@ -169,6 +169,21 @@ export function useApi() {
     }
   };
 
+const sendChatToBot = async (messages: { role: string; content: string }[]) => {
+  const response = await fetch("/api/chatbot/query", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question: messages }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch chatbot response");
+  }
+
+  return response.json(); 
+};
+
+
   return {
     loading,
     fetchTest,
@@ -176,5 +191,6 @@ export function useApi() {
     deleteUserAccount,
     handleLogout,
     getPreviewTest,
+    sendChatToBot,
   };
 }

@@ -20,11 +20,6 @@ const faqs = [
       "Yes, Teskro provides detailed analytics on your performance and a history to view past exams and areas for improvement.",
   },
   {
-    question: "Will more features be added?",
-    answer:
-      "Yes! More features will be added including a more detailed analytics dashboard!",
-  },
-  {
     question: "Is this free to use?",
     answer:
       "Yes, it's currently free to use while in testing phase, but it may become a paid service in the future.",

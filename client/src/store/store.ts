@@ -8,6 +8,7 @@ import configReducer from "./Slices/configSlice";
 import { testsApi } from './Slices/customTestsApi'; 
 import customFilterReducer from "./Slices/customFilterSlice";
 import { statsApi } from "./Slices/statsApi";
+import chatHistoryReducer from "./Slices/chatHistorySlice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     auth: authReducer,
     config: configReducer,
     customFilter: customFilterReducer,
+    chatHistory: chatHistoryReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     [tokenApiSlice.reducerPath]: tokenApiSlice.reducer,
     [testsApi.reducerPath]: testsApi.reducer,
