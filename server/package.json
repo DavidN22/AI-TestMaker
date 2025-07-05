@@ -8,7 +8,8 @@
     "start:ts-node": "ts-node --project tsconfig.node.json server.ts",
     "build": "tsc --project tsconfig.node.json",
     "test": "tsc --project tsconfig.node.json --noEmit",
-    "announcement": "tsx scripts/sendAnnouncement.ts"
+    "announcement": "tsx scripts/sendAnnouncement.ts",
+    "announcement:batch": "tsx scripts/sendAnnouncementBatch.ts"
   },
   "keywords": [],
   "author": "",

@@ -4,13 +4,14 @@ import { RootState } from "./store/store";
 import { toast, ToastContainer } from "react-toastify";
 import { clearError } from "./store/Slices/toastSlice";
 import useAuthCheck from "./Auth-helpers/useAuthCheck";
-
+import { isDarkMode } from "./components/Header/DarkModeToggle";
 
 export default function AppInitializer({ children }: { children: JSX.Element }) {
   const dispatch = useDispatch();
   const { message, type } = useSelector((state: RootState) => state.toast);
 
-
+// check localstorage for dark mode preference
+  isDarkMode();
   useAuthCheck();
 
   useEffect(() => {
