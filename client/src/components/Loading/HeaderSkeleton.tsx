@@ -1,3 +1,5 @@
+import DarkModeToggle from "../Header/DarkModeToggle";
+
 export default function HeaderSkeleton() {
   return (
     <header className="hidden lg:block sticky top-0 z-50 w-full backdrop-blur-lg bg-white/10 dark:bg-black/10 border-b">
@@ -25,8 +27,8 @@ export default function HeaderSkeleton() {
               <div className="w-20 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
             </div>
 
-            {/* Dark mode toggle */}
-            <div className="w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+            {/* Dark mode toggle - actual component */}
+            <DarkModeToggle />
 
             {/* Profile avatar */}
             <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full"></div>

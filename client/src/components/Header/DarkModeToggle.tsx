@@ -1,14 +1,13 @@
 // components/DarkModeToggle.tsx
+/* eslint-disable react-refresh/only-export-components */
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function DarkModeToggle() {
   const [isDark, setIsDark] = useState(false);
-
+// This is used to check the initial theme preference from localStorage and update the icon accordingly.
   useEffect(() => {
-    const root = window.document.documentElement;
     const isDarkMode = localStorage.getItem("theme") === "dark";
-    root.classList.toggle("dark", isDarkMode);
     setIsDark(isDarkMode);
   }, []);
 

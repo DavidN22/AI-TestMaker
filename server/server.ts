@@ -1,13 +1,12 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
-import "./db/db.js"
-import cors from 'cors'; 
-import aiRoutes from './routes/aiRoutes.js'; 
+import "./db/db.js";
+import cors from 'cors';
+import aiRoutes from './routes/aiRoutes.js';
 import dbRoutes from './routes/dbRoutes.js';
-import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import chatbotRoutes from './routes/chatbot.js';
-dotenv.config();
 
 //import authRoutes from './routes/authRoutes';
 //import dbRoutes from './routes/dbRoutes';

@@ -10,7 +10,9 @@ export default function AppInitializer({ children }: { children: JSX.Element }) 
   const dispatch = useDispatch();
   const { message, type } = useSelector((state: RootState) => state.toast);
 
-// check localstorage for dark mode preference
+  // check localstorage for dark mode preference before auth check
+  // This is to ensure that dark mode is set before the auth check runs so that the UI is consistent
+  // and does not flash light mode before the auth check completes.
   isDarkMode();
   useAuthCheck();
 
