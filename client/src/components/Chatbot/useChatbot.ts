@@ -37,7 +37,16 @@ export const useChatbot = () => {
       ? { ...msg, confirmation: undefined }
       : msg
   );
+
+// Redux state: Holds ALL messages (no limit)
+// API calls: Only use the last 10 messages (via the cleaned array)
+// UI: Displays all messages from Redux (so potentially more than 10)
+
 // uncomment this line if you want to keep the cleaned messages in Redux
+// then -->
+// Redux state: Limited to 10 messages max
+// API calls: Use the same 10 messages
+// UI: Displays only those 10 messages
   //dispatch(setMessagesRedux(cleaned));
 
   if (!skipUserBubble) {

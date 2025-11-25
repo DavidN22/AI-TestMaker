@@ -39,7 +39,7 @@ export function getModel(languageModel: string) {
     return {
       generate: async (prompt: string) => {
         const response = await openai.responses.create({
-          model: "gpt-4o",
+          model: "gpt-5o",
           input: [
             { role: "system", content: "You must respond only with valid JSON." },
             { role: "user", content: prompt }
@@ -61,7 +61,7 @@ export function getModel(languageModel: string) {
   if (languageModel === "gemini") {
     const genAI = new GoogleGenerativeAI(geminiApiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-pro",
       generationConfig: {
         responseMimeType: "application/json",
       },
@@ -77,7 +77,7 @@ export function getModel(languageModel: string) {
   // Default: Gemini (for backward compatibility)
   const genAI = new GoogleGenerativeAI(geminiApiKey);
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-pro",
     generationConfig: {
       responseMimeType: "application/json",
     },
