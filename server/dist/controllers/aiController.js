@@ -8,6 +8,14 @@ import { decrementUserToken } from "../utils/decrementToken.js";
 const aiController = {
     getAiTest: async (req, res, next) => {
         const { testName, numQuestions, languageModel, description, types, difficulty } = req.body;
+        // Set up SSE headers and keep-alive
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        // Keep-alive ping every 10 seconds to prevent Vercel timeout
+        const keepAliveInterval = setInterval(() => {
+            res.write("data: ping\n\n");
+        }, 10000);
         try {
             const user = res.locals.user; // Retrieve and utilize user information if necessary // Retrieve user information from response locals
             await decrementUserToken(user); // Decrement user's token for the request handling // Decrement user's token for the request handling
@@ -70,9 +78,13 @@ const aiController = {
             const message = JSON.parse(rawResponse); // Parse the AI model response to JSON format
             message.questions = message.questions.map(// Remove question numbers from the parsed JSON
             ({ question_number, ...rest }) => ({ ...rest }));
-            res.json({ message });
+            // Clear keep-alive interval and send final response
+            clearInterval(keepAliveInterval);
+            res.write(`data: ${JSON.stringify({ message })}\n\n`);
+            res.end();
         }
         catch (error) {
+            clearInterval(keepAliveInterval);
             const err = new Error("Failed to generate test questions. Please try again."); // Error handling for question generation failures
             err.status = 500;
             next(err);

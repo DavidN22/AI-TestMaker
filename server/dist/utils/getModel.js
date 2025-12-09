@@ -7,6 +7,7 @@ const openaiApiKey = process.env.OPENAI_API_KEY || "";
 export function getModel(languageModel) {
     // 🔵 DeepSeek
     if (languageModel === "deepseek") {
+        console.log("🔵 Using DeepSeek model");
         const openai = new OpenAI({
             apiKey: deepseekApiKey,
             baseURL: "https://api.deepseek.com",
@@ -25,15 +26,16 @@ export function getModel(languageModel) {
             },
         };
     }
-    // 🟣 GPT-4o
-    if (languageModel === "gpt-4o") {
+    // 🟣 GPT-5.1
+    if (languageModel === "gpt-5.1") {
+        console.log("🟣 Using GPT-5.1 model");
         const openai = new OpenAI({
             apiKey: openaiApiKey,
         });
         return {
             generate: async (prompt) => {
                 const response = await openai.responses.create({
-                    model: "gpt-4o",
+                    model: "gpt-5.1",
                     input: [
                         { role: "system", content: "You must respond only with valid JSON." },
                         { role: "user", content: prompt }
@@ -49,11 +51,15 @@ export function getModel(languageModel) {
     }
     // 🟢 Gemini
     if (languageModel === "gemini") {
+        console.log("🟢 Using Gemini model");
         const genAI = new GoogleGenerativeAI(geminiApiKey);
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-pro",
             generationConfig: {
                 responseMimeType: "application/json",
+                thinkingConfig: {
+                    thinkingBudget: 128,
+                },
             },
         });
         return {
@@ -64,11 +70,15 @@ export function getModel(languageModel) {
         };
     }
     // Default: Gemini (for backward compatibility)
+    console.log("🟢 Using Gemini model (default)");
     const genAI = new GoogleGenerativeAI(geminiApiKey);
     const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-pro",
         generationConfig: {
             responseMimeType: "application/json",
+            thinkingConfig: {
+                thinkingBudget: 128,
+            },
         },
     });
     return {
