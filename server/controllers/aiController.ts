@@ -16,14 +16,9 @@ const aiController = { // Main controller object for handling AI-related request
   getAiTest: async (req: Request, res: Response, next: NextFunction) => { // Generate AI test questions based on request parameters
     const { testName, numQuestions, languageModel, description, types, difficulty } = req.body;
     
-    // Set up SSE headers and keep-alive
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    
     // Keep-alive ping every 10 seconds to prevent Vercel timeout
     const keepAliveInterval = setInterval(() => {
-      res.write("data: ping\n\n");
+      res.write(" ");
     }, 10000);
     
     try {
@@ -95,10 +90,9 @@ const aiController = { // Main controller object for handling AI-related request
         ({ question_number, ...rest }: any) => ({ ...rest })
       );
 
-      // Clear keep-alive interval and send final response
+      // Clear keep-alive interval and send normal JSON response
       clearInterval(keepAliveInterval);
-      res.write(`data: ${JSON.stringify({ message })}\n\n`);
-      res.end();
+      res.json({ message });
     } catch (error) {
       clearInterval(keepAliveInterval);
       const err = new Error("Failed to generate test questions. Please try again."); // Error handling for question generation failures

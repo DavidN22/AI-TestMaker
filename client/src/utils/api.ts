@@ -37,15 +37,9 @@ export function useApi() {
     setLoading(true);
     try {
       const languageModel = overrideModel || localStorage.getItem("languageModel") || "gemini";
-      
-      // Use fetch for SSE instead of axios
-      const response = await fetch(`${apiBase}/ai/getTest`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
+      const response = await axios.post(
+        `${apiBase}/ai/getTest`,
+        {
           testName,
           numQuestions,
           weakPointMode,
@@ -53,49 +47,10 @@ export function useApi() {
           description,
           difficulty,
           types,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let finalData = null;
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data === 'ping') {
-                // Ignore keep-alive pings
-                continue;
-              }
-              try {
-                finalData = JSON.parse(data);
-              } catch (e) {
-                console.error('Failed to parse SSE data:', e);
-              }
-            }
-          }
-        }
-      }
-
-      if (finalData?.message?.questions) {
-        return finalData.message.questions;
-      }
-      
-      throw new Error('No data received from server');
+        },
+        { withCredentials: true }
+      );
+      return response.data.message.questions;
     } catch (error) {
       handleApiError(error);
       throw error;
