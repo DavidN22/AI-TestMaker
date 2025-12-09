@@ -50,7 +50,13 @@ export function useApi() {
         },
         { withCredentials: true }
       );
-      return response.data.message.questions;
+      
+      // Handle response - it should have message.questions
+      if (response.data?.message?.questions) {
+        return response.data.message.questions;
+      }
+      
+      throw new Error('Invalid response format from server');
     } catch (error) {
       handleApiError(error);
       throw error;

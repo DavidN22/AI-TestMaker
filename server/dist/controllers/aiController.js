@@ -8,9 +8,12 @@ import { decrementUserToken } from "../utils/decrementToken.js";
 const aiController = {
     getAiTest: async (req, res, next) => {
         const { testName, numQuestions, languageModel, description, types, difficulty } = req.body;
+        // Set headers for chunked response to enable keep-alive
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Transfer-Encoding', 'chunked');
         // Keep-alive ping every 10 seconds to prevent Vercel timeout
         const keepAliveInterval = setInterval(() => {
-            res.write(" ");
+            res.write('\n');
         }, 10000);
         try {
             const user = res.locals.user; // Retrieve and utilize user information if necessary // Retrieve user information from response locals
@@ -74,9 +77,10 @@ const aiController = {
             const message = JSON.parse(rawResponse); // Parse the AI model response to JSON format
             message.questions = message.questions.map(// Remove question numbers from the parsed JSON
             ({ question_number, ...rest }) => ({ ...rest }));
-            // Clear keep-alive interval and send normal JSON response
+            // Clear keep-alive interval and send JSON response
             clearInterval(keepAliveInterval);
-            res.json({ message });
+            res.write(JSON.stringify({ message }));
+            res.end();
         }
         catch (error) {
             clearInterval(keepAliveInterval);
