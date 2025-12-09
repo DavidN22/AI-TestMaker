@@ -81,7 +81,7 @@ export default function PracticeTestConfirmModal({
               Using Our Smartest AI Model
             </h3>
             <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
-              We recommend GPT-5.1 for practice tests. It generates the highest quality questions but may take up to 3 minutes to complete.
+              I recommend GPT-5.1 for practice tests. It generates the highest quality questions but may take up to 3 minutes to complete.
             </p>
           </div>
         </div>
