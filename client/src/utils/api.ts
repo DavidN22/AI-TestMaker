@@ -23,7 +23,8 @@ export function useApi() {
     weakPointMode,
     description,
     types = [],
-    difficulty
+    difficulty,
+    languageModel: overrideModel
   }: {
     testName: string;
     numQuestions: number;
@@ -31,10 +32,11 @@ export function useApi() {
     description: string;
     types: string[];
     difficulty?: string;
+    languageModel?: string;
   }) => {
     setLoading(true);
     try {
-      const languageModel = localStorage.getItem("languageModel") || "gemini";
+      const languageModel = overrideModel || localStorage.getItem("languageModel") || "gemini";
       const response = await axios.post(
         `${apiBase}/ai/getTest`,
         {

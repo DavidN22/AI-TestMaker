@@ -9,6 +9,7 @@ const openaiApiKey = process.env.OPENAI_API_KEY || "";
 export function getModel(languageModel: string) {
   // 🔵 DeepSeek
   if (languageModel === "deepseek") {
+    console.log("🔵 Using DeepSeek model");
     const openai = new OpenAI({
       apiKey: deepseekApiKey,
       baseURL: "https://api.deepseek.com",
@@ -30,8 +31,9 @@ export function getModel(languageModel: string) {
     };
   }
 
-  // 🟣 GPT-4o
-  if (languageModel === "gpt-4o") {
+  // 🟣 GPT-5.1
+  if (languageModel === "gpt-5.1") {
+    console.log("🟣 Using GPT-5.1 model");
     const openai = new OpenAI({
       apiKey: openaiApiKey,
     });
@@ -39,7 +41,7 @@ export function getModel(languageModel: string) {
     return {
       generate: async (prompt: string) => {
         const response = await openai.responses.create({
-          model: "gpt-5o",
+          model: "gpt-5.1",
           input: [
             { role: "system", content: "You must respond only with valid JSON." },
             { role: "user", content: prompt }
@@ -59,12 +61,16 @@ export function getModel(languageModel: string) {
 
   // 🟢 Gemini
   if (languageModel === "gemini") {
+    console.log("🟢 Using Gemini model");
     const genAI = new GoogleGenerativeAI(geminiApiKey);
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-pro",
       generationConfig: {
         responseMimeType: "application/json",
-      },
+        thinkingConfig: {
+          thinkingBudget: 128,
+        },
+      } as any,
     });
     return {
       generate: async (prompt: string) => {
@@ -75,12 +81,16 @@ export function getModel(languageModel: string) {
   }
 
   // Default: Gemini (for backward compatibility)
+  console.log("🟢 Using Gemini model (default)");
   const genAI = new GoogleGenerativeAI(geminiApiKey);
   const model = genAI.getGenerativeModel({
     model: "gemini-2.5-pro",
     generationConfig: {
       responseMimeType: "application/json",
-    },
+      thinkingConfig: {
+        thinkingBudget: 128,
+      },
+    } as any,
   });
   return {
     generate: async (prompt: string) => {

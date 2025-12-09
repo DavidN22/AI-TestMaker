@@ -22,7 +22,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
   const [isHistoryConfirmOpen, setIsHistoryConfirmOpen] = useState(false);
   const email = useSelector((state: RootState) => state.auth.email);
   const [clearAllTestResults] = useClearAllTestResultsMutation();
-  const modelOptions = ["gemini", "gpt-4o", "deepseek", "claude"];
+  const modelOptions = ["gemini", "gpt-5.1", "deepseek", "claude"];
   const [selectedModel, setSelectedModel] = useState("gemini");
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
 
   const modelLabelMap: Record<string, string> = {
     gemini: "Gemini (Fastest Model)",
-    "gpt-4o": "Gpt-4o",
+    "gpt-5.1": "Gpt-5.1",
     deepseek: "Deepseek (Slowest Model)",
     claude: "Claude",
   };
@@ -94,7 +94,7 @@ export default function SettingsModal({ state, onClose }: SettingsModalProps) {
               disabledOptions={[
                 selectedModel,
                 ...modelOptions.filter(
-                  (m) => m !== "gemini" && m !== "deepseek" && m !== "gpt-4o"
+                  (m) => m !== "gemini" && m !== "deepseek" && m !== "gpt-5.1"
                 ),
               ]}
               displayValue={(model) => modelLabelMap[model] || model}

@@ -126,7 +126,7 @@ export default function TestPage() {
       {loading && <LoadingSpinner message="Getting your results" />}
 
       {/* Main Content */}
-      <div className="flex flex-col flex-grow lg:items-center lg:justify-center">
+      <div className="flex flex-col flex-grow lg:items-center lg:justify-center lg:p-8 overflow-y-auto">
         {/* MOTION CARD */}
         <motion.div
           key={currentIndex}
@@ -134,7 +134,7 @@ export default function TestPage() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.3 }}
-          className="w-full h-[100dvh] lg:h-auto lg:max-w-4xl bg-white dark:bg-[#2A2A2A] p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl overflow-y-auto border-t lg:border border-gray-200 dark:border-gray-700"
+          className="w-full h-[100dvh] lg:h-auto lg:max-w-4xl bg-white dark:bg-[#2A2A2A] p-4 sm:p-6 lg:p-8 rounded-none lg:rounded-xl shadow-none lg:shadow-2xl border-t lg:border border-gray-200 dark:border-gray-700 overflow-y-auto"
         >
           <h2 className="text-lg font-bold text-black dark:text-white mb-4">
             {testName}

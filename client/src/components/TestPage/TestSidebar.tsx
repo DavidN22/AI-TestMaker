@@ -95,10 +95,10 @@ export default function TestSidebar({
 
   return (
 <aside
-  className={`w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-md border border-gray-200 dark:border-gray-700 transition-all flex flex-col justify-between ${className}`}
+  className={`w-80 bg-white dark:bg-[#1E1E1E] p-6 shadow-md border border-gray-200 dark:border-gray-700 transition-all flex flex-col h-screen ${className}`}
 >
-  {/* Header */}
-  <div>
+  {/* Header - Fixed at top */}
+  <div className="flex-shrink-0">
     <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
       {title}
     </h2>
@@ -133,9 +133,11 @@ export default function TestSidebar({
         />
       </div>
     </div>
+  </div>
 
-    {/* Question List */}
-    <div className="grid grid-cols-5 gap-2 mt-6">
+  {/* Question List - Scrollable */}
+  <div className="flex-1 overflow-y-auto mt-6 min-h-0">
+    <div className="grid grid-cols-5 gap-2">
   {questions.map((q, index) => (
     <button
       key={index}
@@ -150,11 +152,10 @@ export default function TestSidebar({
       {getQuestionIcon(q)}
     </button>
   ))}
-</div>
-
+    </div>
   </div>
 
-  {/* Bottom Buttons */}
+  {/* Bottom Buttons - Fixed at bottom */}
   <div className="mt-8 space-y-3">
     <button
       className="w-full bg-white dark:bg-[#1E1E1E] border border-red-600 dark:border-red-500 text-red-600 dark:text-red-400 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900 transition-all"

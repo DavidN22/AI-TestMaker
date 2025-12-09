@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { triviaFacts } from "../../data/triviaFacts";
 
 export default function LoadingWithTrivia() {
-  const [currentFact, setCurrentFact] = useState("");
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
-    setCurrentFact(triviaFacts[Math.floor(Math.random() * triviaFacts.length)]);
-
     const interval = setInterval(() => {
-      setCurrentFact(triviaFacts[Math.floor(Math.random() * triviaFacts.length)]);
-    }, 4000);
+      setElapsedTime((prev) => prev + 1);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <motion.div
@@ -33,16 +36,20 @@ export default function LoadingWithTrivia() {
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
       />
 
-      {/* Trivia Fact */}
-      <motion.p
-        key={currentFact}
-        className="mt-6 text-lg text-center font-medium text-gray-800 dark:text-gray-200 max-w-xl z-10"
+      {/* Timer */}
+      <motion.div
+        className="mt-6 text-center z-10"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {currentFact}
-      </motion.p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          Generating your test...
+        </p>
+        <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+          {formatTime(elapsedTime)}
+        </p>
+      </motion.div>
     </motion.div>
   );
 }
