@@ -1,4 +1,4 @@
-import { useGetDashboardDataQuery } from "../../store/Slices/statsApi";
+import { useGetDashboardDataQuery, useGetAllUsersQuery } from "../../store/Slices/statsApi";
 import ScoreTrendChart from "./Charts/ScoreTrendChart";
 import ProviderPieChart from "./Charts/ProviderPieChart";
 import StatCard from "./Charts/StatCard";
@@ -8,10 +8,24 @@ import AvgScoreByDifficultyChart from "./Charts/AvgScoreByDifficultyChart";
 import CircularProgressBars from "./Charts/CircularProgressBars";
 import StatPageSkeleton from "./StatPageSkeleton";
 import { getDateKey } from "./Charts/dateUtils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { useState } from "react";
+
+const ADMIN_EMAIL = "naymondavid@gmail.com";
 
 export default function StatPage() {
-  const { data, isLoading, error } = useGetDashboardDataQuery();
-    if (isLoading) return <StatPageSkeleton />;
+  const userEmail = useSelector((state: RootState) => state.auth.email);
+  const isAdmin = userEmail === ADMIN_EMAIL;
+  const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+  
+  const { data: usersData, isLoading: isLoadingUsers } = useGetAllUsersQuery(undefined, {
+    skip: !isAdmin,
+  });
+  
+  const { data, isLoading, error } = useGetDashboardDataQuery(selectedUserId);
+  
+  if (isLoading) return <StatPageSkeleton />;
 
   if (error || !data)
     return (
@@ -27,14 +41,37 @@ export default function StatPage() {
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
      <header className="text-center mb-8">
   <h2 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
-    📊 Your Test Dashboard
+    📊 {selectedUserId ? `Stats for ${selectedUserId}` : 'Your Test Dashboard'}
   </h2>
   <p className="text-gray-500 dark:text-gray-400 mt-2">
     Performance insights at a glance
   </p>
   <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-    Based on your last 100 tests
+    Based on {selectedUserId ? 'their' : 'your'} last 100 tests
   </p>
+  
+  {/* Admin User Selector */}
+  {isAdmin && (
+    <div className="mt-6 flex items-center justify-center gap-3">
+      <label htmlFor="user-select" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        View stats for:
+      </label>
+      <select
+        id="user-select"
+        value={selectedUserId || ""}
+        onChange={(e) => setSelectedUserId(e.target.value || undefined)}
+        className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+        disabled={isLoadingUsers}
+      >
+        <option value="">My Stats</option>
+        {usersData?.users.map((user) => (
+          <option key={user.email} value={user.email}>
+            {user.email}
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
 </header>
 
 

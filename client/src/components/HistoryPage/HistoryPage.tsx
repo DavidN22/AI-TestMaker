@@ -97,13 +97,13 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100 px-2 sm:px-6">
-      <div className="flex-1 flex flex-col items-center p-2 sm:p-10">
+    <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100 px-2 sm:px-6 overflow-x-hidden">
+      <div className="flex-1 flex flex-col items-center p-2 sm:p-10 w-full max-w-full">
       <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="w-full max-w-8xl bg-gray-50 dark:bg-[#2A2A2A] rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 overflow-auto"
+          className="w-full max-w-8xl bg-gray-50 dark:bg-[#2A2A2A] rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-8 overflow-auto"
           style={{ height: "100vh" }}
         >
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center mb-5">
@@ -133,7 +133,7 @@ export default function HistoryPage() {
                 No test results found.
               </p>
             ) : (
-              <div className="grid gap-4 mt-6">
+              <div className="grid gap-4 mt-6 w-full max-w-full overflow-hidden">
                 {loading
                   ? [...Array(3)].map((_, i) => (
                       <div key={i} className="min-h-[200px]">

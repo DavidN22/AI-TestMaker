@@ -21,7 +21,7 @@ const baseQueryWithErrorHandling: typeof baseQuery = async (args, api, extraOpti
 export const statsApi = createApi({
   reducerPath: "statsApi",
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ["Dashboard"],
+  tagTypes: ["Dashboard", "Users"],
   endpoints: (builder) => ({
     getDashboardData: builder.query<{
       meta: {
@@ -36,15 +36,25 @@ export const statsApi = createApi({
         difficulty: string;
         weak_points: string;
       }[];
-    }, void>({
-      query: () => ({
+    }, string | undefined>({
+      query: (userId) => ({
         url: "/dashboard",
         method: "GET",
+        params: userId ? { userId } : undefined,
       }),
       providesTags: ["Dashboard"],
       keepUnusedDataFor: Number.POSITIVE_INFINITY,
     }),
+    getAllUsers: builder.query<{
+      users: { email: string }[];
+    }, void>({
+      query: () => ({
+        url: "/users",
+        method: "GET",
+      }),
+      providesTags: ["Users"],
+    }),
   }),
 });
 
-export const { useGetDashboardDataQuery } = statsApi;
+export const { useGetDashboardDataQuery, useGetAllUsersQuery } = statsApi;

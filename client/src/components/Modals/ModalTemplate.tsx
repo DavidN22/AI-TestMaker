@@ -5,6 +5,8 @@ import {
   DialogBackdrop,
 } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
+import { useIsMobile } from "../../utils/useIsMobile";
 
 interface ModalTemplateProps {
   isOpen: boolean;
@@ -23,6 +25,7 @@ export default function ModalTemplate({
   size = "md",
   fullScreen = false,
 }: ModalTemplateProps) {
+  const isMobile = useIsMobile();
   const handleClose = () => {
     setTimeout(() => setIsOpen(false), 0);
   };
@@ -43,24 +46,37 @@ export default function ModalTemplate({
         className="fixed inset-0 bg-black/30 duration-200 ease-out data-[closed]:opacity-0"
       />
 
-      <div className="fixed inset-0 flex items-center justify-center p-4">
+      <div className={`fixed inset-0 flex items-center justify-center ${isMobile ? 'p-0' : 'p-4'}`}>
         <AnimatePresence>
           {isOpen && (
             <DialogPanel
               as={motion.div}
               onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: isMobile ? 1 : 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              exit={{ opacity: 0, scale: isMobile ? 1 : 0.95 }}
               transition={true}
-              className={`bg-white dark:bg-[#1E1E1E] rounded-lg shadow-lg p-6 w-full ${
-                sizeClasses[size]
-              } ${fullScreen ? "h-[90vh]" : "max-h-[80vh]"} overflow-y-auto`}
+              className={`relative bg-white dark:bg-[#1E1E1E] shadow-lg w-full ${
+                isMobile 
+                  ? 'h-full rounded-none overflow-y-auto' 
+                  : `rounded-lg p-6 ${sizeClasses[size]} ${fullScreen ? "h-[90vh]" : "max-h-[80vh]"} overflow-y-auto`
+              }`}
             >
-              <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                {title}
-              </DialogTitle>
-              <div className="mt-4">{children}</div>
+              {/* X Button - Top Right */}
+              <button
+                onClick={handleClose}
+                className={`${isMobile ? 'sticky top-4 float-right mr-4 mt-4' : 'absolute top-6 right-6'} z-10 p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors`}
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              </button>
+
+              <div className={isMobile ? 'p-6 pt-2' : ''}>
+                <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white pr-10">
+                  {title}
+                </DialogTitle>
+                <div className="mt-4">{children}</div>
+              </div>
             </DialogPanel>
           )}
         </AnimatePresence>
