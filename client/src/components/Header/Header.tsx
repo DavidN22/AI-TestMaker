@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import SettingsModal from "../Modals/settingsModal.tsx";
 import MobileHeader from "./MobileHeader";
 import { useSelector } from "react-redux";
-import { Home, History, BarChart, ListChecks } from "lucide-react";
+import { Home, History, BarChart, ListChecks, BookOpen } from "lucide-react";
 import { RootState } from "../../store/store";
 import { useApi } from "../../utils/api.ts";
 import DarkModeToggle from "./DarkModeToggle";
@@ -100,6 +100,7 @@ export default function Header() {
                   <div className="flex space-x-6">
                     <NavItem to="/home" label="Home" icon={Home} />
                     <NavItem to="/custom" label="Custom" icon={ListChecks} />
+                    <NavItem to="/study" label="Study" icon={BookOpen} isNew={true} />
                     <NavItem to="/history" label="History" icon={History} />
                     <NavItem to="/statistics" label="Stats" icon={BarChart} />
                   </div>
@@ -171,10 +172,12 @@ function NavItem({
   to,
   label,
   icon: Icon,
+  isNew,
 }: {
   to: string;
   label: string;
   icon: React.ElementType;
+  isNew?: boolean;
 }) {
   return (
     <NavLink
@@ -191,6 +194,11 @@ function NavItem({
     >
       <Icon size={16} />
       {label}
+      {isNew && (
+        <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-blue-500 text-white rounded-full animate-pulse">
+          NEW
+        </span>
+      )}
     </NavLink>
   );
 }

@@ -23,10 +23,11 @@ const MessageList = ({
       : -1;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {messages.length === 0 ? (
-        <div className="text-center text-gray-400 dark:text-gray-500 mt-10">
-          Start a conversation!
+        <div className="text-center text-gray-400 dark:text-gray-500 mt-16">
+          <div className="text-lg font-medium mb-1">No messages yet</div>
+          <div className="text-xs">Start by asking a question</div>
         </div>
       ) : (
         messages.map((msg, idx) => (
@@ -44,7 +45,7 @@ const MessageList = ({
             </div>
 
             {idx === confirmationIdx && (
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-2">
                 <ConfirmationPanel />
               </div>
             )}

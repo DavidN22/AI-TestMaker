@@ -50,22 +50,22 @@ const HeroSection = () => {
             tests to certifications and custom quizzes, powered by AI.
           </p>
 <motion.div
-  className="bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/10 border border-yellow-300/40 dark:border-yellow-500/30 rounded-xl p-5 shadow-lg max-w-md"
+  className="bg-gradient-to-br from-blue-50 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/10 border border-blue-300/40 dark:border-blue-500/30 rounded-xl p-5 shadow-lg max-w-md"
   initial={{ opacity: 0, y: 30 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.6, delay: 0.4 }}
 >
   <div className="flex items-center gap-2 mb-2">
-    <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-0.5 rounded-full animate-pulse">
-      🧠 New
+    <span className="bg-blue-400 text-white text-xs font-semibold px-2 py-0.5 rounded-full animate-pulse">
+      ✨ New
     </span>
     <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-      Introducing Teskro Assistant!
+      AI-Powered Study Tools!
     </h3>
   </div>
   <p className="text-sm text-gray-700 dark:text-gray-300">
-    Get smarter about how you study. Ask Teskro Assistant about your recent scores,
-    weak topics, and even auto-generate quizzes based on where you need improvement.
+    Master any topic with intelligent flashcards! Generate custom flashcards from any subject 
+    or create them from your test results to focus on weak points.
     <strong> Must be signed in to use.</strong>
   </p>
 </motion.div>

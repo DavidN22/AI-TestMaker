@@ -44,7 +44,7 @@ export default function TestHistoryModal({
       size="xl"
       fullScreen={true}
     >
-      <div className="flex flex-col h-full overflow-hidden">
+      <div>
         {/* Weak Points */}
         {testData.weak_points && (
           <div className="bg-red-100 dark:bg-red-900 p-4 rounded-lg mb-4 text-sm text-red-700 dark:text-red-300 font-medium shadow-sm">
@@ -79,7 +79,7 @@ export default function TestHistoryModal({
         </div>
 
         {/* Questions */}
-        <div className="flex-1 overflow-y-auto space-y-6 px-1 sm:px-2">
+        <div className="space-y-6 px-1 sm:px-2 pb-4">
           {testData.quiz_data.map((q, index) => {
             const wasAnswered = q.user_answer !== undefined && q.user_answer !== null;
 
@@ -148,7 +148,7 @@ export default function TestHistoryModal({
         </div>
 
         {/* Close Button */}
-        <div className="sticky bottom-0 bg-white dark:bg-[#1E1E1E] p-4 border-t border-gray-200 dark:border-neutral-700">
+        <div className="bg-white dark:bg-[#1E1E1E] p-4 border-t border-gray-200 dark:border-neutral-700 -mx-6 -mb-6 mt-4">
           <button
             className="w-full bg-black dark:bg-white text-white dark:text-black py-3 rounded-md font-semibold hover:opacity-90 transition"
             onClick={() => setIsOpen(false)}

@@ -21,32 +21,30 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
   const isBotLoading = messages.some((m) => m.role === "bot" && m.loading);
   return (
 <motion.div
-  initial={{ opacity: 0, y: 50 }}
-  animate={{ opacity: 1, y: 0 }}
-  exit={{ opacity: 0, scale: 0.7, rotate: -10 }}
-  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-  className="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-6 z-50 w-[95vw] max-w-sm sm:w-[25rem] shadow-2xl rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-gray-200 dark:border-zinc-700 flex flex-col h-[34rem] overflow-hidden"
+  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+  animate={{ opacity: 1, y: 0, scale: 1 }}
+  exit={{ opacity: 0, y: 20, scale: 0.95 }}
+  transition={{ duration: 0.2, ease: "easeOut" }}
+  className="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-6 z-50 w-[95vw] max-w-sm sm:w-[26rem] shadow-xl rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 flex flex-col h-[36rem] overflow-hidden"
 >
-
-
       {/* Header */}
-<div className="relative px-5 py-4 bg-gradient-to-r from-neutral-900 to-neutral-800 dark:from-zinc-900 dark:to-zinc-800 text-white shadow-md border-b border-neutral-700">
+<div className="relative px-6 py-5 bg-white dark:bg-zinc-900 border-b border-gray-100 dark:border-zinc-800">
   <div className="flex justify-between items-start">
     <div className="flex items-center gap-3">
-      <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shadow-inner">
-        <BotIcon className="w-5 h-5 text-white" />
+      <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
+        <BotIcon className="w-5 h-5 text-gray-700 dark:text-gray-300" strokeWidth={2} />
       </div>
       <div>
-        <h2 className="text-base font-semibold">Teskro Assistant</h2>
-        <p className="text-xs opacity-90 leading-tight">
-          Ask anything about your tests or progress
+        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Teskro Assistant</h2>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+          How can I help you today?
         </p>
       </div>
     </div>
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-1 items-center">
       <button
         onClick={() => dispatch(clearMessages())}
-        className="hover:ring-2 hover:ring-white/30 rounded-full text-xs px-3 py-1 bg-white/10 transition"
+        className="hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg text-xs px-3 py-1.5 text-gray-600 dark:text-gray-400 transition-colors font-medium"
         aria-label="Clear Chatbot"
         title="Clear Chat"
       >
@@ -54,34 +52,32 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
       </button>
       <button
         onClick={onClose}
-        className="hover:ring-2 hover:ring-white/30 rounded-full p-1 transition"
+        className="hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg p-1.5 transition-colors"
         aria-label="Close Chatbot"
       >
-        <X className="w-5 h-5 text-white" />
+        <X className="w-4 h-4 text-gray-600 dark:text-gray-400" strokeWidth={2} />
       </button>
     </div>
   </div>
 </div>
 
-
       <QuickReplies endRef={endRef} resetKey={quickRepliesKey} />
 
       {/* Message Area */}
-      <div className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-50 via-white to-white dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-900 px-4 pt-4 pb-2 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-zinc-900 px-5 pt-4 pb-2 custom-scrollbar">
         <MessageList messages={messages} endRef={endRef} />
       </div>
 
       {/* Input */}
       <form
         onSubmit={handleSend}
-        className="flex items-center gap-2 px-4 py-3 border-t bg-white/70 dark:bg-zinc-800/70 border-gray-200 dark:border-zinc-700 backdrop-blur-md"
+        className="flex items-end gap-3 px-5 py-4 border-t bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800"
       >
 <textarea
-  className="flex-1 min-h-[40px] max-h-[130px] resize-none border border-gray-300 dark:border-zinc-600 rounded-xl px-4 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/30 dark:focus:ring-white/30 transition-all"
-  placeholder="Ask your assistant..."
+  className="flex-1 min-h-[44px] max-h-[120px] resize-none border border-gray-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-gray-400 dark:focus:border-zinc-600 transition-colors"
+  placeholder="Type your message..."
   value={input}
   ref={el => {
-    // Attach ref to textarea for resetting height after submit
     if (el && input === "") {
       el.style.height = 'auto';
     }
@@ -89,7 +85,7 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
   onChange={(e) => {
     setInput(e.target.value);
     e.target.style.height = 'auto';
-    const maxHeight = 160;
+    const maxHeight = 120;
     const newHeight = Math.min(e.target.scrollHeight, maxHeight);
     e.target.style.height = `${newHeight}px`;
     e.target.style.overflow = e.target.scrollHeight > maxHeight ? 'auto' : 'hidden';
@@ -97,9 +93,7 @@ export const ChatModal = ({ onClose, quickRepliesKey }: { onClose: () => void; q
 onKeyDown={(e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-
-    if (isBotLoading) return; // ✅ Block sending if bot is busy
-
+    if (isBotLoading) return;
     const form = e.currentTarget.form;
     if (form) {
       const submitEvent = new Event('submit', {
@@ -116,7 +110,7 @@ onKeyDown={(e) => {
         <button
           type="submit"
           disabled={isBotLoading}
-           className="bg-neutral-800 dark:bg-zinc-700 text-white px-4 py-2 rounded-xl text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-700 dark:hover:bg-zinc-600 hover:ring-2 hover:ring-white/30"
+          className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-5 py-3 rounded-xl text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-800 dark:hover:bg-gray-200 active:scale-95"
 >
           Send
         </button>

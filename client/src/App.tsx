@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import StatPage from "./components/StatsPage/StatPage";
 import { useGetDashboardDataQuery } from "./store/Slices/statsApi";
 import ChatbotWidget from "./components/Chatbot/ChatbotWidget";
+import StudyView from "./components/views/StudyView";
 
 function AppContent() {
   const isAuthLoading = useSelector(
@@ -46,6 +47,7 @@ function AppContent() {
       if (location.pathname.startsWith("/test")) return "Test";
       if (location.pathname.startsWith("/history")) return "History";
       if (location.pathname.startsWith("/statistics")) return "Statistics";
+      if (location.pathname.startsWith("/study")) return "Study";
       if (location.pathname.startsWith("/privacy-policy"))
         return "Privacy Policy";
       return "Teskro";
@@ -97,6 +99,14 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <StatPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/study"
+          element={
+            <ProtectedRoute>
+              <StudyView />
             </ProtectedRoute>
           }
         />

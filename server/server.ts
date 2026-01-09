@@ -7,6 +7,7 @@ import dbRoutes from './routes/dbRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import chatbotRoutes from './routes/chatbot.js';
+import studyRoutes from './routes/studyRoutes.js';
 
 //import authRoutes from './routes/authRoutes';
 //import dbRoutes from './routes/dbRoutes';
@@ -28,6 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/db', dbRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/study', studyRoutes);
   
 app.get('/api', (req: Request, res: Response) => {
     res.json({ server: 'Hello, this is your Express server!' });

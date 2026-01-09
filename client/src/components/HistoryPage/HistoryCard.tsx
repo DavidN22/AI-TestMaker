@@ -55,7 +55,7 @@ export default function TestResultCard({
     <div
       className="relative group bg-white dark:bg-[#1E1E1E] border border-gray-300 dark:border-gray-700 
       rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-500 
-      dark:hover:border-blue-400 cursor-pointer flex flex-col min-h-[200px] space-y-3"
+      dark:hover:border-blue-400 cursor-pointer flex flex-col min-h-[200px] space-y-3 w-full max-w-full overflow-hidden"
       onClick={handleCardClick}
     >
       {/* 3-dot menu */}
@@ -65,9 +65,9 @@ export default function TestResultCard({
       />
 
       {/* Title & Icon */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div>{getIcon(testData.title)}</div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white tracking-wide truncate group-hover:whitespace-normal group-hover:overflow-visible group-hover:text-ellipsis">
+      <div className="flex items-center gap-3 min-w-0 w-full overflow-hidden">
+        <div className="flex-shrink-0">{getIcon(testData.title)}</div>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white tracking-wide truncate flex-1 min-w-0 break-words">
           {testData.title}
         </h2>
       </div>

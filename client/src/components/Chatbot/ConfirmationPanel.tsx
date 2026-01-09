@@ -13,18 +13,18 @@ const handleClick = async (value: "yes" | "no") => {
 
 };
   return (
-    <div className="flex gap-4 justify-center mt-1">
+    <div className="flex gap-3 justify-center">
       <button
         onClick={() => handleClick("yes")}
-        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-zinc-600 rounded-lg text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 transition"
+        className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 dark:border-zinc-700 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors font-medium"
       >
-        <CheckCircle className="w-4 h-4" /> Yes
+        <CheckCircle className="w-4 h-4" strokeWidth={2} /> Yes
       </button>
       <button
         onClick={() => handleClick("no")}
-        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-zinc-600 rounded-lg text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-700 transition"
+        className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 dark:border-zinc-700 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors font-medium"
       >
-        <XCircle className="w-4 h-4" /> No
+        <XCircle className="w-4 h-4" strokeWidth={2} /> No
       </button>
     </div>
   );
