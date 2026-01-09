@@ -1,4 +1,4 @@
-import { pool } from "../db/db.js"; // Ensure your database connection is configured // Ensure your database connection is configured
+import { pool } from "../db/db.js";
 import { createClient } from "../utils/supabaseServerClient.js";
 const dbController = {
     addQuizResult: async (req, res, next) => {

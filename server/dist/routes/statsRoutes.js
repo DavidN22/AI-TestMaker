@@ -5,4 +5,6 @@ const router = express.Router();
 // ...existing routes...
 // Stats summary route
 router.get("/dashboard", decodeUserMiddleware, statController.getDashboardData);
+// Admin route to get all users
+router.get("/users", decodeUserMiddleware, statController.getAllUsers);
 export default router;

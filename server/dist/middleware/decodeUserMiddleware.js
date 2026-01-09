@@ -1,4 +1,5 @@
 import { createClient } from "../utils/supabaseServerClient.js";
+// This middleware creates the client and decodes the user from the request, essentially an auth check
 export const decodeUserMiddleware = async (req, res, next) => {
     try {
         const supabase = createClient({ req, res });

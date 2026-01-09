@@ -1,8 +1,19 @@
 import { pool } from "../db/db.js";
+const ADMIN_EMAIL = "naymondavid@gmail.com";
 const statController = {
     getDashboardData: async (req, res, next) => {
         try {
-            const user = res.locals.user;
+            const currentUser = res.locals.user;
+            const requestedUserId = req.query.userId;
+            // Determine which user's stats to fetch
+            let targetUser = currentUser;
+            // If requesting another user's stats, verify admin access
+            if (requestedUserId && requestedUserId !== currentUser) {
+                if (currentUser !== ADMIN_EMAIL) {
+                    return res.status(403).json({ error: "Unauthorized: Admin access required" });
+                }
+                targetUser = requestedUserId;
+            }
             const query = `
   SELECT 
   date,
@@ -15,7 +26,7 @@ FROM devtests
 WHERE "user" = $1
 ORDER BY date DESC
 LIMIT 100`;
-            const { rows } = await pool.query(query, [user]);
+            const { rows } = await pool.query(query, [targetUser]);
             const total_tests = rows.length;
             const avg_score = rows.reduce((sum, r) => sum + r.score, 0) / (rows.length || 1);
             const last_test_date = rows.length > 0 ? rows[0].date : null;
@@ -27,6 +38,25 @@ LIMIT 100`;
                 },
                 tests: rows,
             });
+        }
+        catch (error) {
+            next(error);
+        }
+    },
+    getAllUsers: async (req, res, next) => {
+        try {
+            const currentUser = res.locals.user;
+            // Only admin can fetch all users
+            if (currentUser !== ADMIN_EMAIL) {
+                return res.status(403).json({ error: "Unauthorized: Admin access required" });
+            }
+            const query = `
+      SELECT DISTINCT "user" as email
+      FROM devtests
+      ORDER BY "user"
+    `;
+            const { rows } = await pool.query(query);
+            res.json({ users: rows });
         }
         catch (error) {
             next(error);
