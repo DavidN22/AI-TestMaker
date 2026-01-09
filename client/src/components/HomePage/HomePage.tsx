@@ -2,6 +2,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { motion } from "framer-motion";
 import TestCard from "../Shared/TestCard";
+import { useState, useEffect } from "react";
+import StudyAnnouncementModal from "../Modals/StudyAnnouncementModal";
 
 export default function HomePage() {
   const filteredTests = useSelector(
@@ -9,6 +11,7 @@ export default function HomePage() {
   );
 
   const name = useSelector((state: RootState) => state.auth.fullName);
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
 
   const firstName = name?.split(" ")[0]
     ? name.split(" ")[0].charAt(0).toUpperCase() +
@@ -27,6 +30,19 @@ export default function HomePage() {
   } else {
     greeting = "Burning the midnight oil?";
   }
+
+  // Check localStorage on mount to show announcement modal
+  useEffect(() => {
+    const hasSeenStudyAnnouncement = localStorage.getItem("hasSeenStudyAnnouncement");
+    if (!hasSeenStudyAnnouncement) {
+      // Show modal after a short delay for better UX
+      const timer = setTimeout(() => {
+        setShowAnnouncementModal(true);
+        localStorage.setItem("hasSeenStudyAnnouncement", "true");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   return (
     <div className="flex flex-1 bg-white dark:bg-[#1E1E1E] text-gray-900 dark:text-gray-100">
@@ -76,6 +92,12 @@ export default function HomePage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Study Announcement Modal */}
+      <StudyAnnouncementModal
+        isOpen={showAnnouncementModal}
+        setIsOpen={setShowAnnouncementModal}
+      />
     </div>
   );
 }

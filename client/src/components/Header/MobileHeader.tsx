@@ -15,6 +15,7 @@ import {
   BarChart,
   LogOut,
   ListChecks,
+  BookOpen,
 } from "lucide-react";
 import TokenDisplayMobile from "./TokenDisplayMobile";
 
@@ -96,9 +97,10 @@ export default function MobileHeader({
               {[
                 { to: "/home", label: "Home", Icon: Home },
                 { to: "/custom", label: "Custom Tests", Icon: ListChecks },
+                { to: "/study", label: "Study", Icon: BookOpen, isNew: true },
                 { to: "/history", label: "History", Icon: History },
                 { to: "/statistics", label: "Statistics", Icon: BarChart },
-              ].map(({ to, label, Icon }) => (
+              ].map(({ to, label, Icon, isNew }) => (
                 <Link
                   key={to}
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -112,6 +114,11 @@ export default function MobileHeader({
                   <span className="text-gray-800 dark:text-gray-200 font-medium">
                     {label}
                   </span>
+                  {isNew && (
+                    <span className="ml-auto px-2 py-0.5 text-xs font-bold bg-blue-500 text-white rounded-full animate-pulse">
+                      NEW
+                    </span>
+                  )}
                 </Link>
               ))}
             </nav>

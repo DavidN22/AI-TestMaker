@@ -191,6 +191,64 @@ const sendChatToBot = async (messages: { role: string; content: string }[]) => {
   }
 };
 
+const generateFlashcards = async (topic: string, count: number = 10) => {
+  setLoading(true);
+  try {
+    const response = await axios.post(
+      `${apiBase}/study/generateFlashcards`,
+      { topic, count },
+      { withCredentials: true }
+    );
+    dispatch(tokenApiSlice.util.invalidateTags(["Tokens"]));
+    return response.data.message.flashcards;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+};
+
+const generateFlashcardsFromTest = async (
+  testId: string,
+  count: number = 10,
+  weakPointsOnly: boolean = false
+) => {
+  setLoading(true);
+  try {
+    const response = await axios.post(
+      `${apiBase}/study/generateFlashcardsFromTest`,
+      { testId, count, weakPointsOnly },
+      { withCredentials: true }
+    );
+    dispatch(tokenApiSlice.util.invalidateTags(["Tokens"]));
+    return response.data.message.flashcards;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+};
+
+const studyChatbot = async (question: string) => {
+  setLoading(true);
+  try {
+    const response = await axios.post(
+      `${apiBase}/study/studyChatbot`,
+      { question },
+      { withCredentials: true }
+    );
+    dispatch(tokenApiSlice.util.invalidateTags(["Tokens"]));
+    return response.data.message.answer;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return {
     loading,
@@ -200,5 +258,8 @@ const sendChatToBot = async (messages: { role: string; content: string }[]) => {
     handleLogout,
     getPreviewTest,
     sendChatToBot,
+    generateFlashcards,
+    generateFlashcardsFromTest,
+    studyChatbot,
   };
 }
