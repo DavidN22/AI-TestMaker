@@ -5,7 +5,9 @@ import { RootState } from "../../store/store";
 import FlashcardViewer from "./FlashcardViewer";
 import FlashcardModeSelector from "./FlashcardModeSelector";
 import FlashcardGenerator from "./FlashcardGenerator";
+import FlashcardHistory from "./FlashcardHistory";
 import { useGetTokensQuery, tokenApiSlice } from "../../store/Slices/tokenSlice";
+import { flashcardApi } from "../../store/Slices/flashcardApi";
 
 interface Flashcard {
   term: string;
@@ -25,7 +27,7 @@ interface FlashcardsSectionProps {
 }
 
 export default function FlashcardsSection({ onSelectionChange, onSwitchSection }: FlashcardsSectionProps) {
-  const [mode, setMode] = useState<"ai" | "test" | null>(null);
+  const [mode, setMode] = useState<"ai" | "test" | "history" | null>(null);
   const [topic, setTopic] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
   const [weakPointsOnly, setWeakPointsOnly] = useState(false);
@@ -36,6 +38,7 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
   const [loading, setLoading] = useState(false);
   const [recentTests, setRecentTests] = useState<Test[]>([]);
   const [showNoTokensModal, setShowNoTokensModal] = useState(false);
+  const [previousMode, setPreviousMode] = useState<"ai" | "test" | "history" | null>(null);
   const apiBase = useSelector((state: RootState) => state.config.apiBase);
   const dispatch = useDispatch();
   const { data: tokenData } = useGetTokensQuery();
@@ -97,6 +100,8 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
       
       // Invalidate tokens to refetch updated count
       dispatch(tokenApiSlice.util.invalidateTags(['Tokens']));
+      // Invalidate flashcard history to show new set
+      dispatch(flashcardApi.util.invalidateTags(['FlashcardHistory']));
     } catch (error) {
       console.error("Error generating flashcards:", error);
       alert("Failed to generate flashcards. Please try again.");
@@ -128,6 +133,8 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
       
       // Invalidate tokens to refetch updated count
       dispatch(tokenApiSlice.util.invalidateTags(['Tokens']));
+      // Invalidate flashcard history to show new set
+      dispatch(flashcardApi.util.invalidateTags(['FlashcardHistory']));
     } catch (error) {
       console.error("Error generating flashcards:", error);
       alert("Failed to generate flashcards. Please try again.");
@@ -148,7 +155,13 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
 
   const resetFlashcards = () => {
     setFlashcards([]);
-    setMode(null);
+    // Return to previous mode if it exists, otherwise go to mode selector
+    if (previousMode) {
+      setMode(previousMode);
+      setPreviousMode(null);
+    } else {
+      setMode(null);
+    }
     setTopic("");
     setSelectedTest("");
     setWeakPointsOnly(false);
@@ -160,6 +173,13 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
   const handleCardSelect = (index: number) => {
     setCurrentIndex(index);
     setIsFlipped(false);
+  };
+
+  const handleSelectFlashcardSet = (cards: Flashcard[]) => {
+    setFlashcards(cards);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+    setPreviousMode(mode); // Save current mode before clearing
   };
 
   // No Tokens Modal Component
@@ -215,11 +235,20 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
     );
   }
 
+  if (mode === "history") {
+    return (
+      <FlashcardHistory
+        onSelectFlashcardSet={handleSelectFlashcardSet}
+        onBack={() => setMode(null)}
+      />
+    );
+  }
+
   return (
     <>
       {showNoTokensModal && <NoTokensModal />}
       <FlashcardGenerator
-        mode={mode}
+        mode={mode as "ai" | "test"}
         topic={topic}
         selectedTest={selectedTest}
         weakPointsOnly={weakPointsOnly}

@@ -35,6 +35,26 @@ Rules:
       const rawResponse = await model.generate(prompt);
       const message = JSON.parse(rawResponse);
 
+      // Save to flashcard history
+      try {
+        const insertQuery = `
+          INSERT INTO flashcard_history ("user", title, flashcards, source_type, topic)
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING id;
+        `;
+        const title = `${topic.substring(0, 50)}${topic.length > 50 ? '...' : ''}`;
+        await pool.query(insertQuery, [
+          user,
+          title,
+          JSON.stringify(message),
+          'ai',
+          topic
+        ]);
+      } catch (dbError) {
+        console.error("Error saving flashcard to history:", dbError);
+        // Don't fail the request if history save fails
+      }
+
       res.json({ message });
     } catch (error) {
       next(error);
@@ -121,6 +141,25 @@ Rules:
       const rawResponse = await model.generate(prompt);
       const message = JSON.parse(rawResponse);
 
+      // Save to flashcard history
+      try {
+        const insertQuery = `
+          INSERT INTO flashcard_history ("user", title, flashcards, source_type, source_id)
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING id;
+        `;
+        await pool.query(insertQuery, [
+          user,
+          title,
+          JSON.stringify(message),
+          'test',
+          testId
+        ]);
+      } catch (dbError) {
+        console.error("Error saving flashcard to history:", dbError);
+        // Don't fail the request if history save fails
+      }
+
       res.json({ message });
     } catch (error) {
       next(error);
@@ -155,6 +194,180 @@ ONLY respond with valid JSON, no additional text`;
       const message = JSON.parse(rawResponse);
 
       res.json({ message });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Get flashcard history (last 4 + favorites)
+  getFlashcardHistory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = res.locals.user;
+      
+      // Get last 4 recent flashcards
+      const recentQuery = `
+        SELECT id, title, flashcards, created_at, source_type, source_id, topic, is_favorite
+        FROM flashcard_history
+        WHERE "user" = $1
+        ORDER BY created_at DESC
+        LIMIT 4;
+      `;
+      const recentResult = await pool.query(recentQuery, [user]);
+
+      // Get all favorites
+      const favoritesQuery = `
+        SELECT id, title, flashcards, created_at, source_type, source_id, topic, is_favorite
+        FROM flashcard_history
+        WHERE "user" = $1 AND is_favorite = TRUE
+        ORDER BY created_at DESC;
+      `;
+      const favoritesResult = await pool.query(favoritesQuery, [user]);
+
+      res.json({
+        recent: recentResult.rows,
+        favorites: favoritesResult.rows,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Toggle favorite status for a flashcard set
+  toggleFlashcardFavorite: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { flashcardId } = req.params;
+      const user = res.locals.user;
+
+      // First check if the flashcard belongs to the user
+      const checkQuery = `
+        SELECT is_favorite FROM flashcard_history
+        WHERE id = $1 AND "user" = $2;
+      `;
+      const checkResult = await pool.query(checkQuery, [flashcardId, user]);
+
+      if (checkResult.rows.length === 0) {
+        res.status(404).json({ error: "Flashcard set not found" });
+        return;
+      }
+
+      const currentFavoriteStatus = checkResult.rows[0].is_favorite;
+
+      // Toggle the favorite status
+      const updateQuery = `
+        UPDATE flashcard_history
+        SET is_favorite = $1
+        WHERE id = $2 AND "user" = $3
+        RETURNING id, is_favorite;
+      `;
+      const result = await pool.query(updateQuery, [
+        !currentFavoriteStatus,
+        flashcardId,
+        user
+      ]);
+
+      res.json({
+        message: "Favorite status updated",
+        flashcard: result.rows[0],
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Delete a flashcard set from history
+  deleteFlashcardSet: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { flashcardId } = req.params;
+      const user = res.locals.user;
+
+      const deleteQuery = `
+        DELETE FROM flashcard_history
+        WHERE id = $1 AND "user" = $2
+        RETURNING id;
+      `;
+      const result = await pool.query(deleteQuery, [flashcardId, user]);
+
+      if (result.rows.length === 0) {
+        res.status(404).json({ error: "Flashcard set not found" });
+        return;
+      }
+
+      res.json({
+        message: "Flashcard set deleted successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Get individual favorite flashcards
+  getIndividualFavorites: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = res.locals.user;
+
+      const query = `
+        SELECT id, term, definition, highlights, created_at
+        FROM flashcard_favorites
+        WHERE "user" = $1
+        ORDER BY created_at DESC;
+      `;
+      const result = await pool.query(query, [user]);
+
+      res.json({
+        favorites: result.rows,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Toggle individual flashcard favorite
+  toggleIndividualFavorite: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { term, definition, highlights } = req.body;
+      const user = res.locals.user;
+
+      // Check if already favorited
+      const checkQuery = `
+        SELECT id FROM flashcard_favorites
+        WHERE "user" = $1 AND term = $2 AND definition = $3;
+      `;
+      const checkResult = await pool.query(checkQuery, [user, term, definition]);
+
+      if (checkResult.rows.length > 0) {
+        // Remove from favorites
+        await pool.query(
+          `DELETE FROM flashcard_favorites WHERE id = $1;`,
+          [checkResult.rows[0].id]
+        );
+        res.json({ isFavorite: false });
+      } else {
+        // Add to favorites
+        await pool.query(
+          `INSERT INTO flashcard_favorites ("user", term, definition, highlights) 
+           VALUES ($1, $2, $3, $4);`,
+          [user, term, definition, JSON.stringify(highlights || [])]
+        );
+        res.json({ isFavorite: true });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Check if individual flashcard is favorited
+  checkIndividualFavorite: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { term, definition } = req.body;
+      const user = res.locals.user;
+
+      const query = `
+        SELECT id FROM flashcard_favorites
+        WHERE "user" = $1 AND term = $2 AND definition = $3;
+      `;
+      const result = await pool.query(query, [user, term, definition]);
+
+      res.json({ isFavorite: result.rows.length > 0 });
     } catch (error) {
       next(error);
     }

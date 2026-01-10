@@ -9,6 +9,7 @@ import { testsApi } from './Slices/customTestsApi';
 import customFilterReducer from "./Slices/customFilterSlice";
 import { statsApi } from "./Slices/statsApi";
 import chatHistoryReducer from "./Slices/chatHistorySlice";
+import { flashcardApi } from "./Slices/flashcardApi";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     [tokenApiSlice.reducerPath]: tokenApiSlice.reducer,
     [testsApi.reducerPath]: testsApi.reducer,
     [statsApi.reducerPath]: statsApi.reducer,
+    [flashcardApi.reducerPath]: flashcardApi.reducer,
 
   },
   middleware: (getDefaultMiddleware) =>
@@ -29,7 +31,8 @@ const store = configureStore({
       .concat(apiSlice.middleware)
       .concat(tokenApiSlice.middleware)
       .concat(testsApi.middleware)
-      .concat(statsApi.middleware),
+      .concat(statsApi.middleware)
+      .concat(flashcardApi.middleware),
 
 });
 

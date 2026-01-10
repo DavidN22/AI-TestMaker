@@ -1,5 +1,9 @@
 import pkg from "pg";
 const { Pool } = pkg;
+// Configure pg to parse timestamps as UTC
+// This prevents the driver from converting timestamps to local timezone
+pkg.types.setTypeParser(1114, (str) => str); // timestamp without timezone
+pkg.types.setTypeParser(1184, (str) => str); // timestamp with timezone
 const pool = new Pool({
     connectionString: process.env.DB_URI,
 });

@@ -1,5 +1,7 @@
-import { ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowLeft, Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useToggleIndividualFavoriteMutation, useCheckIndividualFavoriteMutation } from "../../store/Slices/flashcardApi";
 
 interface Flashcard {
   term: string;
@@ -28,6 +30,53 @@ export default function FlashcardViewer({
   onReset,
   onCardSelect,
 }: FlashcardViewerProps) {
+  const [favoriteStates, setFavoriteStates] = useState<boolean[]>([]);
+  const [toggleIndividualFavorite] = useToggleIndividualFavoriteMutation();
+  const [checkIndividualFavorite] = useCheckIndividualFavoriteMutation();
+
+  const currentCard = flashcards[currentIndex];
+
+  // Check favorite status for all flashcards on mount
+  useEffect(() => {
+    const checkFavorites = async () => {
+      const states = await Promise.all(
+        flashcards.map(async (card) => {
+          try {
+            const response = await checkIndividualFavorite({
+              term: card.term,
+              definition: card.definition,
+            }).unwrap();
+            return response.isFavorite;
+          } catch (error) {
+            return false;
+          }
+        })
+      );
+      setFavoriteStates(states);
+    };
+
+    if (flashcards.length > 0) {
+      checkFavorites();
+    }
+  }, [flashcards]);
+
+  const toggleFavorite = async () => {
+    try {
+      const response = await toggleIndividualFavorite({
+        term: currentCard.term,
+        definition: currentCard.definition,
+        highlights: currentCard.highlights,
+      }).unwrap();
+
+      // Update local state
+      const newStates = [...favoriteStates];
+      newStates[currentIndex] = response.isFavorite;
+      setFavoriteStates(newStates);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
+
   // Helper function to render text with highlights
   const renderHighlightedText = (text: string, highlights?: string[]) => {
     if (!highlights || highlights.length === 0) {
@@ -107,13 +156,43 @@ export default function FlashcardViewer({
                 Card {currentIndex + 1} <span className="text-gray-400 dark:text-gray-500">of</span> {flashcards.length}
               </h2>
             </div>
-            <button
-              onClick={onReset}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all shadow-sm border border-gray-200 dark:border-gray-700 font-medium text-sm min-h-[44px]"
-            >
-              <RotateCw size={16} />
-              New Set
-            </button>
+            <div className="flex items-center gap-2">
+              <motion.button
+                onClick={toggleFavorite}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative flex items-center justify-center p-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gradient-to-br hover:from-yellow-50 hover:to-orange-50 dark:hover:from-yellow-900/20 dark:hover:to-orange-900/20 transition-all shadow-sm border border-gray-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-yellow-600 min-h-[44px]"
+                title={favoriteStates[currentIndex] ? "Remove from favorites" : "Add to favorites"}
+              >
+                <motion.div
+                  animate={{
+                    scale: favoriteStates[currentIndex] ? [1, 1.3, 1] : 1,
+                    rotate: favoriteStates[currentIndex] ? [0, 10, -10, 0] : 0,
+                  }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Star
+                    size={20}
+                    className={favoriteStates[currentIndex] ? "fill-yellow-400 text-yellow-400 drop-shadow-md" : "text-gray-400 group-hover:text-yellow-500"}
+                  />
+                </motion.div>
+                {favoriteStates[currentIndex] && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: [0, 1.5, 0], opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.6 }}
+                    className="absolute inset-0 rounded-lg border-2 border-yellow-400"
+                  />
+                )}
+              </motion.button>
+              <button
+                onClick={onReset}
+                className="flex items-center justify-center p-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all shadow-sm border border-gray-200 dark:border-gray-700 min-h-[44px]"
+                title="Go back"
+              >
+                <ArrowLeft size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
