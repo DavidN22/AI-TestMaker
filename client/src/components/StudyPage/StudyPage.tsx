@@ -44,7 +44,7 @@ export default function StudyPage() {
               <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">AI-Powered Learning</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold mb-3 pb-1 leading-tight bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent">
               Study Tools
             </h1>
             <p className="text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">

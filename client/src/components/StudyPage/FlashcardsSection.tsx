@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import FlashcardViewer from "./FlashcardViewer";
 import FlashcardModeSelector from "./FlashcardModeSelector";
 import FlashcardGenerator from "./FlashcardGenerator";
+import { useGetTokensQuery, tokenApiSlice } from "../../store/Slices/tokenSlice";
 
 interface Flashcard {
   term: string;
@@ -34,7 +35,10 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
   const [isFlipped, setIsFlipped] = useState(false);
   const [loading, setLoading] = useState(false);
   const [recentTests, setRecentTests] = useState<Test[]>([]);
+  const [showNoTokensModal, setShowNoTokensModal] = useState(false);
   const apiBase = useSelector((state: RootState) => state.config.apiBase);
+  const dispatch = useDispatch();
+  const { data: tokenData } = useGetTokensQuery();
 
   // Notify parent when mode changes
   useEffect(() => {
@@ -73,6 +77,13 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
   const generateFlashcardsFromAI = async () => {
     if (!topic.trim()) return;
     
+    // Check if user has tokens
+    const currentTokens = Number(tokenData?.token || 0);
+    if (currentTokens < 1) {
+      setShowNoTokensModal(true);
+      return;
+    }
+    
     setLoading(true);
     try {
       const response = await axios.post(
@@ -83,6 +94,9 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
       setFlashcards(response.data.message.flashcards || []);
       setCurrentIndex(0);
       setIsFlipped(false);
+      
+      // Invalidate tokens to refetch updated count
+      dispatch(tokenApiSlice.util.invalidateTags(['Tokens']));
     } catch (error) {
       console.error("Error generating flashcards:", error);
       alert("Failed to generate flashcards. Please try again.");
@@ -94,6 +108,13 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
   const generateFlashcardsFromTest = async () => {
     if (!selectedTest) return;
     
+    // Check if user has tokens
+    const currentTokens = Number(tokenData?.token || 0);
+    if (currentTokens < 1) {
+      setShowNoTokensModal(true);
+      return;
+    }
+    
     setLoading(true);
     try {
       const response = await axios.post(
@@ -104,6 +125,9 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
       setFlashcards(response.data.message.flashcards || []);
       setCurrentIndex(0);
       setIsFlipped(false);
+      
+      // Invalidate tokens to refetch updated count
+      dispatch(tokenApiSlice.util.invalidateTags(['Tokens']));
     } catch (error) {
       console.error("Error generating flashcards:", error);
       alert("Failed to generate flashcards. Please try again.");
@@ -138,6 +162,34 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
     setIsFlipped(false);
   };
 
+  // No Tokens Modal Component
+  const NoTokensModal = () => (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 bg-red-100 dark:bg-red-900/30 rounded-full">
+          <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-3">
+          Out of Tokens
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400 text-center mb-2">
+          You don't have any tokens left to generate flashcards.
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-500 text-center mb-6">
+          Tokens refresh every 2 days. Check your token count in the header.
+        </p>
+        <button
+          onClick={() => setShowNoTokensModal(false)}
+          className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
+        >
+          Got it
+        </button>
+      </div>
+    </div>
+  );
+
   // Render appropriate component based on state
   if (flashcards.length > 0) {
     return (
@@ -164,20 +216,24 @@ export default function FlashcardsSection({ onSelectionChange, onSwitchSection }
   }
 
   return (
-    <FlashcardGenerator
-      mode={mode}
-      topic={topic}
-      selectedTest={selectedTest}
-      weakPointsOnly={weakPointsOnly}
-      count={count}
-      loading={loading}
-      recentTests={recentTests}
-      onTopicChange={setTopic}
-      onTestChange={setSelectedTest}
-      onWeakPointsChange={setWeakPointsOnly}
-      onCountChange={setCount}
-      onGenerate={mode === "ai" ? generateFlashcardsFromAI : generateFlashcardsFromTest}
-      onBack={() => setMode(null)}
-    />
+    <>
+      {showNoTokensModal && <NoTokensModal />}
+      <FlashcardGenerator
+        mode={mode}
+        topic={topic}
+        selectedTest={selectedTest}
+        weakPointsOnly={weakPointsOnly}
+        count={count}
+        loading={loading}
+        recentTests={recentTests}
+        tokenCount={Number(tokenData?.token || 0)}
+        onTopicChange={setTopic}
+        onTestChange={setSelectedTest}
+        onWeakPointsChange={setWeakPointsOnly}
+        onCountChange={setCount}
+        onGenerate={mode === "ai" ? generateFlashcardsFromAI : generateFlashcardsFromTest}
+        onBack={() => setMode(null)}
+      />
+    </>
   );
 }

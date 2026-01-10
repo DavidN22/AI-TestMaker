@@ -17,6 +17,7 @@ interface FlashcardGeneratorProps {
   count: number;
   loading: boolean;
   recentTests: Test[];
+  tokenCount: number;
   onTopicChange: (topic: string) => void;
   onTestChange: (testId: string) => void;
   onWeakPointsChange: (value: boolean) => void;
@@ -33,6 +34,7 @@ export default function FlashcardGenerator({
   count,
   loading,
   recentTests,
+  tokenCount,
   onTopicChange,
   onTestChange,
   onWeakPointsChange,
@@ -189,7 +191,7 @@ export default function FlashcardGenerator({
 
               <button
                 onClick={onGenerate}
-                disabled={(isAI && !topic.trim()) || (!isAI && !selectedTest) || loading}
+                disabled={(isAI && !topic.trim()) || (!isAI && !selectedTest) || loading || tokenCount < 1}
                 className={`w-full py-5 bg-gradient-to-r ${isAI ? 'from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-blue-500/30 hover:shadow-blue-500/40' : 'from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-purple-500/30 hover:shadow-purple-500/40'} text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl`}
               >
                 {loading ? (
@@ -199,11 +201,27 @@ export default function FlashcardGenerator({
                   </>
                 ) : (
                   <>
-                    {isAI ? <Sparkles size={24} /> : <FileText size={24} />}
-                    Generate Flashcards
+                    <div className="flex items-center gap-2">
+                      {isAI ? <Sparkles size={24} /> : <FileText size={24} />}
+                      <span>Generate Flashcards</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-lg">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm font-bold">1 Token</span>
+                    </div>
                   </>
                 )}
               </button>
+              {tokenCount < 1 && (
+                <p className="mt-3 text-sm text-red-600 dark:text-red-400 flex items-start gap-2 font-medium">
+                  <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span>You're out of tokens. Tokens refresh every 2 days.</span>
+                </p>
+              )}
             </div>
           </div>
 
